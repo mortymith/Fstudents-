@@ -66,7 +66,7 @@ The IMS is not an all-encompassing business management suite. The following func
 
 This section lists the measurable business goals of the IMS and the specific criteria by which its success will be judged.
 
-- **Objective:** Reduce time spent on manual stock counts by 50% within 6 months of system launch.
+- **Objective:** Reduce time spent on manual stock counts by 80% within 6 months of system launch.
     
     - **Success Criterion:** Achieve a 50% reduction in person-hours logged for manual stock counting tasks compared to the pre-implementation baseline, measured at the 6-month mark.
         
@@ -304,8 +304,6 @@ The following use cases detail the 20 most critical interactions between the use
 - As a Viewer, I want to be prevented from making any changes to the data so that I cannot accidentally or intentionally alter inventory records.
 
 - As a System Integrator, I want the IMS to automatically receive sales data from the POS system so that inventory counts are always accurate and reflect real-time sales.
-
-- As a Mobile User, I want all system interfaces to be fully responsive and functional on my device so that I can perform my duties efficiently from anywhere in the warehouse.
 
 - As a User, I want the system to provide clear and actionable error messages so that I can understand and resolve issues without technical assistance.
 
