@@ -164,13 +164,13 @@ This architecture promotes separation of concerns, making the system more modula
 
 ## 6. Technology Stack
 
-|   |   |
-|---|---|
-|**Layer**|**Technologies**|
-|Presentation Layer|Mobile: Cordova Desktop: Tauri Web: Next.js REST Client: Axios Tailwind CSS (UI library)|
-|Business Logic Layer|FastAPI (RESTful API) ORM: SQLAlchemy Cache: Redis-py RBAC: Casbin (pycasbin) Monitoring & Logging: Prometheus + Grafana|
-|Data Store Layer|PostgreSQL (primary database) Caching: Redis|
-|web server|nginx|
+|                      |                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| **Layer**            | **Technologies**                                                                                  |
+| Presentation Layer   | Mobile: Cordova Desktop: Tauri Web: Next.js REST Client: Axios Tailwind CSS (UI library)          |
+| Business Logic Layer | FastAPI (RESTful API) ORM: SQLAlchemy Cache: Redis-py  Monitoring & Logging: Prometheus + Grafana |
+| Data Store Layer     | PostgreSQL (primary database) Caching: Redis                                                      |
+| web server           | nginx                                                                                             |
 
 ## 7. Deployment Architecture
 

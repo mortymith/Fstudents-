@@ -1,0 +1,402 @@
+// =============================================
+// CORE USER AND AUTHENTICATION TABLES
+// =============================================
+
+Table users {
+  id int [pk, increment] // Primary key, auto-incrementing
+  email varchar(255) [not null, unique] // User's unique email for login (FR-AUTH-001)
+  password_hash varchar(255) [not null] // Securely hashed password (NF-SEC-002)
+  full_name varchar(255) [not null] // User's full name for display
+  role enum('admin', 'inventory_manager', 'viewer') [not null] // RBAC role (FR-AUTH-003)
+  is_active boolean [default: true] // Soft delete flag for user deactivation
+  
+  // PASSWORD RESET FUNCTIONALITY
+  password_reset_token varchar(255) // Unique token for password reset requests
+  password_reset_token_expires timestamp // Expiration time for reset token (typically 1 hour)
+  password_reset_requested_at timestamp // When the reset was initially requested
+  
+  last_login_at timestamp // Track last login for security monitoring
+  created_at timestamp [default: `now()`] // Record creation timestamp
+  updated_at timestamp [default: `now()`] // Last update timestamp for auditing
+
+  // Indexes for performance
+  Indexes {
+    (email) [name: 'idx_users_email']
+    (password_reset_token) [name: 'idx_users_reset_token'] // For fast token validation
+    (password_reset_token_expires) [name: 'idx_users_token_expiry'] // For cleanup jobs
+  }
+
+  Note: '''
+  PASSWORD RESET WORKFLOW:
+  1. User requests password reset → generate unique token, set expiration (1 hour)
+  2. System emails reset link with token
+  3. User clicks link → validate token and expiration
+  4. User sets new password → clear token fields, update password_hash
+  5. Token automatically expires after 1 hour for security
+  
+  SECURITY FEATURES:
+  - Tokens are cryptographically secure random strings
+  - Short expiration prevents token misuse
+  - Tokens are single-use only
+  - Old tokens are invalidated when new reset is requested
+  '''
+}
+
+Table user_sessions {
+  id int [pk, increment] // Primary key
+  user_id int [not null] // Foreign key to users table
+  session_token varchar(255) [not null, unique] // Unique session identifier
+  expires_at timestamp [not null] // Session expiration (NF-SEC-003)
+  
+  // SECURITY AUDITING IMPROVEMENTS
+  ip_address varchar(45) [not null] // Client IP address (IPv4: 15 chars, IPv6: 45 chars)
+  user_agent text [not null] // Browser/device identification string
+  
+  // SESSION USAGE TRACKING
+  last_activity_at timestamp [not null, default: `now()`] // Last user interaction timestamp
+  
+  created_at timestamp [default: `now()`] // Session creation time
+
+  // Indexes for performance and security monitoring
+  Indexes {
+    (user_id) [name: 'idx_sessions_user_id'] // Fast user session lookup
+    (expires_at) [name: 'idx_sessions_expiry'] // Efficient session cleanup
+    (last_activity_at) [name: 'idx_sessions_activity'] // Active session queries
+    (ip_address) [name: 'idx_sessions_ip'] // Security investigation
+    (session_token) [name: 'idx_sessions_token'] // Fast token validation (unique)
+  }
+
+  Note: '''
+  SECURITY AND USAGE TRACKING FEATURES:
+  
+  IP ADDRESS TRACKING:
+  - Stores client IP for security monitoring and geo-location
+  - Helps detect suspicious login patterns (multiple locations)
+  - IPv6 support with 45-character limit
+  
+  USER AGENT TRACKING:
+  - Records browser, OS, and device information
+  - Helps identify session hijacking attempts
+  - Useful for support and analytics
+  
+  LAST ACTIVITY TRACKING:
+  - Enforces accurate session timeout (NF-SEC-003)
+  - Identifies abandoned sessions for cleanup
+  - Provides user engagement metrics
+  
+  SESSION MANAGEMENT:
+  - Update last_activity_at on every authenticated request
+  - Automatic cleanup of expired sessions via scheduled job
+  - Real-time session monitoring for security teams
+  '''
+}
+
+// =============================================
+// CORE BUSINESS ENTITY TABLES
+// =============================================
+
+Table categories {
+  id int [pk, increment] // Primary key
+  name varchar(255) [not null, unique] // Unique category name (FR-CAT-001)
+  description text // Optional category description
+  
+  // HIERARCHICAL CATEGORIES IMPROVEMENT
+  parent_id int [null] // Self-referencing foreign key for nested categories
+  depth_level int [default: 0] // Cache the depth for performance (root=0, child=1, etc.)
+  path_string varchar(1000) // Materialized path for easy querying (e.g., "1/5/12")
+  
+  is_active boolean [default: true] // Soft delete for category archiving
+  sort_order int [default: 0] // Custom ordering within parent category
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  // Indexes for hierarchical queries
+  Indexes {
+    (name) [name: 'idx_categories_name']
+    (parent_id) [name: 'idx_categories_parent'] // Fast child category lookups
+    (depth_level) [name: 'idx_categories_depth'] // Filter by level
+    (path_string) [name: 'idx_categories_path'] // Path-based queries
+    (sort_order) [name: 'idx_categories_order'] // Ordered display
+    (is_active) [name: 'idx_categories_active'] // Active category filtering
+  }
+
+  // Self-referencing relationship
+  Ref: categories.id < categories.parent_id [delete: restrict, update: cascade]
+
+  Note: '''
+  HIERARCHICAL CATEGORY STRUCTURE:
+  
+  PARENT_ID:
+  - NULL for root-level categories
+  - References id of parent category for nested structure
+  - Prevents circular references through application logic
+  
+  DEPTH_LEVEL:
+  - Cached depth for performance (0 = root, 1 = first child, etc.)
+  - Automatically calculated based on parent's depth + 1
+  
+  PATH_STRING:
+  - Materialized path (e.g., "1/5/12" for Electronics > Phones > iPhone)
+  - Enables easy ancestor/descendant queries
+  - Updated when category tree changes
+  
+  SORT_ORDER:
+  - Custom ordering within same parent category
+  - Lower numbers appear first
+  - Default 0 for natural ordering
+  
+  USAGE EXAMPLES:
+  - Electronics (id:1, parent_id:NULL, depth:0, path:"1")
+    - Phones (id:5, parent_id:1, depth:1, path:"1/5")
+      - iPhone (id:12, parent_id:5, depth:2, path:"1/5/12")
+      - Android (id:13, parent_id:5, depth:2, path:"1/5/13")
+  - Clothing (id:2, parent_id:NULL, depth:0, path:"2")
+  '''
+}
+
+Table suppliers {
+  id int [pk, increment] // Primary key
+  name varchar(255) [not null] // Supplier company name (FR-SUP-001)
+  contact_person_name varchar(255) // Primary contact person
+  contact_email varchar(255) // Contact email address
+  contact_phone varchar(50) // Contact phone number
+  address_line1 varchar(255) // Street address line 1
+  address_line2 varchar(255) // Street address line 2
+  city varchar(100) // City
+  state varchar(100) // State/Province
+  postal_code varchar(20) // Postal/ZIP code
+  country varchar(100) // Country
+  is_active boolean [default: true] // Archive instead of delete (FR-SUP-003)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  // COMPREHENSIVE INDEX STRATEGY
+  Indexes {
+    // Primary key index (auto-created by most databases)
+    (id) [pk]
+
+    // Business key index for unique supplier identification
+    (name) [name: 'idx_suppliers_name']
+
+    // Contact information indexes for quick lookups
+    (contact_email) [name: 'idx_suppliers_email']
+    (contact_phone) [name: 'idx_suppliers_phone']
+    
+    // Geographic indexes for regional reporting and filtering
+    (country) [name: 'idx_suppliers_country']
+    (state, city) [name: 'idx_suppliers_state_city']
+    (city) [name: 'idx_suppliers_city']
+    (postal_code) [name: 'idx_suppliers_postal']
+    
+    // Status and activity filtering
+    (is_active) [name: 'idx_suppliers_active']
+    
+    // Composite index for common search patterns
+    (is_active, country, state) [name: 'idx_suppliers_active_region']
+    
+    // Temporal indexes for reporting and cleanup
+    (created_at) [name: 'idx_suppliers_created']
+    (updated_at) [name: 'idx_suppliers_updated']
+    
+  }
+
+  Note: '''
+  INDEX STRATEGY RATIONALE:
+  
+  SEARCH PATTERNS COVERED:
+  1. Lookup by supplier name (common operation)
+  2. Contact searches by email or phone
+  3. Regional filtering by country, state, city
+  4. Active/inactive supplier filtering
+  5. Temporal reporting by creation/update dates
+  6. Combined status and geographic queries
+  
+  PERFORMANCE CONSIDERATIONS:
+  - Single-column indexes support flexible WHERE clauses
+  - Composite indexes optimize common query combinations
+  - Geographic indexes enable regional supplier analysis
+  - Status indexes support active/inactive filtering
+  
+  MAINTENANCE:
+  - Monitor index usage and remove unused indexes
+  - Consider partial indexes for large datasets
+  - Regular index maintenance for optimal performance
+  '''
+}
+
+Table products {
+  id int [pk, increment] // Primary key
+  sku varchar(100) [not null, unique] // Stock Keeping Unit - unique identifier (FR-PROD-001)
+  name varchar(255) [not null] // Product name
+  description text // Product description
+  category_id int [not null] // Foreign key to categories
+  supplier_id int [not null] // Foreign key to suppliers
+  
+  // PRICING AND COSTING
+  price decimal(10,2) [not null] // Selling price
+  cost_price decimal(10,2) // Purchase cost for margin calculations
+  tax_rate decimal(5,4) [default: 0.0] // Sales tax rate (e.g., 0.085 for 8.5%)
+  
+  // INVENTORY MANAGEMENT ENHANCEMENTS
+  low_stock_threshold int [default: 10] // Alert threshold for low stock (FR-RPT-001)
+  reorder_point int [default: 15] // Automatic PO generation threshold
+  reorder_quantity int [default: 50] // Default quantity to reorder
+
+
+  // PERISHABLE GOODS SUPPORT
+  expiry_date date // For perishable goods management
+  
+  // MEDIA AND IDENTIFICATION
+  barcode_data varchar(255) // Barcode data for scanning (FR-CODE-001)
+  qr_code_data text // QR code data for mobile scanning
+  
+  // STATUS AND AUDITING
+  is_active boolean [default: true] // Archive products with history (FR-PROD-004)
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+
+  // COMPREHENSIVE INDEX STRATEGY
+  Indexes {
+    // Primary key and unique constraints
+    (id) [pk]
+    (sku) [unique, name: 'idx_products_sku']
+    
+    // Search and filtering indexes
+    (name) [name: 'idx_products_name']
+    (category_id) [name: 'idx_products_category']
+    (supplier_id) [name: 'idx_products_supplier']
+    (is_active) [name: 'idx_products_active']
+    
+    // Inventory management indexes
+    (low_stock_threshold) [name: 'idx_products_low_stock']
+    (reorder_point) [name: 'idx_products_reorder']
+    
+    // Pricing and reporting indexes
+    (price) [name: 'idx_products_price']
+    (cost_price) [name: 'idx_products_cost']
+    
+    // Perishable goods management
+    (expiry_date) [name: 'idx_products_expiry']
+    
+    // Barcode scanning optimization
+    (barcode_data) [name: 'idx_products_barcode']
+    
+    // Composite indexes for common query patterns
+    (is_active, category_id) [name: 'idx_products_active_category']
+    (is_active, supplier_id) [name: 'idx_products_active_supplier']
+    (category_id, price) [name: 'idx_products_category_price']
+    (is_active, low_stock_threshold) [name: 'idx_products_active_low_stock']
+    
+    // Temporal indexes
+    (created_at) [name: 'idx_products_created']
+    (updated_at) [name: 'idx_products_updated']
+    
+    // Full-text search (implementation varies)
+    // (name, description) [type: fulltext, name: 'idx_products_ft_search']
+  }
+
+  // Foreign key relationships
+  Ref: categories.id < products.category_id
+  Ref: suppliers.id < products.supplier_id
+}
+
+// =============================================
+// INVENTORY TRACKING TABLES
+// =============================================
+
+Table product_inventory {
+  id int [pk, increment] // Primary key
+  product_id int [not null, unique] // One-to-one with products
+  quantity_on_hand int [not null, default: 0] // Physical inventory count
+  quantity_committed int [default: 0] // Reserved for orders/sales
+  quantity_available int [not null, default: 0] // Denormalized: on_hand - committed
+  last_restocked_at timestamp // Last restock date for reporting
+  last_counted_at timestamp // Last physical count date for accuracy tracking
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+  
+}
+
+Table purchase_orders {
+  id int [pk, increment] // Primary key
+  po_number varchar(100) [not null, unique] // Human-readable PO number
+  supplier_id int [not null] // Foreign key to suppliers
+  status enum('draft', 'ordered', 'received', 'cancelled') [default: 'draft'] // PO lifecycle
+  total_amount decimal(10,2) // Calculated total for the PO
+  ordered_date timestamp // Date when PO was sent to supplier
+  expected_delivery_date timestamp // Estimated delivery date
+  received_date timestamp // Actual receipt date
+  created_by int [not null] // User who created the PO
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+Table purchase_order_items {
+  id int [pk, increment] // Primary key
+  purchase_order_id int [not null] // Foreign key to purchase_orders
+  product_id int [not null] // Foreign key to products
+  quantity_ordered int [not null] // Quantity ordered from supplier
+  quantity_received int [default: 0] // Actual quantity received
+  unit_cost decimal(10,2) [not null] // Cost per unit at time of order
+  line_total decimal(10,2) [not null] // Denormalized: quantity_ordered * unit_cost
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
+}
+
+// =============================================
+// STOCK MOVEMENT AND TRANSACTION TABLES
+// =============================================
+
+Table stock_movements {
+  id int [pk, increment] // Primary key
+  product_id int [not null] // Foreign key to products
+  movement_type enum('in', 'out', 'adjustment') [not null] // Type of movement
+  quantity_change int [not null] // Positive for incoming, negative for outgoing
+  quantity_before int [not null] // Stock level before movement
+  quantity_after int [not null] // Denormalized: before + change (for reporting)
+  reference_type enum('purchase_order', 'sale', 'adjustment', 'transfer') [not null]
+  reference_id int // Flexible foreign key to various transaction types
+  movement_date timestamp [not null] // When the movement occurred
+  created_by int [not null] // User who performed the movement
+  created_at timestamp [default: `now()`]
+
+}
+
+Table stock_adjustments {
+  id int [pk, increment] // Primary key
+  product_id int [not null] // Foreign key to products
+  adjustment_type enum('damaged', 'expired', 'returned', 'found', 'theft', 'internal_use') [not null]
+  quantity_adjusted int [not null] // Typically negative, positive for 'found' items
+  reason text // Detailed reason for adjustment (FR-STCK-003)
+  adjustment_date timestamp [not null] // When adjustment occurred
+  created_by int [not null] // User who made the adjustment
+  created_at timestamp [default: `now()`]
+
+}
+
+
+
+// =============================================
+// TABLE RELATIONSHIPS
+// =============================================
+
+// User Management Relationships
+Ref: users.id < user_sessions.user_id
+
+// Product Catalog Relationships
+Ref: categories.id < products.category_id
+Ref: suppliers.id < products.supplier_id
+
+// Inventory Management Relationships
+Ref: products.id < product_inventory.product_id
+Ref: suppliers.id < purchase_orders.supplier_id
+Ref: users.id < purchase_orders.created_by
+Ref: purchase_orders.id < purchase_order_items.purchase_order_id
+Ref: products.id < purchase_order_items.product_id
+
+// Stock Movement Relationships
+Ref: products.id < stock_movements.product_id
+Ref: users.id < stock_movements.created_by
+Ref: products.id < stock_adjustments.product_id
+Ref: users.id < stock_adjustments.created_by
+
