@@ -19,14 +19,13 @@ Table users {
   created_at timestamp [default: `now()`] // Record creation timestamp
   updated_at timestamp [default: `now()`] // Last update timestamp for auditing
 
-  // Indexes for performance
-  Indexes {
+  indexes {
     (email) [name: 'idx_users_email']
     (password_reset_token) [name: 'idx_users_reset_token'] // For fast token validation
     (password_reset_token_expires) [name: 'idx_users_token_expiry'] // For cleanup jobs
   }
 
-  Note: '''
+  note: '''
   PASSWORD RESET WORKFLOW:
   1. User requests password reset → generate unique token, set expiration (1 hour)
   2. System emails reset link with token
@@ -57,8 +56,7 @@ Table user_sessions {
   
   created_at timestamp [default: `now()`] // Session creation time
 
-  // Indexes for performance and security monitoring
-  Indexes {
+  indexes {
     (user_id) [name: 'idx_sessions_user_id'] // Fast user session lookup
     (expires_at) [name: 'idx_sessions_expiry'] // Efficient session cleanup
     (last_activity_at) [name: 'idx_sessions_activity'] // Active session queries
@@ -66,7 +64,7 @@ Table user_sessions {
     (session_token) [name: 'idx_sessions_token'] // Fast token validation (unique)
   }
 
-  Note: '''
+  note: '''
   SECURITY AND USAGE TRACKING FEATURES:
   
   IP ADDRESS TRACKING:
@@ -102,56 +100,16 @@ Table categories {
   
   // HIERARCHICAL CATEGORIES IMPROVEMENT
   parent_id int [null] // Self-referencing foreign key for nested categories
-  depth_level int [default: 0] // Cache the depth for performance (root=0, child=1, etc.)
-  path_string varchar(1000) // Materialized path for easy querying (e.g., "1/5/12")
   
   is_active boolean [default: true] // Soft delete for category archiving
-  sort_order int [default: 0] // Custom ordering within parent category
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
 
-  // Indexes for hierarchical queries
-  Indexes {
+  indexes {
     (name) [name: 'idx_categories_name']
     (parent_id) [name: 'idx_categories_parent'] // Fast child category lookups
-    (depth_level) [name: 'idx_categories_depth'] // Filter by level
-    (path_string) [name: 'idx_categories_path'] // Path-based queries
-    (sort_order) [name: 'idx_categories_order'] // Ordered display
     (is_active) [name: 'idx_categories_active'] // Active category filtering
   }
-
-  // Self-referencing relationship
-  Ref: categories.id < categories.parent_id [delete: restrict, update: cascade]
-
-  Note: '''
-  HIERARCHICAL CATEGORY STRUCTURE:
-  
-  PARENT_ID:
-  - NULL for root-level categories
-  - References id of parent category for nested structure
-  - Prevents circular references through application logic
-  
-  DEPTH_LEVEL:
-  - Cached depth for performance (0 = root, 1 = first child, etc.)
-  - Automatically calculated based on parent's depth + 1
-  
-  PATH_STRING:
-  - Materialized path (e.g., "1/5/12" for Electronics > Phones > iPhone)
-  - Enables easy ancestor/descendant queries
-  - Updated when category tree changes
-  
-  SORT_ORDER:
-  - Custom ordering within same parent category
-  - Lower numbers appear first
-  - Default 0 for natural ordering
-  
-  USAGE EXAMPLES:
-  - Electronics (id:1, parent_id:NULL, depth:0, path:"1")
-    - Phones (id:5, parent_id:1, depth:1, path:"1/5")
-      - iPhone (id:12, parent_id:5, depth:2, path:"1/5/12")
-      - Android (id:13, parent_id:5, depth:2, path:"1/5/13")
-  - Clothing (id:2, parent_id:NULL, depth:0, path:"2")
-  '''
 }
 
 Table suppliers {
@@ -170,8 +128,7 @@ Table suppliers {
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
 
-  // COMPREHENSIVE INDEX STRATEGY
-  Indexes {
+  indexes {
     // Primary key index (auto-created by most databases)
     (id) [pk]
 
@@ -197,10 +154,9 @@ Table suppliers {
     // Temporal indexes for reporting and cleanup
     (created_at) [name: 'idx_suppliers_created']
     (updated_at) [name: 'idx_suppliers_updated']
-    
   }
 
-  Note: '''
+  note: '''
   INDEX STRATEGY RATIONALE:
   
   SEARCH PATTERNS COVERED:
@@ -235,13 +191,11 @@ Table products {
   // PRICING AND COSTING
   price decimal(10,2) [not null] // Selling price
   cost_price decimal(10,2) // Purchase cost for margin calculations
-  tax_rate decimal(5,4) [default: 0.0] // Sales tax rate (e.g., 0.085 for 8.5%)
   
   // INVENTORY MANAGEMENT ENHANCEMENTS
   low_stock_threshold int [default: 10] // Alert threshold for low stock (FR-RPT-001)
   reorder_point int [default: 15] // Automatic PO generation threshold
   reorder_quantity int [default: 50] // Default quantity to reorder
-
 
   // PERISHABLE GOODS SUPPORT
   expiry_date date // For perishable goods management
@@ -255,8 +209,7 @@ Table products {
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
 
-  // COMPREHENSIVE INDEX STRATEGY
-  Indexes {
+  indexes {
     // Primary key and unique constraints
     (id) [pk]
     (sku) [unique, name: 'idx_products_sku']
@@ -294,10 +247,6 @@ Table products {
     // Full-text search (implementation varies)
     // (name, description) [type: fulltext, name: 'idx_products_ft_search']
   }
-
-  // Foreign key relationships
-  Ref: categories.id < products.category_id
-  Ref: suppliers.id < products.supplier_id
 }
 
 // =============================================
@@ -314,7 +263,6 @@ Table product_inventory {
   last_counted_at timestamp // Last physical count date for accuracy tracking
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
-  
 }
 
 Table purchase_orders {
@@ -359,7 +307,6 @@ Table stock_movements {
   movement_date timestamp [not null] // When the movement occurred
   created_by int [not null] // User who performed the movement
   created_at timestamp [default: `now()`]
-
 }
 
 Table stock_adjustments {
@@ -371,10 +318,7 @@ Table stock_adjustments {
   adjustment_date timestamp [not null] // When adjustment occurred
   created_by int [not null] // User who made the adjustment
   created_at timestamp [default: `now()`]
-
 }
-
-
 
 // =============================================
 // TABLE RELATIONSHIPS
@@ -386,6 +330,9 @@ Ref: users.id < user_sessions.user_id
 // Product Catalog Relationships
 Ref: categories.id < products.category_id
 Ref: suppliers.id < products.supplier_id
+
+// Hierarchical Categories Relationship
+Ref: categories.id < categories.parent_id
 
 // Inventory Management Relationships
 Ref: products.id < product_inventory.product_id
@@ -399,4 +346,3 @@ Ref: products.id < stock_movements.product_id
 Ref: users.id < stock_movements.created_by
 Ref: products.id < stock_adjustments.product_id
 Ref: users.id < stock_adjustments.created_by
-
