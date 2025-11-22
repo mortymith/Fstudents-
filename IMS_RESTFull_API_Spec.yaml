@@ -1,0 +1,2881 @@
+openapi: 3.1.0
+info:
+  title: Inventory Management System API
+  description: Comprehensive REST API for inventory management, product catalog, and supplier management
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api-support@inventory-system.com
+  license:
+    name: Proprietary
+    url: https://company.com/license
+
+servers:
+  - url: https://api.inventory-system.com/v1
+    description: Production server
+  - url: https://staging-api.inventory-system.com/v1
+    description: Staging server
+  - url: http://localhost:3000/v1
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from authentication endpoints
+
+  parameters:
+    idPathParameter:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+        example: 123
+      description: Unique resource identifier
+    
+    paginationLimit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+        example: 20
+      description: Number of items to return per page
+    
+    paginationOffset:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+        example: 0
+      description: Number of items to skip for pagination
+    
+    sortParameter:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        example: "name,-created_at"
+      description: Comma-separated list of fields to sort by. Prefix with '-' for descending order.
+    
+    includeParameter:
+      name: include
+      in: query
+      required: false
+      schema:
+        type: string
+        example: "supplier,category,inventory"
+      description: Comma-separated list of related resources to include in the response
+
+  schemas:
+    # Common Base Schemas
+    TimestampFields:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+    
+    PaginatedResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        pagination:
+          type: object
+          properties:
+            total:
+              type: integer
+              example: 150
+            limit:
+              type: integer
+              example: 20
+            offset:
+              type: integer
+              example: 0
+            has_more:
+              type: boolean
+              example: true
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "One or more validation errors occurred"
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: "email"
+              message:
+                type: string
+                example: "Email is required"
+              code:
+                type: string
+                example: "required"
+        trace_id:
+          type: string
+          example: "req_123456789"
+
+    # Authentication Schemas
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - full_name
+        - role
+        - is_active
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: "admin@company.com"
+        full_name:
+          type: string
+          example: "John Doe"
+        role:
+          type: string
+          enum: [admin, inventory_manager, viewer]
+          example: "admin"
+        is_active:
+          type: boolean
+          example: true
+        last_login_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-15T09:45:00Z"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T09:45:00Z"
+
+    UserCreate:
+      type: object
+      required:
+        - email
+        - password
+        - full_name
+        - role
+      properties:
+        email:
+          type: string
+          format: email
+          example: "new.user@company.com"
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: "securePassword123"
+        full_name:
+          type: string
+          example: "Jane Smith"
+        role:
+          type: string
+          enum: [admin, inventory_manager, viewer]
+          example: "inventory_manager"
+
+    UserUpdate:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: "updated.email@company.com"
+        full_name:
+          type: string
+          example: "Jane Updated"
+        role:
+          type: string
+          enum: [admin, inventory_manager, viewer]
+          example: "admin"
+        is_active:
+          type: boolean
+          example: true
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "admin@company.com"
+        password:
+          type: string
+          format: password
+          example: "securePassword123"
+
+    LoginResponse:
+      type: object
+      required:
+        - user
+        - access_token
+        - expires_in
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        access_token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        expires_in:
+          type: integer
+          example: 3600
+        token_type:
+          type: string
+          example: "Bearer"
+
+    PasswordResetRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: "user@company.com"
+
+    PasswordResetConfirm:
+      type: object
+      required:
+        - token
+        - new_password
+      properties:
+        token:
+          type: string
+          example: "reset_token_123456"
+        new_password:
+          type: string
+          format: password
+          minLength: 8
+          example: "newSecurePassword123"
+
+    # Category Schemas
+    Category:
+      type: object
+      required:
+        - id
+        - name
+        - is_active
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Electronics"
+        description:
+          type: string
+          example: "Electronic devices and components"
+        parent_id:
+          type: integer
+          nullable: true
+          example: null
+        parent_category:
+          $ref: '#/components/schemas/Category'
+        is_active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    CategoryCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "New Category"
+        description:
+          type: string
+          example: "Category description"
+        parent_id:
+          type: integer
+          nullable: true
+          example: 1
+        is_active:
+          type: boolean
+          example: true
+
+    CategoryUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Category Name"
+        description:
+          type: string
+          example: "Updated description"
+        parent_id:
+          type: integer
+          nullable: true
+          example: 2
+        is_active:
+          type: boolean
+          example: false
+
+    # Supplier Schemas
+    Supplier:
+      type: object
+      required:
+        - id
+        - name
+        - is_active
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Global Electronics Inc."
+        contact_person_name:
+          type: string
+          example: "John Supplier"
+        contact_email:
+          type: string
+          format: email
+          example: "john@globalelectronics.com"
+        contact_phone:
+          type: string
+          example: "+1-555-0123"
+        address_line1:
+          type: string
+          example: "123 Business Ave"
+        address_line2:
+          type: string
+          nullable: true
+          example: "Suite 100"
+        city:
+          type: string
+          example: "San Francisco"
+        state:
+          type: string
+          example: "CA"
+        postal_code:
+          type: string
+          example: "94105"
+        country:
+          type: string
+          example: "United States"
+        is_active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    SupplierCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "New Supplier LLC"
+        contact_person_name:
+          type: string
+          example: "Jane Contact"
+        contact_email:
+          type: string
+          format: email
+          example: "jane@newsupplier.com"
+        contact_phone:
+          type: string
+          example: "+1-555-0124"
+        address_line1:
+          type: string
+          example: "456 Commerce St"
+        address_line2:
+          type: string
+          nullable: true
+          example: "Building B"
+        city:
+          type: string
+          example: "New York"
+        state:
+          type: string
+          example: "NY"
+        postal_code:
+          type: string
+          example: "10001"
+        country:
+          type: string
+          example: "United States"
+        is_active:
+          type: boolean
+          example: true
+
+    SupplierUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Supplier Name"
+        contact_person_name:
+          type: string
+          example: "Updated Contact"
+        contact_email:
+          type: string
+          format: email
+          example: "updated@supplier.com"
+        contact_phone:
+          type: string
+          example: "+1-555-0125"
+        address_line1:
+          type: string
+          example: "789 Updated Ave"
+        address_line2:
+          type: string
+          nullable: true
+          example: "Suite 200"
+        city:
+          type: string
+          example: "Los Angeles"
+        state:
+          type: string
+          example: "CA"
+        postal_code:
+          type: string
+          example: "90001"
+        country:
+          type: string
+          example: "United States"
+        is_active:
+          type: boolean
+          example: false
+
+    # Product Schemas
+    Product:
+      type: object
+      required:
+        - id
+        - sku
+        - name
+        - category_id
+        - supplier_id
+        - price
+        - is_active
+      properties:
+        id:
+          type: integer
+          example: 1
+        sku:
+          type: string
+          example: "ELEC-001"
+        name:
+          type: string
+          example: "Wireless Headphones"
+        description:
+          type: string
+          example: "High-quality wireless headphones with noise cancellation"
+        category_id:
+          type: integer
+          example: 1
+        category:
+          $ref: '#/components/schemas/Category'
+        supplier_id:
+          type: integer
+          example: 1
+        supplier:
+          $ref: '#/components/schemas/Supplier'
+        price:
+          type: number
+          format: float
+          minimum: 0
+          example: 199.99
+        cost_price:
+          type: number
+          format: float
+          minimum: 0
+          example: 120.50
+        low_stock_threshold:
+          type: integer
+          minimum: 0
+          example: 10
+        reorder_point:
+          type: integer
+          minimum: 0
+          example: 15
+        reorder_quantity:
+          type: integer
+          minimum: 0
+          example: 50
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+          example: "2024-12-31"
+        barcode_data:
+          type: string
+          nullable: true
+          example: "123456789012"
+        qr_code_data:
+          type: string
+          nullable: true
+          example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg..."
+        is_active:
+          type: boolean
+          example: true
+        inventory:
+          $ref: '#/components/schemas/ProductInventory'
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    ProductCreate:
+      type: object
+      required:
+        - sku
+        - name
+        - category_id
+        - supplier_id
+        - price
+      properties:
+        sku:
+          type: string
+          example: "NEW-SKU-001"
+        name:
+          type: string
+          example: "New Product"
+        description:
+          type: string
+          example: "Product description"
+        category_id:
+          type: integer
+          example: 1
+        supplier_id:
+          type: integer
+          example: 1
+        price:
+          type: number
+          format: float
+          minimum: 0
+          example: 99.99
+        cost_price:
+          type: number
+          format: float
+          minimum: 0
+          example: 60.00
+        low_stock_threshold:
+          type: integer
+          minimum: 0
+          example: 5
+        reorder_point:
+          type: integer
+          minimum: 0
+          example: 10
+        reorder_quantity:
+          type: integer
+          minimum: 0
+          example: 25
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+          example: "2024-12-31"
+        barcode_data:
+          type: string
+          nullable: true
+          example: "987654321098"
+        is_active:
+          type: boolean
+          example: true
+
+    ProductUpdate:
+      type: object
+      properties:
+        sku:
+          type: string
+          example: "UPDATED-SKU-001"
+        name:
+          type: string
+          example: "Updated Product Name"
+        description:
+          type: string
+          example: "Updated description"
+        category_id:
+          type: integer
+          example: 2
+        supplier_id:
+          type: integer
+          example: 2
+        price:
+          type: number
+          format: float
+          minimum: 0
+          example: 129.99
+        cost_price:
+          type: number
+          format: float
+          minimum: 0
+          example: 75.00
+        low_stock_threshold:
+          type: integer
+          minimum: 0
+          example: 8
+        reorder_point:
+          type: integer
+          minimum: 0
+          example: 12
+        reorder_quantity:
+          type: integer
+          minimum: 0
+          example: 30
+        expiry_date:
+          type: string
+          format: date
+          nullable: true
+          example: "2025-06-30"
+        barcode_data:
+          type: string
+          nullable: true
+          example: "updated_barcode_123"
+        is_active:
+          type: boolean
+          example: false
+
+    # Inventory Schemas
+    ProductInventory:
+      type: object
+      required:
+        - id
+        - product_id
+        - quantity_on_hand
+        - quantity_committed
+        - quantity_available
+      properties:
+        id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        quantity_on_hand:
+          type: integer
+          example: 100
+        quantity_committed:
+          type: integer
+          example: 25
+        quantity_available:
+          type: integer
+          example: 75
+        last_restocked_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-10T14:30:00Z"
+        last_counted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-05T09:15:00Z"
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    InventoryUpdate:
+      type: object
+      required:
+        - quantity_on_hand
+      properties:
+        quantity_on_hand:
+          type: integer
+          example: 150
+        last_counted_at:
+          type: string
+          format: date-time
+          example: "2023-01-20T11:00:00Z"
+
+    # Stock Movement Schemas
+    StockMovement:
+      type: object
+      required:
+        - id
+        - product_id
+        - movement_type
+        - quantity_change
+        - quantity_before
+        - quantity_after
+        - reference_type
+        - movement_date
+        - created_by
+      properties:
+        id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        product:
+          $ref: '#/components/schemas/Product'
+        movement_type:
+          type: string
+          enum: [in, out, adjustment]
+          example: "in"
+        quantity_change:
+          type: integer
+          example: 50
+        quantity_before:
+          type: integer
+          example: 100
+        quantity_after:
+          type: integer
+          example: 150
+        reference_type:
+          type: string
+          enum: [purchase_order, sale, adjustment, transfer]
+          example: "purchase_order"
+        reference_id:
+          type: integer
+          nullable: true
+          example: 1
+        movement_date:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        created_by:
+          type: integer
+          example: 1
+        user:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    StockAdjustment:
+      type: object
+      required:
+        - id
+        - product_id
+        - adjustment_type
+        - quantity_adjusted
+        - reason
+        - adjustment_date
+        - created_by
+      properties:
+        id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        product:
+          $ref: '#/components/schemas/Product'
+        adjustment_type:
+          type: string
+          enum: [damaged, expired, returned, found, theft, internal_use]
+          example: "damaged"
+        quantity_adjusted:
+          type: integer
+          example: -5
+        reason:
+          type: string
+          example: "Items damaged during handling"
+        adjustment_date:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        created_by:
+          type: integer
+          example: 1
+        user:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    StockAdjustmentCreate:
+      type: object
+      required:
+        - product_id
+        - adjustment_type
+        - quantity_adjusted
+        - reason
+        - adjustment_date
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        adjustment_type:
+          type: string
+          enum: [damaged, expired, returned, found, theft, internal_use]
+          example: "damaged"
+        quantity_adjusted:
+          type: integer
+          example: -5
+        reason:
+          type: string
+          example: "Items damaged during handling"
+        adjustment_date:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    # Purchase Order Schemas
+    PurchaseOrder:
+      type: object
+      required:
+        - id
+        - po_number
+        - supplier_id
+        - status
+        - total_amount
+        - created_by
+      properties:
+        id:
+          type: integer
+          example: 1
+        po_number:
+          type: string
+          example: "PO-2023-001"
+        supplier_id:
+          type: integer
+          example: 1
+        supplier:
+          $ref: '#/components/schemas/Supplier'
+        status:
+          type: string
+          enum: [draft, ordered, received, cancelled]
+          example: "ordered"
+        total_amount:
+          type: number
+          format: float
+          example: 2500.75
+        ordered_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-10T09:00:00Z"
+        expected_delivery_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-25T00:00:00Z"
+        received_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-24T14:30:00Z"
+        created_by:
+          type: integer
+          example: 1
+        user:
+          $ref: '#/components/schemas/User'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItem'
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    PurchaseOrderCreate:
+      type: object
+      required:
+        - supplier_id
+        - items
+      properties:
+        supplier_id:
+          type: integer
+          example: 1
+        status:
+          type: string
+          enum: [draft, ordered]
+          example: "draft"
+        ordered_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-15T10:30:00Z"
+        expected_delivery_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-30T00:00:00Z"
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItemCreate'
+
+    PurchaseOrderUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [draft, ordered, received, cancelled]
+          example: "received"
+        ordered_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-16T10:30:00Z"
+        expected_delivery_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-31T00:00:00Z"
+        received_date:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2023-01-30T14:30:00Z"
+
+    PurchaseOrderItem:
+      type: object
+      required:
+        - id
+        - purchase_order_id
+        - product_id
+        - quantity_ordered
+        - quantity_received
+        - unit_cost
+        - line_total
+      properties:
+        id:
+          type: integer
+          example: 1
+        purchase_order_id:
+          type: integer
+          example: 1
+        product_id:
+          type: integer
+          example: 1
+        product:
+          $ref: '#/components/schemas/Product'
+        quantity_ordered:
+          type: integer
+          example: 100
+        quantity_received:
+          type: integer
+          example: 95
+        unit_cost:
+          type: number
+          format: float
+          example: 25.50
+        line_total:
+          type: number
+          format: float
+          example: 2550.00
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-01-01T00:00:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
+    PurchaseOrderItemCreate:
+      type: object
+      required:
+        - product_id
+        - quantity_ordered
+        - unit_cost
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        quantity_ordered:
+          type: integer
+          minimum: 1
+          example: 100
+        unit_cost:
+          type: number
+          format: float
+          minimum: 0
+          example: 25.50
+
+    PurchaseOrderItemUpdate:
+      type: object
+      properties:
+        quantity_received:
+          type: integer
+          minimum: 0
+          example: 95
+
+    # Barcode/QR Code Schemas
+    BarcodeScanRequest:
+      type: object
+      required:
+        - barcode_data
+      properties:
+        barcode_data:
+          type: string
+          example: "123456789012"
+        action:
+          type: string
+          enum: [view, update]
+          example: "view"
+
+    BarcodeScanResponse:
+      type: object
+      required:
+        - product
+        - action
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        action:
+          type: string
+          example: "view"
+        requires_quantity:
+          type: boolean
+          example: false
+
+    # Report Schemas
+    LowStockReport:
+      type: object
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        parameters:
+          type: object
+          properties:
+            threshold:
+              type: integer
+              example: 10
+            category_id:
+              type: integer
+              nullable: true
+              example: 1
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+
+    StockMovementReport:
+      type: object
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        parameters:
+          type: object
+          properties:
+            start_date:
+              type: string
+              format: date-time
+              example: "2023-01-01T00:00:00Z"
+            end_date:
+              type: string
+              format: date-time
+              example: "2023-01-31T23:59:59Z"
+            product_id:
+              type: integer
+              nullable: true
+              example: 1
+            category_id:
+              type: integer
+              nullable: true
+              example: 1
+        movements:
+          type: array
+          items:
+            $ref: '#/components/schemas/StockMovement'
+
+    MostSoldReport:
+      type: object
+      properties:
+        generated_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+        parameters:
+          type: object
+          properties:
+            start_date:
+              type: string
+              format: date-time
+              example: "2023-01-01T00:00:00Z"
+            end_date:
+              type: string
+              format: date-time
+              example: "2023-01-31T23:59:59Z"
+            limit:
+              type: integer
+              example: 10
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: '#/components/schemas/Product'
+              total_sold:
+                type: integer
+                example: 150
+              revenue:
+                type: number
+                format: float
+                example: 29998.50
+
+  responses:
+    UnauthorizedError:
+      description: Authentication credentials were missing or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "UNAUTHORIZED"
+            message: "Authentication credentials missing or invalid"
+            trace_id: "req_123456789"
+
+    ForbiddenError:
+      description: User does not have permission to perform this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "FORBIDDEN"
+            message: "Insufficient permissions to access this resource"
+            trace_id: "req_123456789"
+
+    NotFoundError:
+      description: The requested resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "NOT_FOUND"
+            message: "Resource with ID 123 not found"
+            trace_id: "req_123456789"
+
+    ValidationError:
+      description: The request data failed validation
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "VALIDATION_ERROR"
+            message: "One or more validation errors occurred"
+            details:
+              - field: "email"
+                message: "Email is required"
+                code: "required"
+              - field: "password"
+                message: "Password must be at least 8 characters"
+                code: "min_length"
+            trace_id: "req_123456789"
+
+    ConflictError:
+      description: Resource conflict (e.g., duplicate unique constraint)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "CONFLICT"
+            message: "A user with this email already exists"
+            trace_id: "req_123456789"
+
+security:
+  - bearerAuth: []
+
+paths:
+  # =============================================
+  # AUTHENTICATION ENDPOINTS (FR-AUTH-001, FR-AUTH-002)
+  # =============================================
+  /auth/login:
+    post:
+      summary: Authenticate user and obtain access token
+      description: Authenticate user credentials and return JWT token for API access (UC-01)
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Successfully authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "INVALID_CREDENTIALS"
+                message: "Invalid email or password"
+                trace_id: "req_123456789"
+
+  /auth/logout:
+    post:
+      summary: Logout user and invalidate session
+      description: Invalidate the current user session and access token
+      tags: [Authentication]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successfully logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Successfully logged out"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/password-reset:
+    post:
+      summary: Request password reset
+      description: Send password reset instructions to user's email
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequest'
+      responses:
+        200:
+          description: Password reset instructions sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password reset instructions sent to your email"
+        400:
+          $ref: '#/components/responses/ValidationError'
+
+  /auth/password-reset/confirm:
+    post:
+      summary: Confirm password reset
+      description: Reset user password using valid reset token
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+      responses:
+        200:
+          description: Password successfully reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password successfully reset"
+        400:
+          $ref: '#/components/responses/ValidationError'
+        410:
+          description: Reset token expired or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "INVALID_RESET_TOKEN"
+                message: "Reset token is invalid or has expired"
+                trace_id: "req_123456789"
+
+  # =============================================
+  # USER MANAGEMENT ENDPOINTS (FR-AUTH-003 to FR-AUTH-006)
+  # =============================================
+  /users:
+    get:
+      summary: List all users
+      description: Retrieve paginated list of users with optional filtering (Admin only)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - name: role
+          in: query
+          schema:
+            type: string
+            enum: [admin, inventory_manager, viewer]
+          description: Filter by user role
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in email and full_name fields
+      responses:
+        200:
+          description: Users retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+
+    post:
+      summary: Create a new user (UC-17)
+      description: Create a new user account (Admin only)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        201:
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        409:
+          $ref: '#/components/responses/ConflictError'
+
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      description: Retrieve detailed information about a specific user
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        200:
+          description: User retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      summary: Update user
+      description: Update user information (Admin only or own profile)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        200:
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        409:
+          $ref: '#/components/responses/ConflictError'
+
+    delete:
+      summary: Delete user (soft delete)
+      description: Soft delete user by setting is_active to false (Admin only)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        204:
+          description: User successfully deactivated
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  # =============================================
+  # CATEGORY MANAGEMENT ENDPOINTS (FR-CAT-001)
+  # =============================================
+  /categories:
+    get:
+      summary: List all categories
+      description: Retrieve paginated list of product categories
+      tags: [Categories]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: parent_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by parent category ID
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in category name and description
+      responses:
+        200:
+          description: Categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Category'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      summary: Create a new category (UC-11)
+      description: Create a new product category (Inventory Manager or Admin only)
+      tags: [Categories]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreate'
+      responses:
+        201:
+          description: Category created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        409:
+          $ref: '#/components/responses/ConflictError'
+
+  /categories/{id}:
+    get:
+      summary: Get category by ID
+      description: Retrieve detailed information about a specific category
+      tags: [Categories]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/includeParameter'
+      responses:
+        200:
+          description: Category retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      summary: Update category
+      description: Update category information (Inventory Manager or Admin only)
+      tags: [Categories]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryUpdate'
+      responses:
+        200:
+          description: Category updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        409:
+          $ref: '#/components/responses/ConflictError'
+
+    delete:
+      summary: Delete category (soft delete)
+      description: Soft delete category by setting is_active to false
+      tags: [Categories]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        204:
+          description: Category successfully deactivated
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /categories/{id}/products:
+    get:
+      summary: Get products in category
+      description: Retrieve all products belonging to a specific category
+      tags: [Categories, Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+      responses:
+        200:
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  # =============================================
+  # SUPPLIER MANAGEMENT ENDPOINTS (FR-SUP-001 to FR-SUP-003)
+  # =============================================
+  /suppliers:
+    get:
+      summary: List all suppliers
+      description: Retrieve paginated list of suppliers with optional filtering
+      tags: [Suppliers]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: country
+          in: query
+          schema:
+            type: string
+          description: Filter by country
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in supplier name and contact information
+      responses:
+        200:
+          description: Suppliers retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Supplier'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      summary: Create a new supplier (UC-09)
+      description: Create a new supplier (Inventory Manager or Admin only)
+      tags: [Suppliers]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierCreate'
+      responses:
+        201:
+          description: Supplier created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+
+  /suppliers/{id}:
+    get:
+      summary: Get supplier by ID
+      description: Retrieve detailed information about a specific supplier
+      tags: [Suppliers]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/includeParameter'
+      responses:
+        200:
+          description: Supplier retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      summary: Update supplier
+      description: Update supplier information (Inventory Manager or Admin only)
+      tags: [Suppliers]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplierUpdate'
+      responses:
+        200:
+          description: Supplier updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      summary: Delete supplier (soft delete) (UC-10)
+      description: Soft delete supplier by setting is_active to false
+      tags: [Suppliers]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        204:
+          description: Supplier successfully deactivated
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /suppliers/{id}/products:
+    get:
+      summary: Get supplier products
+      description: Retrieve all products supplied by a specific supplier
+      tags: [Suppliers, Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+      responses:
+        200:
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /suppliers/{id}/purchase-orders:
+    get:
+      summary: Get supplier purchase orders
+      description: Retrieve all purchase orders for a specific supplier
+      tags: [Suppliers, Purchase Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, ordered, received, cancelled]
+          description: Filter by purchase order status
+      responses:
+        200:
+          description: Purchase orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PurchaseOrder'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  # =============================================
+  # PRODUCT MANAGEMENT ENDPOINTS (FR-PROD-001 to FR-PROD-004)
+  # =============================================
+  /products:
+    get:
+      summary: List all products (UC-03, FR-PROD-003)
+      description: Retrieve paginated list of products with comprehensive filtering
+      tags: [Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+          description: Filter by active status
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by category ID
+        - name: supplier_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by supplier ID
+        - name: low_stock
+          in: query
+          schema:
+            type: boolean
+          description: Filter for low stock items only
+        - name: min_price
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Minimum price filter
+        - name: max_price
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Maximum price filter
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search in product name, description, and SKU
+        - name: barcode
+          in: query
+          schema:
+            type: string
+          description: Filter by barcode data
+      responses:
+        200:
+          description: Products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      summary: Create a new product (UC-02, FR-PROD-001)
+      description: Create a new product (Inventory Manager or Admin only)
+      tags: [Products]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreate'
+      responses:
+        201:
+          description: Product created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        409:
+          $ref: '#/components/responses/ConflictError'
+
+  /products/{id}:
+    get:
+      summary: Get product by ID
+      description: Retrieve detailed information about a specific product
+      tags: [Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/includeParameter'
+      responses:
+        200:
+          description: Product retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      summary: Update product (UC-03, FR-PROD-002)
+      description: Update product information (Inventory Manager or Admin only)
+      tags: [Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdate'
+      responses:
+        200:
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        409:
+          $ref: '#/components/responses/ConflictError'
+
+    delete:
+      summary: Delete product (soft delete) (UC-04, UC-05, FR-PROD-004)
+      description: Soft delete product by setting is_active to false
+      tags: [Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        204:
+          description: Product successfully deactivated
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /products/{id}/inventory:
+    get:
+      summary: Get product inventory
+      description: Retrieve current inventory information for a specific product
+      tags: [Products, Inventory]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        200:
+          description: Inventory information retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    patch:
+      summary: Update product inventory
+      description: Update inventory quantities for a specific product (Inventory Manager or Admin only)
+      tags: [Products, Inventory]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InventoryUpdate'
+      responses:
+        200:
+          description: Inventory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /products/{id}/stock-movements:
+    get:
+      summary: Get product stock movements
+      description: Retrieve stock movement history for a specific product
+      tags: [Products, Stock Movements]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: movement_type
+          in: query
+          schema:
+            type: string
+            enum: [in, out, adjustment]
+          description: Filter by movement type
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter movements after this date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter movements before this date
+      responses:
+        200:
+          description: Stock movements retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StockMovement'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /products/{id}/stock-adjustments:
+    get:
+      summary: Get product stock adjustments
+      description: Retrieve stock adjustment history for a specific product
+      tags: [Products, Stock Adjustments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: adjustment_type
+          in: query
+          schema:
+            type: string
+            enum: [damaged, expired, returned, found, theft, internal_use]
+          description: Filter by adjustment type
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter adjustments after this date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter adjustments before this date
+      responses:
+        200:
+          description: Stock adjustments retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StockAdjustment'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  # =============================================
+  # BARCODE/QR CODE ENDPOINTS (FR-CODE-001 to FR-CODE-003)
+  # =============================================
+  /barcode/scan:
+    post:
+      summary: Scan barcode/QR code (UC-15, UC-16)
+      description: Scan a barcode or QR code to view or update product information
+      tags: [Barcode]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BarcodeScanRequest'
+      responses:
+        200:
+          description: Barcode scanned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BarcodeScanResponse'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Product not found for barcode
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "PRODUCT_NOT_FOUND"
+                message: "No product found with the provided barcode"
+                trace_id: "req_123456789"
+
+  /products/{id}/barcode:
+    get:
+      summary: Generate barcode/QR code (FR-CODE-001)
+      description: Generate barcode or QR code for a specific product
+      tags: [Barcode, Products]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [barcode, qrcode]
+            default: "barcode"
+          description: Type of code to generate
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [svg, png, base64]
+            default: "svg"
+          description: Output format
+      responses:
+        200:
+          description: Code generated successfully
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code_data:
+                    type: string
+                    example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg..."
+                  code_type:
+                    type: string
+                    example: "barcode"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  # =============================================
+  # INVENTORY MANAGEMENT ENDPOINTS (FR-STCK-001 to FR-STCK-003)
+  # =============================================
+  /inventory/low-stock:
+    get:
+      summary: Get low stock products (UC-12, FR-RPT-001)
+      description: Retrieve products that are below their low stock threshold
+      tags: [Inventory]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: threshold
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Custom low stock threshold
+      responses:
+        200:
+          description: Low stock products retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /inventory/stock-adjustments:
+    post:
+      summary: Create stock adjustment (UC-07, UC-08, FR-STCK-003)
+      description: Record a stock adjustment for inventory correction (Inventory Manager or Admin only)
+      tags: [Inventory]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockAdjustmentCreate'
+      responses:
+        201:
+          description: Stock adjustment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockAdjustment'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+
+  /inventory/outgoing-stock:
+    post:
+      summary: Record outgoing stock (FR-STCK-002)
+      description: Record outgoing stock for sales or other reasons (Inventory Manager or Admin only)
+      tags: [Inventory]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product_id
+                - quantity
+                - reason
+              properties:
+                product_id:
+                  type: integer
+                  example: 1
+                quantity:
+                  type: integer
+                  minimum: 1
+                  example: 5
+                reason:
+                  type: string
+                  example: "Sale"
+                reference_id:
+                  type: integer
+                  nullable: true
+                  example: 1001
+                notes:
+                  type: string
+                  example: "Customer order #1001"
+      responses:
+        201:
+          description: Outgoing stock recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockMovement'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+
+  # =============================================
+  # PURCHASE ORDER MANAGEMENT ENDPOINTS (FR-STCK-001)
+  # =============================================
+  /purchase-orders:
+    get:
+      summary: List all purchase orders
+      description: Retrieve paginated list of purchase orders with filtering
+      tags: [Purchase Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, ordered, received, cancelled]
+          description: Filter by purchase order status
+        - name: supplier_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by supplier ID
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter POs created after this date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter POs created before this date
+      responses:
+        200:
+          description: Purchase orders retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PurchaseOrder'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      summary: Create a new purchase order (UC-06, FR-STCK-001)
+      description: Create a new purchase order (Inventory Manager or Admin only)
+      tags: [Purchase Orders]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderCreate'
+      responses:
+        201:
+          description: Purchase order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+
+  /purchase-orders/{id}:
+    get:
+      summary: Get purchase order by ID
+      description: Retrieve detailed information about a specific purchase order
+      tags: [Purchase Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/includeParameter'
+      responses:
+        200:
+          description: Purchase order retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    put:
+      summary: Update purchase order
+      description: Update purchase order information (Inventory Manager or Admin only)
+      tags: [Purchase Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchaseOrderUpdate'
+      responses:
+        200:
+          description: Purchase order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      summary: Delete purchase order
+      description: Delete a purchase order (only allowed for draft status)
+      tags: [Purchase Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        204:
+          description: Purchase order successfully deleted
+        400:
+          description: Cannot delete non-draft purchase order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "INVALID_OPERATION"
+                message: "Only draft purchase orders can be deleted"
+                trace_id: "req_123456789"
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /purchase-orders/{id}/receive:
+    post:
+      summary: Receive purchase order items (UC-06)
+      description: Record receipt of purchase order items and update inventory
+      tags: [Purchase Orders]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - received_items
+              properties:
+                received_items:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required:
+                      - purchase_order_item_id
+                      - quantity_received
+                    properties:
+                      purchase_order_item_id:
+                        type: integer
+                        example: 1
+                      quantity_received:
+                        type: integer
+                        minimum: 0
+                        example: 95
+                received_date:
+                  type: string
+                  format: date-time
+                  example: "2023-01-20T14:30:00Z"
+      responses:
+        200:
+          description: Purchase order items received successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrder'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  # =============================================
+  # STOCK MOVEMENT ENDPOINTS
+  # =============================================
+  /stock-movements:
+    get:
+      summary: List all stock movements
+      description: Retrieve paginated list of stock movements with comprehensive filtering
+      tags: [Stock Movements]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - $ref: '#/components/parameters/sortParameter'
+        - $ref: '#/components/parameters/includeParameter'
+        - name: product_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by product ID
+        - name: movement_type
+          in: query
+          schema:
+            type: string
+            enum: [in, out, adjustment]
+          description: Filter by movement type
+        - name: reference_type
+          in: query
+          schema:
+            type: string
+            enum: [purchase_order, sale, adjustment, transfer]
+          description: Filter by reference type
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter movements after this date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter movements before this date
+      responses:
+        200:
+          description: Stock movements retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StockMovement'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # =============================================
+  # REPORTS AND ANALYTICS ENDPOINTS (FR-RPT-001 to FR-RPT-003)
+  # =============================================
+  /reports/low-stock:
+    get:
+      summary: Generate low stock report (UC-12, FR-RPT-001)
+      description: Generate comprehensive low stock report
+      tags: [Reports]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: threshold
+          in: query
+          schema:
+            type: integer
+            default: 10
+          description: Low stock threshold
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by category ID
+        - name: include_inactive
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: Include inactive products
+      responses:
+        200:
+          description: Low stock report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LowStockReport'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /reports/stock-movement:
+    get:
+      summary: Generate stock movement report (UC-13, FR-RPT-002)
+      description: Generate stock movement report for specified period
+      tags: [Reports]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Start date for the report period
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: End date for the report period
+        - name: product_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by specific product
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by category
+        - name: movement_type
+          in: query
+          schema:
+            type: string
+            enum: [in, out, adjustment]
+          description: Filter by movement type
+      responses:
+        200:
+          description: Stock movement report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockMovementReport'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /reports/most-sold:
+    get:
+      summary: Generate most sold items report (UC-14, FR-RPT-003)
+      description: Generate report of most sold products within a date range
+      tags: [Reports]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: Start date for the report period
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: End date for the report period
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            maximum: 100
+          description: Number of top products to return
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by category
+      responses:
+        200:
+          description: Most sold items report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MostSoldReport'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+
+  # =============================================
+  # DASHBOARD ENDPOINTS
+  # =============================================
+  /dashboard/overview:
+    get:
+      summary: Get dashboard overview (UC-18)
+      description: Retrieve key metrics and overview data for the dashboard
+      tags: [Dashboard]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Dashboard data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_products:
+                    type: integer
+                    example: 150
+                  total_suppliers:
+                    type: integer
+                    example: 25
+                  low_stock_count:
+                    type: integer
+                    example: 12
+                  pending_orders:
+                    type: integer
+                    example: 5
+                  recent_movements:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StockMovement'
+                  top_selling_products:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
