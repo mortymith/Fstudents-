@@ -172,9 +172,8 @@ components:
           type: boolean
           example: true
         last_login_at:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-15T09:45:00Z"
         created_at:
           type: string
@@ -305,8 +304,7 @@ components:
           type: string
           example: "Electronic devices and components"
         parent_id:
-          type: integer
-          nullable: true
+          type: [ integer, "null" ]
           example: null
         parent_category:
           $ref: '#/components/schemas/Category'
@@ -334,8 +332,7 @@ components:
           type: string
           example: "Category description"
         parent_id:
-          type: integer
-          nullable: true
+          type: [ integer, "null" ]
           example: 1
         is_active:
           type: boolean
@@ -351,8 +348,7 @@ components:
           type: string
           example: "Updated description"
         parent_id:
-          type: integer
-          nullable: true
+          type: [ integer, "null" ]
           example: 2
         is_active:
           type: boolean
@@ -386,8 +382,7 @@ components:
           type: string
           example: "123 Business Ave"
         address_line2:
-          type: string
-          nullable: true
+          type: [ string, "null" ]
           example: "Suite 100"
         city:
           type: string
@@ -435,8 +430,7 @@ components:
           type: string
           example: "456 Commerce St"
         address_line2:
-          type: string
-          nullable: true
+          type: [ string, "null" ]
           example: "Building B"
         city:
           type: string
@@ -474,8 +468,7 @@ components:
           type: string
           example: "789 Updated Ave"
         address_line2:
-          type: string
-          nullable: true
+          type: [ string, "null" ]
           example: "Suite 200"
         city:
           type: string
@@ -550,17 +543,14 @@ components:
           minimum: 0
           example: 50
         expiry_date:
-          type: string
+          type: [ string, "null" ]
           format: date
-          nullable: true
           example: "2024-12-31"
         barcode_data:
-          type: string
-          nullable: true
+          type: [ string, "null" ]
           example: "123456789012"
         qr_code_data:
-          type: string
-          nullable: true
+          type: [ string, "null" ]
           example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg..."
         is_active:
           type: boolean
@@ -623,13 +613,11 @@ components:
           minimum: 0
           example: 25
         expiry_date:
-          type: string
+          type: [ string, "null" ]
           format: date
-          nullable: true
           example: "2024-12-31"
         barcode_data:
-          type: string
-          nullable: true
+          type: [ string, "null" ]
           example: "987654321098"
         is_active:
           type: boolean
@@ -676,13 +664,11 @@ components:
           minimum: 0
           example: 30
         expiry_date:
-          type: string
+          type: [ string, "null" ]  
           format: date
-          nullable: true
           example: "2025-06-30"
         barcode_data:
-          type: string
-          nullable: true
+          type: [ string, "null" ]  
           example: "updated_barcode_123"
         is_active:
           type: boolean
@@ -714,14 +700,12 @@ components:
           type: integer
           example: 75
         last_restocked_at:
-          type: string
+          type: [ string, "null" ] 
           format: date-time
-          nullable: true
           example: "2023-01-10T14:30:00Z"
         last_counted_at:
-          type: string
+          type: [ string, "null" ] 
           format: date-time
-          nullable: true
           example: "2023-01-05T09:15:00Z"
         created_at:
           type: string
@@ -785,8 +769,7 @@ components:
           enum: [purchase_order, sale, adjustment, transfer]
           example: "purchase_order"
         reference_id:
-          type: integer
-          nullable: true
+          type: [ integer, "null" ]
           example: 1
         movement_date:
           type: string
@@ -903,19 +886,16 @@ components:
           format: float
           example: 2500.75
         ordered_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-10T09:00:00Z"
         expected_delivery_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-25T00:00:00Z"
         received_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-24T14:30:00Z"
         created_by:
           type: integer
@@ -949,14 +929,12 @@ components:
           enum: [draft, ordered]
           example: "draft"
         ordered_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-15T10:30:00Z"
         expected_delivery_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-30T00:00:00Z"
         items:
           type: array
@@ -972,19 +950,15 @@ components:
           enum: [draft, ordered, received, cancelled]
           example: "received"
         ordered_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-16T10:30:00Z"
         expected_delivery_date:
-          type: string
+          type: [ string, "null" ]
           format: date-time
-          nullable: true
           example: "2023-01-31T00:00:00Z"
         received_date:
-          type: string
           format: date-time
-          nullable: true
           example: "2023-01-30T14:30:00Z"
 
     PurchaseOrderItem:
@@ -1104,8 +1078,7 @@ components:
               type: integer
               example: 10
             category_id:
-              type: integer
-              nullable: true
+              type: [ integer, "null" ]
               example: 1
         products:
           type: array
@@ -1131,12 +1104,10 @@ components:
               format: date-time
               example: "2023-01-31T23:59:59Z"
             product_id:
-              type: integer
-              nullable: true
+              type: [ integer, "null" ]
               example: 1
             category_id:
-              type: integer
-              nullable: true
+              type: [ integer, "null" ]
               example: 1
         movements:
           type: array
@@ -2409,8 +2380,7 @@ paths:
                   type: string
                   example: "Sale"
                 reference_id:
-                  type: integer
-                  nullable: true
+                  type: [ integer, "null" ]
                   example: 1001
                 notes:
                   type: string
