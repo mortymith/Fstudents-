@@ -1,43 +1,59 @@
 // =============================================
 // CORE USER AND AUTHENTICATION TABLES
 // =============================================
-
 Table users {
-  id int [pk, increment] // Primary key, auto-incrementing
-  email varchar(255) [not null, unique] // User's unique email for login (FR-AUTH-001)
-  password_hash varchar(255) [not null] // Securely hashed password (NF-SEC-002)
-  full_name varchar(255) [not null] // User's full name for display
-  role enum('admin', 'inventory_manager', 'viewer') [not null] // RBAC role (FR-AUTH-003)
-  is_active boolean [default: true] // Soft delete flag for user deactivation
-  
-  // PASSWORD RESET FUNCTIONALITY
-  password_reset_token varchar(255) // Unique token for password reset requests
-  password_reset_token_expires timestamp // Expiration time for reset token (typically 1 hour)
-  password_reset_requested_at timestamp // When the reset was initially requested
-  
-  last_login_at timestamp // Track last login for security monitoring
-  created_at timestamp [default: `now()`] // Record creation timestamp
-  updated_at timestamp [default: `now()`] // Last update timestamp for auditing
+  id int [pk, increment]
+  email varchar(255) [not null, unique]
+  password_hash varchar(255) [not null]
+  full_name varchar(255) [not null]
+  role enum('admin', 'inventory_manager', 'viewer') [not null]
+  is_active boolean [default: true]
+  last_login_at timestamp
+  created_at timestamp [default: `now()`]
+  updated_at timestamp [default: `now()`]
 
   indexes {
     (email) [name: 'idx_users_email']
-    (password_reset_token) [name: 'idx_users_reset_token'] // For fast token validation
-    (password_reset_token_expires) [name: 'idx_users_token_expiry'] // For cleanup jobs
+    (is_active) [name: 'idx_users_active'] // For filtering active users
+  }
+
+  note: '''
+  USER MANAGEMENT:
+  - Core user authentication and profile data
+  - Role-based access control (RBAC) for system permissions
+  - Soft delete via is_active flag
+  - Tracks authentication patterns via last_login_at
+  '''
+}
+
+Table password_reset_tokens {
+  id int [pk, increment]
+  user_id int [not null]
+  reset_token varchar(255) [not null, unique] // Cryptographically secure random string
+  token_expires timestamp [not null] // Typically 1 hour from creation
+  is_used boolean [default: false] // Prevents token reuse
+  created_at timestamp [default: `now()`]
+  used_at timestamp // When token was successfully consumed
+
+  indexes {
+    (reset_token) [name: 'idx_reset_tokens_token'] // Fast token validation
+    (token_expires) [name: 'idx_reset_tokens_expiry'] // For cleanup of expired tokens
+    (user_id, is_used) [name: 'idx_reset_tokens_user_status'] // Check for active tokens per user
   }
 
   note: '''
   PASSWORD RESET WORKFLOW:
-  1. User requests password reset → generate unique token, set expiration (1 hour)
+  1. User requests reset → generate unique token with 1-hour expiration
   2. System emails reset link with token
-  3. User clicks link → validate token and expiration
-  4. User sets new password → clear token fields, update password_hash
+  3. User clicks link → validate token exists, not expired, and not used
+  4. User sets new password → mark token as used, record timestamp
   5. Token automatically expires after 1 hour for security
   
   SECURITY FEATURES:
-  - Tokens are cryptographically secure random strings
-  - Short expiration prevents token misuse
-  - Tokens are single-use only
-  - Old tokens are invalidated when new reset is requested
+  - Single-use tokens only
+  - Short expiration window
+  - Cryptographically secure tokens
+  - Clear audit trail of reset attempts
   '''
 }
 
@@ -323,6 +339,10 @@ Table stock_adjustments {
 // =============================================
 // TABLE RELATIONSHIPS
 // =============================================
+
+// Password Reset Token Relationships
+Ref: password_reset_tokens.user_id > users.id [delete: cascade, update: cascade]
+
 
 // User Management Relationships
 Ref: users.id < user_sessions.user_id
