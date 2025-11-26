@@ -1,7 +1,12 @@
 openapi: 3.1.0
 info:
   title: Inventory Management System API
-  description: Comprehensive REST API for inventory management, product catalog, and supplier management
+  description: >
+    REST API for the Inventory Management System (IMS). Designed for secure,
+    auditable inventory and supplier management with role-based access control (RBAC),
+    atomic stock transactions, barcode/QR workflows and POS integration. This API
+    prioritizes data integrity and operational simplicity for the v0.1 release.
+    See externalDocs for full architecture, migrations and integration notes.
   version: 1.0.0
   contact:
     name: API Support
