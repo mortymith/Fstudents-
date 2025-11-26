@@ -1,20 +1,50 @@
 // =============================================
 // CORE USER AND AUTHENTICATION TABLES
 // =============================================
-Table users {
-  id int [pk, increment]
-  email varchar(255) [not null, unique]
-  password_hash varchar(255) [not null]
-  full_name varchar(255) [not null]
-  role enum('admin', 'inventory_manager', 'viewer') [not null]
-  is_active boolean [default: true]
-  last_login_at timestamp
-  created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  Table users {
+    id int [pk, increment]
+    email varchar(255) [not null, unique]
+    password_hash varchar(255) [not null]
+    full_name varchar(255) [not null]
+    role enum('admin', 'inventory_manager', 'viewer') [not null]
+    is_active boolean [default: true]
+    last_login_at timestamp
+    created_at timestamp [default: `now()`]
+    updated_at timestamp [default: `now()`]
 
+    // Primary Index (automatically created)
   indexes {
-    (email) [name: 'idx_users_email']
-    (is_active) [name: 'idx_users_active'] // For filtering active users
+    id [pk]
+    
+    // Unique constraint for authentication
+    email [unique]
+    
+    // Role-based access control queries
+    role [name: 'idx_user_role']
+    
+    // Active user filtering (highly selective)
+    (is_active) [name: 'idx_active_users']
+    
+    // User search and management
+    (full_name) [name: 'idx_full_name']
+    
+    // Composite indexes for common admin queries
+    (role, is_active) [name: 'idx_role_active_status']
+    (is_active, last_login_at) [name: 'idx_active_recent_login']
+    
+    // Login activity and monitoring
+    (last_login_at) [name: 'idx_last_login']
+    
+    // Date-based user analytics
+    (created_at) [name: 'idx_created_at']
+    (updated_at) [name: 'idx_updated_at']
+    
+    // User onboarding and activation tracking
+    (created_at, is_active) [name: 'idx_user_onboarding']
+    
+    // Administrative reporting composites
+    (role, created_at) [name: 'idx_role_growth_trends']
+    (is_active, role, last_login_at) [name: 'idx_user_engagement']
   }
 
   note: '''
@@ -279,6 +309,30 @@ Table product_inventory {
   last_counted_at timestamp // Last physical count date for accuracy tracking
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
+
+  // Primary Index (automatically created)
+  indexes {
+    id [pk]
+    
+    // Unique constraint for one-to-one relationship
+    product_id [unique]
+    
+    // Performance indexes for common queries
+    (quantity_available) [name: 'idx_available_quantity']
+    (quantity_on_hand) [name: 'idx_on_hand_quantity']
+    (last_restocked_at) [name: 'idx_restock_date']
+    (last_counted_at) [name: 'idx_count_date']
+    
+    // Composite indexes for reporting and analytics
+    (quantity_available, last_restocked_at) [name: 'idx_available_restocked']
+    (quantity_on_hand, last_counted_at) [name: 'idx_on_hand_counted']
+    
+    // Index for low stock alerts
+    (quantity_available, product_id) [name: 'idx_low_stock_check']
+    
+    // Index for inventory aging analysis
+    (last_restocked_at, quantity_on_hand) [name: 'idx_inventory_aging']
+  }
 }
 
 Table purchase_orders {
@@ -293,6 +347,42 @@ Table purchase_orders {
   created_by int [not null] // User who created the PO
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
+
+  // Primary Index (automatically created)
+  indexes {
+    id [pk]
+    
+    // Unique constraint for PO number
+    po_number [unique]
+    
+    // Foreign key indexes for joins
+    supplier_id [name: 'idx_supplier_id']
+    created_by [name: 'idx_created_by']
+    
+    // Status-based queries (high cardinality)
+    status [name: 'idx_po_status']
+    
+    // Date-based indexes for reporting
+    (ordered_date) [name: 'idx_ordered_date']
+    (expected_delivery_date) [name: 'idx_expected_delivery']
+    (received_date) [name: 'idx_received_date']
+    (created_at) [name: 'idx_created_at']
+    
+    // Composite indexes for common business queries
+    (status, expected_delivery_date) [name: 'idx_status_delivery']
+    (supplier_id, status) [name: 'idx_supplier_status']
+    (status, ordered_date) [name: 'idx_status_ordered_date']
+    
+    // Financial reporting indexes
+    (total_amount) [name: 'idx_total_amount']
+    (status, total_amount) [name: 'idx_status_amount']
+    
+    // Delivery monitoring index
+    (expected_delivery_date, status) [name: 'idx_pending_deliveries']
+    
+    // Date range queries for analytics
+    (ordered_date, total_amount) [name: 'idx_date_amount_analysis']
+  }
 }
 
 Table purchase_order_items {
@@ -305,6 +395,44 @@ Table purchase_order_items {
   line_total decimal(10,2) [not null] // Denormalized: quantity_ordered * unit_cost
   created_at timestamp [default: `now()`]
   updated_at timestamp [default: `now()`]
+
+  // Primary Index (automatically created)
+  indexes {
+    id [pk]
+    
+    // Foreign key indexes for joins
+    purchase_order_id [name: 'idx_po_id']
+    product_id [name: 'idx_product_id']
+    
+    // Composite foreign key indexes for efficient joins
+    (purchase_order_id, product_id) [name: 'idx_po_product', unique]
+    
+    // Quantity-based indexes for inventory reconciliation
+    (quantity_ordered) [name: 'idx_quantity_ordered']
+    (quantity_received) [name: 'idx_quantity_received']
+    
+    // Cost analysis indexes
+    (unit_cost) [name: 'idx_unit_cost']
+    (line_total) [name: 'idx_line_total']
+    
+    // Composite indexes for common business queries
+    (purchase_order_id, quantity_received) [name: 'idx_po_receipt_status']
+    (product_id, unit_cost) [name: 'idx_product_pricing']
+    (purchase_order_id, line_total) [name: 'idx_po_line_totals']
+    
+    // Receipt completion analysis
+    (quantity_ordered, quantity_received) [name: 'idx_receipt_comparison']
+    
+    // Product purchase history
+    (product_id, created_at) [name: 'idx_product_purchase_history']
+    
+    // Financial reporting composites
+    (product_id, line_total) [name: 'idx_product_spend']
+    (purchase_order_id, product_id, quantity_ordered) [name: 'idx_po_product_qty']
+    
+    // Partial receipt identification
+    (purchase_order_id, quantity_ordered, quantity_received) [name: 'idx_partial_receipts']
+  }
 }
 
 // =============================================
@@ -323,6 +451,47 @@ Table stock_movements {
   movement_date timestamp [not null] // When the movement occurred
   created_by int [not null] // User who performed the movement
   created_at timestamp [default: `now()`]
+
+  // Primary Index (automatically created)
+  indexes {
+    id [pk]
+    
+    // Core foreign key indexes
+    product_id [name: 'idx_product_id']
+    created_by [name: 'idx_created_by']
+    
+    // Composite product + date for stock history queries
+    (product_id, movement_date) [name: 'idx_product_movement_history']
+    (product_id, movement_type, movement_date) [name: 'idx_product_movement_type_history']
+    
+    // Movement type analysis
+    movement_type [name: 'idx_movement_type']
+    
+    // Date-based indexes for reporting and time-series analysis
+    (movement_date) [name: 'idx_movement_date']
+    (created_at) [name: 'idx_created_at']
+    
+    // Reference tracking (polymorphic relationship)
+    (reference_type, reference_id) [name: 'idx_reference_lookup']
+    (reference_type, product_id) [name: 'idx_reference_product']
+    
+    // Stock level analysis indexes
+    (quantity_after) [name: 'idx_quantity_after']
+    (quantity_before) [name: 'idx_quantity_before']
+    
+    // Composite indexes for common audit queries
+    (product_id, movement_type, quantity_change) [name: 'idx_product_movement_impact']
+    (movement_date, movement_type) [name: 'idx_daily_movement_summary']
+    
+    // Large movement tracking
+    (quantity_change) [name: 'idx_quantity_change']
+    
+    // User activity tracking
+    (created_by, movement_date) [name: 'idx_user_activity']
+    
+    // Real-time stock level queries
+    (product_id, movement_date, quantity_after) [name: 'idx_product_stock_timeline']
+  }
 }
 
 Table stock_adjustments {
@@ -334,6 +503,45 @@ Table stock_adjustments {
   adjustment_date timestamp [not null] // When adjustment occurred
   created_by int [not null] // User who made the adjustment
   created_at timestamp [default: `now()`]
+
+    // Primary Index (automatically created)
+  indexes {
+    id [pk]
+    
+    // Core foreign key indexes
+    product_id [name: 'idx_product_id']
+    created_by [name: 'idx_created_by']
+    
+    // Adjustment type analysis (moderate cardinality)
+    adjustment_type [name: 'idx_adjustment_type']
+    
+    // Date-based indexes for reporting
+    (adjustment_date) [name: 'idx_adjustment_date']
+    (created_at) [name: 'idx_created_at']
+    
+    // Quantity analysis indexes
+    (quantity_adjusted) [name: 'idx_quantity_adjusted']
+    
+    // Composite indexes for common business queries
+    (product_id, adjustment_date) [name: 'idx_product_adjustment_history']
+    (adjustment_type, adjustment_date) [name: 'idx_type_adjustment_trends']
+    (product_id, adjustment_type) [name: 'idx_product_adjustment_patterns']
+    
+    // Large adjustment tracking
+    (quantity_adjusted, adjustment_date) [name: 'idx_large_adjustments']
+    
+    // Loss analysis (negative adjustments)
+    (adjustment_type, quantity_adjusted) [name: 'idx_loss_analysis']
+    
+    // User accountability
+    (created_by, adjustment_date) [name: 'idx_user_adjustments']
+    
+    // Monthly reporting composite
+    (adjustment_date, adjustment_type, quantity_adjusted) [name: 'idx_monthly_adjustment_report']
+    
+    // Product-specific adjustment patterns
+    (product_id, adjustment_type, adjustment_date) [name: 'idx_product_adjustment_analysis']
+  }
 }
 
 // =============================================
