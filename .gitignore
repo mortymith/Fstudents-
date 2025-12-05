@@ -1,5 +1,7 @@
 
 .obsidian/
 .vscode/
+.pytest_cache/
 data/
 design/IMS_db_design.dbdiagram
+backend/.venv/
