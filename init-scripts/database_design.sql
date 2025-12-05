@@ -346,7 +346,3 @@ WHERE quantity_available < 10;
 -- Index for pending purchase orders
 CREATE INDEX idx_pending_pos ON purchase_orders(status, expected_delivery_date) 
 WHERE status IN ('ordered', 'draft');
-
--- Index for recent stock movements (last 30 days)
-CREATE INDEX idx_recent_movements ON stock_movements(movement_date, product_id) 
-WHERE movement_date > CURRENT_TIMESTAMP - INTERVAL '30 days';

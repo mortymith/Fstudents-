@@ -168,7 +168,7 @@ This architecture promotes separation of concerns, making the system more modula
 | -------------------- | ------------------------------------------------------------------------------------------------- |
 | **Layer**            | **Technologies**                                                                                  |
 | Presentation Layer   | Mobile: Cordova Desktop: Tauri Web: Next.js REST Client: Axios Tailwind CSS (UI library)          |
-| Business Logic Layer | FastAPI (RESTful API) ORM: SQLAlchemy Cache: Redis-py  Monitoring & Logging: Prometheus + Grafana |
+| Business Logic Layer | FastAPI (RESTful API) ORM: SQLAlchemy Cache: Redis-py  Monitoring & Logging: Prometheus + Grafana Hashing: Argon2 |
 | Data Store Layer     | PostgreSQL (primary database) Caching: Redis                                                      |
 | web server           | nginx                                                                                             |
 

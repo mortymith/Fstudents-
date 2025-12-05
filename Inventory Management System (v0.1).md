@@ -111,7 +111,7 @@ The current system also fails to provide the **auditable trail and predictive in
 
 The proposed Inventory Management System (IMS) is a **secure, web-based application** designed for use across multiple devices. It will be fully functional on both desktop and mobile browsers. This ensures accessibility for inventory staff working in the warehouse or on the go.
 
-The core of the system is a **centralized database** for managing critical inventory information. This includes all product details, supplier records, and order transaction history. The centralized data structure eliminates version control issues and provides a single source of truth for all users.
+The core of the system is a **centralized database** for managing critical inventory information. This includes all product details, supplier records, and order transaction history. The centralized database eliminates version control issues and provides a single source of truth for all users.
 
 The system utilizes **Role-Based Access Control (RBAC)** to govern user experience. Admins, Inventory Managers, and Viewers will see tailored dashboards and interfaces. This ensures appropriate security and prevents unauthorized changes to stock levels or core settings.
 
