@@ -1,0 +1,52 @@
+
+# Core Dependencies
+fastapi[standard]==0.115.0
+pydantic==2.9.2
+pydantic-settings==2.1.0
+
+# SQLAlchemy 2.0 with async support
+sqlalchemy==2.0.23
+sqlalchemy[asyncio]==2.0.23
+
+# Database Drivers
+asyncpg==0.29.0          # PostgreSQL async driver (production)
+aiosqlite==0.19.0        # SQLite async driver (testing)
+
+# Testing Framework
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-xdist==3.5.0      # Parallel test execution
+pytest-benchmark==4.0.0  # Benchmarking support (optional)
+pytest-mock==3.12.0
+
+# Test Data Factories
+factory-boy==3.3.0
+Faker==38.2.0
+
+# Type Checking & Code Quality
+mypy==1.7.1
+black==23.11.0
+ruff==0.1.6
+pre-commit==3.5.0
+
+# Development Tools
+ipython==8.18.1
+python-dotenv==1.0.0
+watchfiles==0.21.0       # Auto-reload for development
+
+# Async Utilities
+anyio==4.0.0
+httpx==0.25.1            # Async HTTP client (if needed)
+
+# Security
+python-jose[cryptography]==3.3.0  # JWT support (from your config)
+argon2-cffi==25.1.0          # Password hashing
+cryptography==41.0.7
+
+# Logging
+structlog==23.2.0
+
+# API Documentation (optional)
+python-multipart==0.0.7
+uvicorn[standard]==0.30.6

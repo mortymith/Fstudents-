@@ -1,0 +1,160 @@
+
+services:
+  # ============================================
+  # PostgreSQL (Bitnami)
+  # ============================================
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres-db
+    restart: unless-stopped
+
+    environment:
+      POSTGRESQL_POSTGRES_PASSWORD: "${POSTGRES_ROOT_PASSWORD}"
+      POSTGRESQL_USERNAME: "${POSTGRES_USER}"
+      POSTGRESQL_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRESQL_DATABASE: "${POSTGRES_DB}"
+      POSTGRESQL_SHARED_PRELOAD_LIBRARIES: "pg_stat_statements"
+
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+
+    volumes:
+      - postgres_data:/bitnami/postgresql
+      - ./init-scripts:/docker-entrypoint-initdb.d:ro
+      - ./postgresql.conf:/bitnami/postgresql/conf/postgresql.conf:ro
+
+    networks:
+      - backend
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================
+  # Redis (Alpine) — Works With redis.conf
+  # ============================================
+
+  redis:
+    image: redis:alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - redis_data:/data
+    environment:
+      - REDIS_PASSWORD="${REDIS_PASSWORD}"
+      - REDIS_PORT=6379
+    command: |
+      sh -c 'redis-server /usr/local/etc/redis/redis.conf --requirepass $$REDIS_PASSWORD'
+    restart: unless-stopped
+
+    networks:
+      - backend
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ============================================
+  # Redis Commander
+  # ============================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: redis-commander
+    restart: unless-stopped
+
+    environment:
+      REDIS_HOSTS: "local:redis:6379:0:${REDIS_PASSWORD}"
+      HTTP_USER: "${REDIS_COMMANDER_USER:-admin}"
+      HTTP_PASSWORD: "${REDIS_COMMANDER_PASSWORD:-admin}"
+
+    ports:
+      - "127.0.0.1:8081:8081"
+
+    networks:
+      - backend
+
+    depends_on:
+      - redis
+
+    profiles:
+      - monitoring
+
+  # ============================================
+  # PgAdmin
+  # ============================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    restart: unless-stopped
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "${PGADMIN_EMAIL:-admin@localhost}"
+      PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_PASSWORD:-admin}"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+
+    ports:
+      - "127.0.0.1:8080:80"
+
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+    networks:
+      - backend
+
+    depends_on:
+      - postgres
+
+    profiles:
+      - monitoring
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/postgres
+
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis
+
+  pgadmin_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/pgadmin
+
+# ============================================
+# Network
+# ============================================
+networks:
+  backend:
+    driver: bridge
