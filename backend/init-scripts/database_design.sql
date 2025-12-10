@@ -3,7 +3,7 @@
 -- =============================================
 
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     full_name VARCHAR(255) NOT NULL,
@@ -33,7 +33,7 @@ CREATE INDEX idx_user_engagement ON users(is_active, role, last_login_at);
 -- =============================================
 
 CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
     parent_id INTEGER,
@@ -48,7 +48,7 @@ CREATE INDEX idx_categories_parent ON categories(parent_id);
 CREATE INDEX idx_categories_active ON categories(is_active) WHERE is_active = true;
 
 CREATE TABLE suppliers (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     contact_person_name VARCHAR(255),
     contact_email VARCHAR(255),
@@ -78,7 +78,7 @@ CREATE INDEX idx_suppliers_created ON suppliers(created_at);
 CREATE INDEX idx_suppliers_updated ON suppliers(updated_at);
 
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     sku VARCHAR(100) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -121,7 +121,7 @@ CREATE INDEX idx_products_updated ON products(updated_at);
 -- =============================================
 
 CREATE TABLE product_inventory (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     product_id INTEGER NOT NULL UNIQUE,
     quantity_on_hand INTEGER NOT NULL DEFAULT 0,
     quantity_committed INTEGER DEFAULT 0,
@@ -144,7 +144,7 @@ CREATE INDEX idx_low_stock_check ON product_inventory(quantity_available, produc
 CREATE INDEX idx_inventory_aging ON product_inventory(last_restocked_at, quantity_on_hand);
 
 CREATE TABLE purchase_orders (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     po_number VARCHAR(100) NOT NULL UNIQUE,
     supplier_id INTEGER NOT NULL,
     status VARCHAR(20) NOT NULL CHECK (status IN ('draft', 'ordered', 'received', 'cancelled')) DEFAULT 'draft',
@@ -175,7 +175,7 @@ CREATE INDEX idx_pending_deliveries ON purchase_orders(expected_delivery_date, s
 CREATE INDEX idx_date_amount_analysis ON purchase_orders(ordered_date, total_amount);
 
 CREATE TABLE purchase_order_items (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     purchase_order_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     quantity_ordered INTEGER NOT NULL,
@@ -209,7 +209,7 @@ CREATE INDEX idx_partial_receipts ON purchase_order_items(purchase_order_id, qua
 -- =============================================
 
 CREATE TABLE stock_movements (
-    id SERIAL PRIMARY KEY,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     product_id INTEGER NOT NULL,
     movement_type VARCHAR(20) NOT NULL CHECK (movement_type IN ('in', 'out', 'adjustment')),
     quantity_change INTEGER NOT NULL,
@@ -219,7 +219,8 @@ CREATE TABLE stock_movements (
     reference_id INTEGER,
     movement_date TIMESTAMP NOT NULL,
     created_by INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Stock movement indexes
@@ -229,7 +230,7 @@ CREATE INDEX idx_product_movement_history ON stock_movements(product_id, movemen
 CREATE INDEX idx_product_movement_type_history ON stock_movements(product_id, movement_type, movement_date);
 CREATE INDEX idx_movement_type ON stock_movements(movement_type);
 CREATE INDEX idx_movement_date ON stock_movements(movement_date);
-CREATE INDEX idx_created_at ON stock_movements(created_at);
+CREATE INDEX idx_movement_created_at ON stock_movements(created_at);
 CREATE INDEX idx_reference_lookup ON stock_movements(reference_type, reference_id);
 CREATE INDEX idx_reference_product ON stock_movements(reference_type, product_id);
 CREATE INDEX idx_quantity_after ON stock_movements(quantity_after);
@@ -241,14 +242,16 @@ CREATE INDEX idx_user_activity ON stock_movements(created_by, movement_date);
 CREATE INDEX idx_product_stock_timeline ON stock_movements(product_id, movement_date, quantity_after);
 
 CREATE TABLE stock_adjustments (
-    id SERIAL PRIMARY KEY,
+    id         BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     product_id INTEGER NOT NULL,
     adjustment_type VARCHAR(20) NOT NULL CHECK (adjustment_type IN ('damaged', 'expired', 'returned', 'found', 'theft', 'internal_use')),
     quantity_adjusted INTEGER NOT NULL,
     reason TEXT,
     adjustment_date TIMESTAMP NOT NULL,
     created_by INTEGER NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
 );
 
 -- Stock adjustment indexes
@@ -331,6 +334,8 @@ CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products FOR EACH ROW
 CREATE TRIGGER update_product_inventory_updated_at BEFORE UPDATE ON product_inventory FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_purchase_orders_updated_at BEFORE UPDATE ON purchase_orders FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_purchase_order_items_updated_at BEFORE UPDATE ON purchase_order_items FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_stock_movements_updated_at BEFORE UPDATE ON stock_movements FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_stock_adjustments_updated_at BEFORE UPDATE ON stock_adjustments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- =============================================
 -- OPTIONAL: COMPLEX INDEXES FOR PERFORMANCE
@@ -346,3 +351,5 @@ WHERE quantity_available < 10;
 -- Index for pending purchase orders
 CREATE INDEX idx_pending_pos ON purchase_orders(status, expected_delivery_date) 
 WHERE status IN ('ordered', 'draft');
+
+
