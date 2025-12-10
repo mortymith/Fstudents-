@@ -5,7 +5,8 @@ from .purchase_order import PurchaseOrder,PurchaseOrderItem
 from .product import Product
 from .product_inventory import ProductInventory
 from .category import Category
+from .base import Base
 
 
-__all__ = ["User", "Category", "Supplier", "Product", "ProductInventory", 
+__all__ = ["Base","User", "Category", "Supplier", "Product", "ProductInventory", 
            "PurchaseOrder", "PurchaseOrderItem", "StockMovement", "StockAdjustment"] 
