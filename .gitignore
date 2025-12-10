@@ -1,7 +1,7 @@
 
 .obsidian/
 .vscode/
-.pytest_cache/
+**/.pytest_cache/
 ./__pycache__/
 data/
 design/IMS_db_design.dbdiagram

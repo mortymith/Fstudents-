@@ -6,7 +6,6 @@ A modern, scalable REST API built with FastAPI following best practices and clea
 
 ```
 ├── app/
-│   ├── main.py                 # FastAPI application entry point
 │   ├── core/                   # Core configuration and settings
 │   ├── routes/                 # API route handlers
 │   ├── models/                 # Database models 
@@ -17,7 +16,7 @@ A modern, scalable REST API built with FastAPI following best practices and clea
 │   └── dependencies/           # FastAPI dependencies and DI
 ├── tests/                      # Test suite
 ├── Dockerfile                  # Docker image configuration
-├── docker-compose.yml          # Multi-container setup
+├── compose.yaml          # Multi-container setup
 ├── .env                        # Environment variables
 └── requirements.txt            # Python dependencies
 ```
