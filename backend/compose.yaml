@@ -39,32 +39,34 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # ============================================
-  # Redis (Alpine) — Works With redis.conf
-  # ============================================
 
+  # ============================================
+  # Redis (Alpine 7.2) — Hardened, ACL Auth
+  # ============================================
   redis:
-    image: redis:alpine
+    image: redis:7.2-alpine
     container_name: redis-cache
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
-      - redis_data:/data
-    environment:
-      - REDIS_PASSWORD="${REDIS_PASSWORD}"
-      - REDIS_PORT=6379
-    command: |
-      sh -c 'redis-server /usr/local/etc/redis/redis.conf --requirepass $$REDIS_PASSWORD'
     restart: unless-stopped
+
+    env_file:
+      - .env
+
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+
+    ports:
+      - "127.0.0.1:${REDIS_PORT}:6379"
+
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - redis_data:/data
 
     networks:
       - backend
 
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD", "redis-cli", "-u", "redis://$REDIS_USERNAME:$REDIS_PASSWORD@redis:6379", "PING"]
+      interval: 20s
+      timeout: 5s
       retries: 3
       start_period: 20s
 
@@ -74,16 +76,17 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  # ============================================
-  # Redis Commander
-  # ============================================
+
+
   redis-commander:
     image: rediscommander/redis-commander:latest
     container_name: redis-commander
     restart: unless-stopped
 
     environment:
-      REDIS_HOSTS: "local:redis:6379:0:${REDIS_PASSWORD}"
+      # Format:  name:host:port:db:username:password
+      REDIS_HOSTS: "local:redis:6379:0:${REDIS_USERNAME}:${REDIS_PASSWORD}"
+
       HTTP_USER: "${REDIS_COMMANDER_USER:-admin}"
       HTTP_PASSWORD: "${REDIS_COMMANDER_PASSWORD:-admin}"
 
@@ -99,6 +102,7 @@ services:
     profiles:
       - monitoring
 
+      
   # ============================================
   # PgAdmin
   # ============================================

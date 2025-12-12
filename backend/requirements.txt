@@ -2,10 +2,12 @@
 fastapi[standard]==0.115.0    # FastAPI web framework with recommended extras (docs, dev tools, security)
 pydantic==2.9.2              # Data validation and settings using Python type annotations
 pydantic-settings==2.1.0     # Structured application settings built on Pydantic
+pydantic[email]
 
 # SQLAlchemy 2.0 with async support
 sqlalchemy==2.0.23           # SQL toolkit and ORM for Python (core sync functionality)
 sqlalchemy[asyncio]==2.0.23  # Async engine/session helpers for SQLAlchemy 2.0
+redis==5.0.8                 # redis driver with async support 
 
 # Database Drivers
 asyncpg==0.29.0              # High-performance asyncio PostgreSQL driver
