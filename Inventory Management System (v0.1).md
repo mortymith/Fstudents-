@@ -303,8 +303,6 @@ The following use cases detail the 20 most critical interactions between the use
 
 - As a Viewer, I want to be prevented from making any changes to the data so that I cannot accidentally or intentionally alter inventory records.
 
-- As a System Integrator, I want the IMS to automatically receive sales data from the POS system so that inventory counts are always accurate and reflect real-time sales.
-
 - As a User, I want the system to provide clear and actionable error messages so that I can understand and resolve issues without technical assistance.
 
 - As a User concerned with security, I want my session to automatically timeout after a period of inactivity so that my account is protected from unauthorized access.
@@ -316,9 +314,9 @@ The following use cases detail the 20 most critical interactions between the use
 
 - **Constraint:**
     
-    - **Time/Schedule:** The Initial Operating Capability (IOC) of the IMS must be achieved and deployed to key users within **9 months** of project commencement.
+    - **Time/Schedule:** The Initial Operating Capability (IOC) of the IMS must be achieved and deployed to key users within **2 months** of project commencement.
         
-    - **Budget:** The total project budget (including development, licensing, and initial deployment) shall not exceed **$150,000 USD**.
+    - **Budget:** The total project budget (including development, licensing, and initial deployment) shall not exceed **$0 USD**.
         
     - **Integration Scope:** The system must only integrate with the existing POS system for outgoing stock data. No other external system integrations (e.g., ERP, CRM) are permitted in this version (v0.1).
         

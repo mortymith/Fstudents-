@@ -12,15 +12,19 @@ from .purchase_order_repository import PurchaseOrderRepository
 from .purchase_order_item_repository import PurchaseOrderItemRepository
 from .stock_movement_repository import StockMovementRepository
 from .stock_adjustment_repository import StockAdjustmentRepository
+from .user_session_repository import UserSessionRepository
+from .reset_password_repository import PasswordResetTokenRepository
 
 __all__ = [
-    'UserRepository',
-    'CategoryRepository',
-    'SupplierRepository',
-    'ProductRepository',
-    'ProductInventoryRepository',
-    'PurchaseOrderRepository',
-    'PurchaseOrderItemRepository',
-    'StockMovementRepository',
-    'StockAdjustmentRepository',
+    "UserRepository",
+    "CategoryRepository",
+    "SupplierRepository",
+    "ProductRepository",
+    "ProductInventoryRepository",
+    "PurchaseOrderRepository",
+    "PurchaseOrderItemRepository",
+    "StockMovementRepository",
+    "StockAdjustmentRepository",
+    "UserSessionRepository",
+    "PasswordResetTokenRepository",
 ]
