@@ -10,7 +10,7 @@
     is_active boolean [default: true]
     last_login_at timestamp
     created_at timestamp [default: `now()`]
-    updated_at timestamp [default: `now()`]
+    updated_at timestamp
 
     // Primary Index (automatically created)
   indexes {
@@ -149,7 +149,7 @@ Table categories {
   
   is_active boolean [default: true] // Soft delete for category archiving
   created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  updated_at timestamp
 
   indexes {
     (name) [name: 'idx_categories_name']
@@ -160,9 +160,9 @@ Table categories {
 
 Table suppliers {
   id int [pk, increment] // Primary key
-  name varchar(255) [not null] // Supplier company name (FR-SUP-001)
+  name varchar(255) [not null, unique] // Supplier company name (FR-SUP-001)
   contact_person_name varchar(255) // Primary contact person
-  contact_email varchar(255) // Contact email address
+  contact_email varchar(255) [not null , unique]// Contact email address
   contact_phone varchar(50) // Contact phone number
   address_line1 varchar(255) // Street address line 1
   address_line2 varchar(255) // Street address line 2
@@ -172,7 +172,7 @@ Table suppliers {
   country varchar(100) // Country
   is_active boolean [default: true] // Archive instead of delete (FR-SUP-003)
   created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  updated_at timestamp
 
   indexes {
     // Primary key index (auto-created by most databases)
@@ -239,9 +239,9 @@ Table products {
   cost_price decimal(10,2) // Purchase cost for margin calculations
   
   // INVENTORY MANAGEMENT ENHANCEMENTS
-  low_stock_threshold int [default: 10] // Alert threshold for low stock (FR-RPT-001)
-  reorder_point int [default: 15] // Automatic PO generation threshold
-  reorder_quantity int [default: 50] // Default quantity to reorder
+  low_stock_threshold int [default: 0] // Alert threshold for low stock (FR-RPT-001)
+  reorder_point int [default: 1] // Automatic PO generation threshold
+  reorder_quantity int [default: 10] // Default quantity to reorder
 
   // PERISHABLE GOODS SUPPORT
   expiry_date date // For perishable goods management
@@ -253,7 +253,7 @@ Table products {
   // STATUS AND AUDITING
   is_active boolean [default: true] // Archive products with history (FR-PROD-004)
   created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  updated_at timestamp
 
   indexes {
     // Primary key and unique constraints
@@ -308,7 +308,7 @@ Table product_inventory {
   last_restocked_at timestamp // Last restock date for reporting
   last_counted_at timestamp // Last physical count date for accuracy tracking
   created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  updated_at timestamp
 
   // Primary Index (automatically created)
   indexes {
@@ -346,7 +346,7 @@ Table purchase_orders {
   received_date timestamp // Actual receipt date
   created_by int [not null] // User who created the PO
   created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  updated_at timestamp
 
   // Primary Index (automatically created)
   indexes {
@@ -394,7 +394,7 @@ Table purchase_order_items {
   unit_cost decimal(10,2) [not null] // Cost per unit at time of order
   line_total decimal(10,2) [not null] // Denormalized: quantity_ordered * unit_cost
   created_at timestamp [default: `now()`]
-  updated_at timestamp [default: `now()`]
+  updated_at timestamp
 
   // Primary Index (automatically created)
   indexes {
@@ -451,6 +451,7 @@ Table stock_movements {
   movement_date timestamp [not null] // When the movement occurred
   created_by int [not null] // User who performed the movement
   created_at timestamp [default: `now()`]
+  updated_at timestamp
 
   // Primary Index (automatically created)
   indexes {
@@ -503,6 +504,7 @@ Table stock_adjustments {
   adjustment_date timestamp [not null] // When adjustment occurred
   created_by int [not null] // User who made the adjustment
   created_at timestamp [default: `now()`]
+  updated_at timestamp
 
     // Primary Index (automatically created)
   indexes {
