@@ -1,7 +1,6 @@
 -- =============================================
 -- CORE USER AND AUTHENTICATION TABLES
 -- =============================================
-
 CREATE TABLE users (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -27,7 +26,7 @@ CREATE INDEX idx_user_role ON users (role);
 
 CREATE INDEX idx_active_users ON users (is_active)
 WHERE
-    is_active = true;
+    is_active;
 
 CREATE INDEX idx_full_name ON users (full_name);
 
@@ -54,12 +53,11 @@ CREATE INDEX idx_user_engagement ON users (
 -- =============================================
 -- CORE BUSINESS ENTITY TABLES
 -- =============================================
-
 CREATE TABLE categories (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
     description TEXT,
-    parent_id INTEGER,
+    parent_id BIGINT,
     is_active BOOLEAN DEFAULT true,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -72,13 +70,13 @@ CREATE INDEX idx_categories_parent ON categories (parent_id);
 
 CREATE INDEX idx_categories_active ON categories (is_active)
 WHERE
-    is_active = true;
+    is_active;
 
 CREATE TABLE suppliers (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
     contact_person_name VARCHAR(255),
-    contact_email VARCHAR(255),
+    contact_email VARCHAR(255) NOT NULL UNIQUE,
     contact_phone VARCHAR(50),
     address_line1 VARCHAR(255),
     address_line2 VARCHAR(255),
@@ -108,7 +106,7 @@ CREATE INDEX idx_suppliers_postal ON suppliers (postal_code);
 
 CREATE INDEX idx_suppliers_active ON suppliers (is_active)
 WHERE
-    is_active = true;
+    is_active;
 
 CREATE INDEX idx_suppliers_active_region ON suppliers (is_active, country, state);
 
@@ -125,9 +123,9 @@ CREATE TABLE products (
     supplier_id INTEGER NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     cost_price DECIMAL(10, 2),
-    low_stock_threshold INTEGER DEFAULT 10,
-    reorder_point INTEGER DEFAULT 15,
-    reorder_quantity INTEGER DEFAULT 50,
+    low_stock_threshold INTEGER DEFAULT 1,
+    reorder_point INTEGER DEFAULT 0,
+    reorder_quantity INTEGER DEFAULT 10,
     expiry_date DATE,
     barcode_data VARCHAR(255),
     qr_code_data TEXT,
@@ -147,7 +145,7 @@ CREATE INDEX idx_products_supplier ON products (supplier_id);
 
 CREATE INDEX idx_products_active ON products (is_active)
 WHERE
-    is_active = true;
+    is_active;
 
 CREATE INDEX idx_products_low_stock ON products (low_stock_threshold);
 
@@ -179,15 +177,19 @@ CREATE INDEX idx_products_updated ON products (updated_at);
 -- =============================================
 -- INVENTORY TRACKING TABLES
 -- =============================================
-
 CREATE TABLE product_inventory (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    product_id INTEGER NOT NULL UNIQUE,
+    product_id BIGINT NOT NULL UNIQUE,
     quantity_on_hand INTEGER NOT NULL DEFAULT 0,
+    --Counted in warehouse
     quantity_committed INTEGER DEFAULT 0,
+    --Reserved for pending orders
     quantity_available INTEGER NOT NULL DEFAULT 0,
+    -- Ready to be selled  = On hand - Committed
     last_restocked_at TIMESTAMP,
+    --  Date of last incoming stock
     last_counted_at TIMESTAMP,
+    -- Date of last physical count/audit
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -226,7 +228,7 @@ CREATE INDEX idx_inventory_aging ON product_inventory (
 CREATE TABLE purchase_orders (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     po_number VARCHAR(100) NOT NULL UNIQUE,
-    supplier_id INTEGER NOT NULL,
+    supplier_id BIGINT NOT NULL,
     status VARCHAR(20) NOT NULL CHECK (
         status IN (
             'draft',
@@ -239,7 +241,7 @@ CREATE TABLE purchase_orders (
     ordered_date TIMESTAMP,
     expected_delivery_date TIMESTAMP,
     received_date TIMESTAMP,
-    created_by INTEGER NOT NULL,
+    created_by BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -259,7 +261,7 @@ CREATE INDEX idx_expected_delivery ON purchase_orders (expected_delivery_date);
 
 CREATE INDEX idx_received_date ON purchase_orders (received_date);
 
-CREATE INDEX idx_created_at ON purchase_orders (created_at);
+CREATE INDEX idx_po_created_at ON purchase_orders (created_at);
 
 CREATE INDEX idx_status_delivery ON purchase_orders (
     status,
@@ -283,8 +285,8 @@ CREATE INDEX idx_date_amount_analysis ON purchase_orders (ordered_date, total_am
 
 CREATE TABLE purchase_order_items (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    purchase_order_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
+    purchase_order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
     quantity_ordered INTEGER NOT NULL,
     quantity_received INTEGER DEFAULT 0,
     unit_cost DECIMAL(10, 2) NOT NULL,
@@ -342,16 +344,18 @@ CREATE INDEX idx_partial_receipts ON purchase_order_items (
 -- =============================================
 -- STOCK MOVEMENT AND TRANSACTION TABLES
 -- =============================================
-
 CREATE TABLE stock_movements (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    product_id INTEGER NOT NULL,
+    product_id BIGINT NOT NULL,
     movement_type VARCHAR(20) NOT NULL CHECK (
         movement_type IN ('in', 'out', 'adjustment')
     ),
     quantity_change INTEGER NOT NULL,
+    -- How much moved?
     quantity_before INTEGER NOT NULL,
+    -- Inventory level BEFORE the movement(product_inventory.quantity_available)
     quantity_after INTEGER NOT NULL,
+    -- Inventory level AFTER the movement
     reference_type VARCHAR(20) NOT NULL CHECK (
         reference_type IN (
             'purchase_order',
@@ -360,9 +364,10 @@ CREATE TABLE stock_movements (
             'transfer'
         )
     ),
-    reference_id INTEGER,
+    reference_id BIGINT,
+    -- reference to specific item with in reference_type
     movement_date TIMESTAMP NOT NULL,
-    created_by INTEGER NOT NULL,
+    created_by BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -428,7 +433,7 @@ CREATE TABLE stock_adjustments (
     quantity_adjusted INTEGER NOT NULL,
     reason TEXT,
     adjustment_date TIMESTAMP NOT NULL,
-    created_by INTEGER NOT NULL,
+    created_by BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -482,94 +487,495 @@ CREATE INDEX idx_product_adjustment_analysis ON stock_adjustments (
 -- =============================================
 -- FOREIGN KEY CONSTRAINTS
 -- =============================================
-
 -- Product Catalog Relationships
 ALTER TABLE products
-ADD CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories (id);
+ADD CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE RESTRICT;
 
 ALTER TABLE products
-ADD CONSTRAINT fk_products_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers (id);
+ADD CONSTRAINT fk_products_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers (id) ON DELETE RESTRICT;
 
 -- Hierarchical Categories Relationship
 ALTER TABLE categories
-ADD CONSTRAINT fk_categories_parent FOREIGN KEY (parent_id) REFERENCES categories (id);
+ADD CONSTRAINT fk_categories_parent FOREIGN KEY (parent_id) REFERENCES categories (id) ON DELETE RESTRICT;
 
 -- Inventory Management Relationships
 ALTER TABLE product_inventory
-ADD CONSTRAINT fk_inventory_product FOREIGN KEY (product_id) REFERENCES products (id);
+ADD CONSTRAINT fk_inventory_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT;
 
 ALTER TABLE purchase_orders
-ADD CONSTRAINT fk_po_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers (id);
+ADD CONSTRAINT fk_po_supplier FOREIGN KEY (supplier_id) REFERENCES suppliers (id) ON DELETE RESTRICT;
 
 ALTER TABLE purchase_orders
-ADD CONSTRAINT fk_po_created_by FOREIGN KEY (created_by) REFERENCES users (id);
+ADD CONSTRAINT fk_po_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE RESTRICT;
 
 ALTER TABLE purchase_order_items
-ADD CONSTRAINT fk_po_items_po FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders (id);
+ADD CONSTRAINT fk_po_items_po FOREIGN KEY (purchase_order_id) REFERENCES purchase_orders (id) ON DELETE RESTRICT;
 
 ALTER TABLE purchase_order_items
-ADD CONSTRAINT fk_po_items_product FOREIGN KEY (product_id) REFERENCES products (id);
+ADD CONSTRAINT fk_po_items_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT;
 
 -- Stock Movement Relationships
 ALTER TABLE stock_movements
-ADD CONSTRAINT fk_movements_product FOREIGN KEY (product_id) REFERENCES products (id);
+ADD CONSTRAINT fk_movements_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT;
 
 ALTER TABLE stock_movements
-ADD CONSTRAINT fk_movements_created_by FOREIGN KEY (created_by) REFERENCES users (id);
+ADD CONSTRAINT fk_movements_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE RESTRICT;
 
 ALTER TABLE stock_adjustments
-ADD CONSTRAINT fk_adjustments_product FOREIGN KEY (product_id) REFERENCES products (id);
+ADD CONSTRAINT fk_adjustments_product FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT;
 
 ALTER TABLE stock_adjustments
-ADD CONSTRAINT fk_adjustments_created_by FOREIGN KEY (created_by) REFERENCES users (id);
+ADD CONSTRAINT fk_adjustments_created_by FOREIGN KEY (created_by) REFERENCES users (id) ON DELETE RESTRICT;
 
 -- =============================================
 -- TRIGGERS FOR UPDATED_AT TIMESTAMPS
 -- =============================================
-
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
+    -- Skip if only updated_at changed
+    IF ROW(NEW.*) IS NOT DISTINCT FROM ROW(OLD.*) THEN
+        RETURN NEW;
+    END IF;
+
+    -- Force updated_at to current timestamp
+    NEW.updated_at := CURRENT_TIMESTAMP;
+
     RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 -- Create triggers for all tables with updated_at
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_users_updated_at BEFORE
+UPDATE
+    ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_categories_updated_at BEFORE UPDATE ON categories FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_categories_updated_at BEFORE
+UPDATE
+    ON categories FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_suppliers_updated_at BEFORE UPDATE ON suppliers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_suppliers_updated_at BEFORE
+UPDATE
+    ON suppliers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_products_updated_at BEFORE
+UPDATE
+    ON products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_product_inventory_updated_at BEFORE UPDATE ON product_inventory FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_product_inventory_updated_at BEFORE
+UPDATE
+    ON product_inventory FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_purchase_orders_updated_at BEFORE UPDATE ON purchase_orders FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_purchase_orders_updated_at BEFORE
+UPDATE
+    ON purchase_orders FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_purchase_order_items_updated_at BEFORE UPDATE ON purchase_order_items FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_purchase_order_items_updated_at BEFORE
+UPDATE
+    ON purchase_order_items FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_stock_movements_updated_at BEFORE UPDATE ON stock_movements FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_stock_movements_updated_at BEFORE
+UPDATE
+    ON stock_movements FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_stock_adjustments_updated_at BEFORE UPDATE ON stock_adjustments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_stock_adjustments_updated_at BEFORE
+UPDATE
+    ON stock_adjustments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- =====================================================================================
+-- Auto-calculate quantity_available in product_inventory
+CREATE OR REPLACE FUNCTION update_quantity_available()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only recalculate when relevant fields change
+    IF TG_OP = 'UPDATE' AND
+       NEW.quantity_on_hand IS NOT DISTINCT FROM OLD.quantity_on_hand AND
+       NEW.quantity_committed IS NOT DISTINCT FROM OLD.quantity_committed THEN
+        RETURN NEW;
+    END IF;
+
+    -- Calculate derived field
+    NEW.quantity_available :=
+        NEW.quantity_on_hand - COALESCE(NEW.quantity_committed, 0);
+
+    -- Enforce invariant
+    IF NEW.quantity_available < 0 THEN
+        RAISE EXCEPTION
+            'quantity_available cannot be negative (on_hand=%, committed=%)',
+            NEW.quantity_on_hand,
+            NEW.quantity_committed;
+    END IF;
+
+    -- Maintain audit field
+    NEW.updated_at := CURRENT_TIMESTAMP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_quantity_available
+BEFORE INSERT OR UPDATE OF quantity_on_hand, quantity_committed
+ON product_inventory
+FOR EACH ROW
+EXECUTE FUNCTION update_quantity_available();
+
+-- Auto-create inventory record when new and active product is added
+CREATE OR REPLACE FUNCTION create_inventory_for_new_product()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Only create inventory for active products
+    IF NEW.is_active IS DISTINCT FROM TRUE THEN
+        RETURN NEW;
+    END IF;
+
+    INSERT INTO product_inventory (
+        product_id,
+        quantity_on_hand,
+        quantity_committed
+    )
+    VALUES (
+        NEW.id,
+        0,
+        0
+    )
+    ON CONFLICT (product_id) DO NOTHING;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_create_inventory_for_new_product
+AFTER INSERT ON products
+FOR EACH ROW
+EXECUTE FUNCTION create_inventory_for_new_product();
 
 -- =============================================
--- OPTIONAL: COMPLEX INDEXES FOR PERFORMANCE
+-- PURCHASE ORDER WORKFLOW TRIGGERS
 -- =============================================
+-- Auto-generate po_number in sequential format (PO-YYYY-XXXXX)
+CREATE TABLE po_number_counters (
+    year INT PRIMARY KEY,
+    last_number BIGINT NOT NULL
+);
 
--- Partial indexes for active records (already included above with WHERE clauses)
--- These are particularly efficient for large datasets
+CREATE OR REPLACE FUNCTION generate_po_number()
+RETURNS TRIGGER AS $$
+DECLARE
+    current_year INT;
+    next_number BIGINT;
+BEGIN
+    IF NEW.po_number IS NOT NULL THEN
+        RETURN NEW;
+    END IF;
 
--- Index for low stock alert queries
-CREATE INDEX idx_low_stock_alert ON product_inventory (quantity_available)
-WHERE
-    quantity_available < 10;
+    current_year := EXTRACT(YEAR FROM CURRENT_DATE)::INT;
 
--- Index for pending purchase orders
-CREATE INDEX idx_pending_pos ON purchase_orders (
-    status,
-    expected_delivery_date
-)
-WHERE
-    status IN ('ordered', 'draft');
+    LOOP
+        -- Try update first (fast path)
+        UPDATE po_number_counters
+        SET last_number = last_number + 1
+        WHERE year = current_year
+        RETURNING last_number INTO next_number;
+
+        EXIT WHEN FOUND;
+
+        -- If no row exists, try to insert
+        BEGIN
+            INSERT INTO po_number_counters (year, last_number)
+            VALUES (current_year, 1)
+            RETURNING last_number INTO next_number;
+
+            EXIT;
+        EXCEPTION
+            WHEN unique_violation THEN
+                -- Another transaction inserted first, retry
+        END;
+    END LOOP;
+
+    NEW.po_number :=
+        'PO-' || current_year || '-' || LPAD(next_number::TEXT, 5, '0');
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_generate_po_number
+BEFORE INSERT ON purchase_orders
+FOR EACH ROW
+EXECUTE FUNCTION generate_po_number();
+
+-- =============================================
+-- PRODUCT CATALOG TRIGGERS
+-- =============================================
+-- 7. Auto-generate SKU in sequential format (SKU-YYYY-XXXXX)
+CREATE TABLE product_sku_counters (
+    year INT PRIMARY KEY,
+    last_number BIGINT NOT NULL
+);
+
+CREATE OR REPLACE FUNCTION generate_product_sku()
+RETURNS TRIGGER AS $$
+DECLARE
+    current_year INT;
+    next_number BIGINT;
+BEGIN
+    -- Respect manual SKU
+    IF NEW.sku IS NOT NULL AND NEW.sku <> '' THEN
+        RETURN NEW;
+    END IF;
+
+    current_year := EXTRACT(YEAR FROM CURRENT_DATE)::INT;
+
+    LOOP
+        -- Fast path
+        UPDATE product_sku_counters
+        SET last_number = last_number + 1
+        WHERE year = current_year
+        RETURNING last_number INTO next_number;
+
+        EXIT WHEN FOUND;
+
+        -- First SKU of the year
+        BEGIN
+            INSERT INTO product_sku_counters (year, last_number)
+            VALUES (current_year, 1)
+            RETURNING last_number INTO next_number;
+            EXIT;
+        EXCEPTION
+            WHEN unique_violation THEN
+                -- Retry if concurrent insert happened
+        END;
+    END LOOP;
+
+    NEW.sku :=
+        'SKU-' || current_year || '-' || LPAD(next_number::TEXT, 5, '0');
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_generate_product_sku
+BEFORE INSERT ON products
+FOR EACH ROW
+EXECUTE FUNCTION generate_product_sku();
+
+-- =============================================
+-- Logical Constraints
+-- =============================================
+-- 1. PRODUCTS TABLE - Business Rule Constraints
+ALTER TABLE products -- Ensure positive pricing
+ADD CONSTRAINT chk_price_positive CHECK (price > 0),
+-- Ensure valid cost price (can be NULL for unknown)
+ADD CONSTRAINT chk_cost_price_valid CHECK (
+    cost_price IS NULL
+    OR cost_price >= 0
+),
+-- Ensure valid stock thresholds
+ADD CONSTRAINT chk_stock_thresholds CHECK (
+    low_stock_threshold >= 0
+    AND reorder_point >= 0
+    AND reorder_quantity > 0
+);
+
+-- 2. PURCHASE ORDERS TABLE - Workflow Constraints
+ALTER TABLE purchase_orders -- Ensure positive amounts or NULL
+ADD CONSTRAINT chk_total_amount_positive CHECK (
+    total_amount IS NULL
+    OR total_amount >= 0
+),
+-- Ensure logical date progression
+ADD CONSTRAINT chk_po_dates_logical CHECK (
+    (
+        ordered_date IS NULL
+        OR expected_delivery_date IS NULL
+    )
+    OR expected_delivery_date >= ordered_date
+),
+ADD CONSTRAINT chk_received_date_valid CHECK (
+    (
+        received_date IS NULL
+        AND status != 'received'
+    )
+    OR (
+        received_date IS NOT NULL
+        AND status = 'received'
+        AND received_date >= ordered_date
+    )
+),
+-- Ensure draft orders have no ordered date
+ADD CONSTRAINT chk_draft_state CHECK (
+    (
+        status = 'draft'
+        AND ordered_date IS NULL
+    )
+    OR (status != 'draft')
+),
+-- Ensure ordered orders have an ordered date
+ADD CONSTRAINT chk_ordered_state CHECK (
+    (
+        status = 'ordered'
+        AND ordered_date IS NOT NULL
+    )
+    OR (status != 'ordered')
+);
+
+-- 3. PRODUCT INVENTORY TABLE - Quantity Constraints
+ALTER TABLE product_inventory -- Ensure non-negative quantities
+ADD CONSTRAINT chk_quantity_non_negative CHECK (
+    quantity_on_hand >= 0
+    AND (
+        quantity_committed IS NULL
+        OR quantity_committed >= 0
+    )
+    AND quantity_available >= 0
+),
+-- Ensure counting dates are logical
+ADD CONSTRAINT chk_count_dates CHECK (
+    last_counted_at IS NULL
+    OR last_restocked_at IS NULL
+    OR last_counted_at >= last_restocked_at
+);
+
+-- 4. STOCK MOVEMENTS TABLE - Movement Logic Constraints
+ALTER TABLE stock_movements -- Ensure quantity change matches movement type
+ADD CONSTRAINT chk_movement_quantity_sign CHECK (
+    (
+        movement_type = 'in'
+        AND quantity_change > 0
+    )
+    OR (
+        movement_type = 'out'
+        AND quantity_change < 0
+    )
+    OR (movement_type = 'adjustment') -- Can be positive or negative
+),
+-- Ensure mathematical consistency
+ADD CONSTRAINT chk_movement_math CHECK (
+    quantity_after = quantity_before + quantity_change
+),
+-- Ensure before/after quantities are non-negative
+ADD CONSTRAINT chk_movement_quantities_non_negative CHECK (
+    quantity_before >= 0
+    AND quantity_after >= 0
+);
+
+-- 5. PURCHASE ORDER ITEMS TABLE - Item-level Constraints
+ALTER TABLE purchase_order_items
+ADD CONSTRAINT chk_quantities_positive CHECK (
+    quantity_ordered > 0
+    AND quantity_received >= 0
+    AND unit_cost >= 0
+    AND line_total >= 0
+),
+ADD CONSTRAINT chk_received_vs_ordered CHECK (
+    quantity_received <= quantity_ordered
+),
+ADD CONSTRAINT chk_line_total_calculation CHECK (
+    line_total = quantity_ordered * unit_cost
+);
+
+-- 6. CATEGORIES TABLE - Hierarchical Constraints
+CREATE OR REPLACE FUNCTION enforce_category_hierarchy()
+RETURNS TRIGGER AS $$
+DECLARE
+    parent_active BOOLEAN;
+    cycle_found   BOOLEAN;
+BEGIN
+    -- ==============================
+    -- 1. Prevent self-parenting
+    -- ==============================
+    IF NEW.parent_id IS NOT NULL AND NEW.parent_id = NEW.id THEN
+        RAISE EXCEPTION
+            'Category % cannot be its own parent',
+            NEW.id;
+    END IF;
+
+    -- ==============================
+    -- 2. Prevent recursive cycles
+    -- ==============================
+    IF NEW.parent_id IS NOT NULL AND TG_OP = 'UPDATE' THEN
+        WITH RECURSIVE ancestors AS (
+            SELECT id, parent_id
+            FROM categories
+            WHERE id = NEW.parent_id
+
+            UNION ALL
+
+            SELECT c.id, c.parent_id
+            FROM categories c
+            JOIN ancestors a ON c.id = a.parent_id
+        )
+        SELECT TRUE INTO cycle_found
+        FROM ancestors
+        WHERE id = NEW.id
+        LIMIT 1;
+
+        IF cycle_found THEN
+            RAISE EXCEPTION
+                'Hierarchy cycle detected: category % cannot be parented under its descendant %',
+                NEW.id, NEW.parent_id;
+        END IF;
+    END IF;
+
+    -- ==============================
+    -- 3. Active child requires active parent
+    -- ==============================
+    IF NEW.is_active = TRUE AND NEW.parent_id IS NOT NULL THEN
+        SELECT is_active
+        INTO parent_active
+        FROM categories
+        WHERE id = NEW.parent_id
+        FOR SHARE;
+
+        IF parent_active = FALSE THEN
+            RAISE EXCEPTION
+                'Active category % cannot have inactive parent %',
+                NEW.id, NEW.parent_id;
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_enforce_category_hierarchy
+BEFORE INSERT OR UPDATE OF parent_id, is_active
+ON categories
+FOR EACH ROW
+EXECUTE FUNCTION enforce_category_hierarchy();
+
+-- 7. USERS TABLE - time Constraints
+ALTER TABLE users
+ADD CONSTRAINT chk_user_timeline CHECK (
+    created_at <= updated_at
+    AND -- Ensure updated_at is after creation
+    (
+        last_login_at IS NULL
+        OR last_login_at >= created_at
+    ) -- Ensure last_login_at is after creation
+);
+
+-- 8. STOCK ADJUSTMENTS - Adjustment-specific Rules
+ALTER TABLE stock_adjustments
+ADD CONSTRAINT chk_adjustment_quantities CHECK (
+    (
+        adjustment_type IN (
+            'damaged',
+            'expired',
+            'theft',
+            'internal_use'
+        )
+        AND quantity_adjusted < 0
+    )
+    OR (
+        adjustment_type IN ('found', 'returned')
+        AND quantity_adjusted > 0
+    )
+),
+ADD CONSTRAINT chk_adjustment_reason_required CHECK (
+    adjustment_type NOT IN('damaged', 'theft')
+    OR (
+        reason IS NOT NULL
+        AND LENGTH(TRIM(reason)) > 10
+    )
+);
