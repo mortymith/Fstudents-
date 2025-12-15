@@ -4,7 +4,7 @@ info:
   description: >
     REST API for the Inventory Management System (IMS). Designed for secure,
     auditable inventory and supplier management with role-based access control (RBAC),
-    atomic stock transactions, barcode/QR workflows and POS integration. This API
+    atomic stock transactions and barcode/QR workflows. This API
     prioritizes data integrity and operational simplicity for the v0.1 release.
     See externalDocs for full architecture, migrations and integration notes.
   version: 1.0.0
@@ -20,7 +20,7 @@ servers:
     description: Production server
   - url: https://staging-api.inventory-system.com/v1
     description: Staging server
-  - url: http://localhost:3000/v1
+  - url: http://localhost:8000/v1
     description: Local development server
 
 components:
@@ -860,6 +860,76 @@ components:
           format: date-time
           example: "2023-01-15T10:30:00Z"
 
+    StockMovementCreate:
+          type: object
+          required:
+            - product_id
+            - movement_type
+            - quantity_change
+            - reference_type
+            - movement_date
+          properties:
+            product_id:
+              type: integer
+              example: 1
+            movement_type:
+              type: string
+              enum: [in, out, adjustment]
+              example: "in"
+            quantity_change:
+              type: integer
+              example: 50
+            quantity_before:
+              type: integer
+              example: 100
+              description: "Optional - will be calculated if not provided"
+            quantity_after:
+              type: integer
+              example: 150
+              description: "Optional - will be calculated if not provided"
+            reference_type:
+              type: string
+              enum: [purchase_order, sale, adjustment, transfer]
+              example: "purchase_order"
+            reference_id:
+              type: [integer, "null"]
+              example: 1
+            movement_date:
+              type: string
+              format: date-time
+              example: "2023-01-15T10:30:00Z"
+            notes:
+              type: string
+              example: "Manual adjustment by admin"
+
+    StockMovementUpdate:
+      type: object
+      properties:
+        quantity_change:
+          type: integer
+          example: 40
+        movement_date:
+          type: string
+          format: date-time
+          example: "2023-01-16T10:30:00Z"
+        notes:
+          type: string
+          example: "Updated quantity"
+
+    StockAdjustmentUpdate:
+      type: object
+      properties:
+        quantity_adjusted:
+          type: integer
+          example: -3
+        adjustment_date:
+          type: string
+          format: date-time
+          example: "2023-01-16T10:30:00Z"
+        reason:
+          type: string
+          example: "Updated damage count"
+
     # Purchase Order Schemas
     PurchaseOrder:
       type: object
@@ -1068,6 +1138,43 @@ components:
           type: boolean
           example: false
 
+    PurchaseOrderItemAdd:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/PurchaseOrderItemCreate'
+
+    ProductInventoryCreate:
+      type: object
+      required:
+        - product_id
+        - quantity_on_hand
+      properties:
+        product_id:
+          type: integer
+          example: 999
+        quantity_on_hand:
+          type: integer
+          minimum: 0
+          example: 100
+        quantity_committed:
+          type: integer
+          default: 0
+          example: 0
+        quantity_available:
+          type: integer
+          description: "Optional - calculated if not provided"
+          example: 100
+        last_restocked_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T10:30:00Z"
+
     # Report Schemas
     LowStockReport:
       type: object
@@ -1155,6 +1262,56 @@ components:
                 format: float
                 example: 29998.50
 
+    PasswordChange:
+      type: object
+      required:
+        - current_password
+        - new_password
+      properties:
+        current_password:
+          type: string
+          format: password
+          minLength: 8
+          example: "oldPassword123"
+        new_password:
+          type: string
+          format: password
+          minLength: 8
+          example: "newPassword456"
+
+    UserSession:
+      type: object
+      required:
+        - id
+        - user_id
+        - login_at
+        - ip_address
+        - user_agent
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        login_at:
+          type: string
+          format: date-time
+          example: "2023-01-15T09:45:00Z"
+        logout_at:
+          type: [string, "null"]
+          format: date-time
+          example: "2023-01-15T17:30:00Z"
+        ip_address:
+          type: string
+          example: "192.168.1.100"
+        user_agent:
+          type: string
+          example: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        is_active:
+          type: boolean
+          example: true
+
   responses:
     UnauthorizedError:
       description: Authentication credentials were missing or invalid
@@ -1216,6 +1373,17 @@ components:
           example:
             error: "CONFLICT"
             message: "A user with this email already exists"
+            trace_id: "req_123456789"
+
+    CannotModifyError:
+      description: Cannot modify resource due to business rules
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: "CANNOT_MODIFY"
+            message: "Cannot modify stock movement that affects inventory calculations"
             trace_id: "req_123456789"
 
 security:
@@ -1336,6 +1504,56 @@ paths:
                 error: "INVALID_RESET_TOKEN"
                 message: "Reset token is invalid or has expired"
                 trace_id: "req_123456789"
+
+  /users/{id}/sessions:
+    get:
+      summary: Get user sessions (Admin or own user only)
+      description: Retrieve active and recent sessions for a user
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+        - $ref: '#/components/parameters/paginationLimit'
+        - $ref: '#/components/parameters/paginationOffset'
+        - name: active_only
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: Filter to show only active sessions
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter sessions after this date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Filter sessions before this date
+      responses:
+        200:
+          description: User sessions retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserSession'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
 
   # =============================================
   # USER MANAGEMENT ENDPOINTS (FR-AUTH-003 to FR-AUTH-006)
@@ -1484,6 +1702,61 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         403:
           $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+  /users/{id}/password:
+    put:
+      summary: Change user password
+      description: Change password for logged-in user (requires current password)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+      responses:
+        200:
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Password updated successfully"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    example: "2023-01-15T10:30:00Z"
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          description: Current password incorrect or unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "INVALID_PASSWORD"
+                message: "Current password is incorrect"
+                trace_id: "req_123456789"
+        403:
+          description: Cannot change another user's password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "FORBIDDEN_OPERATION"
+                message: "You can only change your own password"
+                trace_id: "req_123456789"
         404:
           $ref: '#/components/responses/NotFoundError'
 
@@ -2404,6 +2677,48 @@ paths:
         403:
           $ref: '#/components/responses/ForbiddenError'
 
+  /inventory:
+    post:
+      summary: Create inventory record directly (Admin only)
+      description: |
+        Direct creation of product inventory record. Use only for:
+        1. Initial system setup
+        2. Data migration
+        3. Emergency corrections
+        **WARNING:** This bypasses normal inventory creation workflows.
+      tags: [Inventory]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInventoryCreate'
+      responses:
+        201:
+          description: Inventory record created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInventory'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        409:
+          description: Inventory already exists for product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "DUPLICATE_INVENTORY"
+                message: "Inventory record already exists for this product"
+                trace_id: "req_123456789"
+
   # =============================================
   # PURCHASE ORDER MANAGEMENT ENDPOINTS (FR-STCK-001)
   # =============================================
@@ -2619,6 +2934,49 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundError'
 
+  /purchase-orders/{id}/items:
+      post:
+        summary: Add items to existing purchase order
+        description: Add new items to an existing purchase order (only for draft status)
+        tags: [Purchase Orders]
+        security:
+          - bearerAuth: []
+        parameters:
+          - $ref: '#/components/parameters/idPathParameter'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseOrderItemAdd'
+        responses:
+          201:
+            description: Items added to purchase order successfully
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/PurchaseOrderItem'
+          400:
+            $ref: '#/components/responses/ValidationError'
+          401:
+            $ref: '#/components/responses/UnauthorizedError'
+          403:
+            $ref: '#/components/responses/ForbiddenError'
+          404:
+            $ref: '#/components/responses/NotFoundError'
+          409:
+            description: Cannot add items to non-draft purchase order
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  error: "INVALID_OPERATION"
+                  message: "Can only add items to draft purchase orders"
+                  trace_id: "req_123456789"
+  
   # =============================================
   # STOCK MOVEMENT ENDPOINTS
   # =============================================
@@ -2679,7 +3037,168 @@ paths:
                           $ref: '#/components/schemas/StockMovement'
         401:
           $ref: '#/components/responses/UnauthorizedError'
+    post:
+      summary: Create stock movement directly (Admin only)
+      description: |
+        Direct creation of stock movement record for manual corrections or special cases.
+        **WARNING:** This bypasses normal inventory workflows. Use with caution.
+      tags: [Stock Movements]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockMovementCreate'
+      responses:
+        201:
+          description: Stock movement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockMovement'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        422:
+          description: Movement would create negative inventory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "INVALID_MOVEMENT"
+                message: "Movement would result in negative inventory quantity"
+                trace_id: "req_123456789"
 
+  /stock-movements/{id}:
+      put:
+        summary: Update stock movement (Admin only)
+        description: |
+          Update existing stock movement. Only certain fields can be modified.
+          **NOTE:** Cannot modify movements that are part of reconciled transactions.
+        tags: [Stock Movements]
+        security:
+          - bearerAuth: []
+        parameters:
+          - $ref: '#/components/parameters/idPathParameter'
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockMovementUpdate'
+        responses:
+          200:
+            description: Stock movement updated successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/StockMovement'
+          400:
+            $ref: '#/components/responses/ValidationError'
+          401:
+            $ref: '#/components/responses/UnauthorizedError'
+          403:
+            $ref: '#/components/responses/ForbiddenError'
+          404:
+            $ref: '#/components/responses/NotFoundError'
+          422:
+            $ref: '#/components/responses/CannotModifyError'
+
+      delete:
+        summary: Delete stock movement (Admin only)
+        description: |
+          Delete a stock movement record. Only allowed for manual movements.
+          Cannot delete system-generated movements.
+        tags: [Stock Movements]
+        security:
+          - bearerAuth: []
+        parameters:
+          - $ref: '#/components/parameters/idPathParameter'
+        responses:
+          204:
+            description: Stock movement deleted successfully
+          400:
+            description: Cannot delete system-generated movement
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  error: "PROTECTED_MOVEMENT"
+                  message: "Cannot delete system-generated stock movements"
+                  trace_id: "req_123456789"
+          401:
+            $ref: '#/components/responses/UnauthorizedError'
+          403:
+            $ref: '#/components/responses/ForbiddenError'
+          404:
+            $ref: '#/components/responses/NotFoundError'
+
+  /stock-adjustments/{id}:
+    put:
+      summary: Update stock adjustment (Inventory Manager or Admin only)
+      description: Update existing stock adjustment information
+      tags: [Stock Adjustments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StockAdjustmentUpdate'
+      responses:
+        200:
+          description: Stock adjustment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StockAdjustment'
+        400:
+          $ref: '#/components/responses/ValidationError'
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      summary: Delete stock adjustment (Admin only)
+      description: Delete a stock adjustment record
+      tags: [Stock Adjustments]
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        204:
+          description: Stock adjustment deleted successfully
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          $ref: '#/components/responses/NotFoundError'
+        409:
+          description: Adjustment has associated stock movement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "ADJUSTMENT_HAS_MOVEMENT"
+                message: "Cannot delete adjustment with associated stock movement"
+                trace_id: "req_123456789"
+ 
   # =============================================
   # REPORTS AND ANALYTICS ENDPOINTS (FR-RPT-001 to FR-RPT-003)
   # =============================================
