@@ -1,28 +1,45 @@
-from core.database import db_manager as db
-from models import User,Category
-from sqlalchemy import select,insert
-import asyncio
+# app/main.py
+"""
+FastAPI application entry point.
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-db.init('postgresql+asyncpg://app_user:pass12345@127.0.0.1:5432/app_db')
+from app.core.config import settings
+from app.routes import auth_routes
 
-async def get_user(user_id: int):
-    async for session in db.get_session():
-        result = await session.execute(select(User).where(User.id == user_id))
-        return result.scalar_one_or_none()
-    
-async def insert_user(user:User):
-    async for session in db.get_session():
-        session.add(user)
-        await session.commit()
-        await session.refresh(user)
-        return user
+# Create FastAPI app
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    docs_url="/docs" if settings.DEBUG else None,
+    redoc_url="/redoc" if settings.DEBUG else None,
+)
 
-user = User(
-        email="jane.doe@example.com",
-        password_hash="hashed_password_here",
-        full_name="Jane Doe",
-        role="viewer",
-        is_active=True
-    )
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# print(asyncio.run(insert_user(user)))
+# Register routes
+app.include_router(auth_routes.router, prefix="/api/v1")
+
+
+@app.get("/")
+async def root():
+    """Root endpoint."""
+    return {
+        "app": settings.APP_NAME,
+        "version": settings.APP_VERSION,
+        "docs": "/docs" if settings.DEBUG else None,
+    }
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "healthy"}

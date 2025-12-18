@@ -1,3 +1,15 @@
+"""
+Example Of Usage:
+    cache = CacheManager(settings.redis_url)
+    await cache.connect()
+
+    password_reset = PasswordResetToken(cache.get_client())
+    user_session =  UserSessionRepository(cache.get_client())
+    await user_session.create(user_id=12,ip_address='172.0.0.1',user_agent='mozilla',ttl_hours=1)
+    print(user_session)
+"""
+
+
 from typing import Optional, Any
 from redis.asyncio import Redis, ConnectionPool
 from redis.asyncio.client import Pipeline
@@ -9,7 +21,6 @@ import asyncio
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 import json
-
 
 @dataclass
 class HealthStatus:

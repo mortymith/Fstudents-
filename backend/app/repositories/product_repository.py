@@ -2,7 +2,7 @@ from typing import Optional, List, Tuple, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, or_
 from sqlalchemy.orm import selectinload
-from models import Product
+from app.models import Product
 from decimal import Decimal
 import logging
 

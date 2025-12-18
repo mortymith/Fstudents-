@@ -1,3 +1,31 @@
+'''
+async def main():
+    # Create and initialize
+    db = await create_database_client(
+        "postgresql+asyncpg://user:pass@localhost/db",
+        enable_query_logging=True
+    )
+    
+    # Use standalone session
+    async with db.session() as session:
+        result = await session.execute("SELECT 1")
+        print(result.scalar())
+    
+    # Use managed transaction
+    async with db.transaction() as session:
+        await session.execute("INSERT INTO ...")
+        # Auto-commits if no exception
+    
+    await db.shutdown()
+
+# Or with context manager
+async with AsyncDatabase("postgresql+asyncpg://...") as db:
+    async with db.session() as session:
+        # work with session
+
+'''
+
+
 import asyncio
 import logging
 from contextlib import asynccontextmanager

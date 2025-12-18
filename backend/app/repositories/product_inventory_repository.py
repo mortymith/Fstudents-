@@ -2,7 +2,7 @@ from typing import Optional, List, Tuple, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 from sqlalchemy.orm import selectinload
-from models import ProductInventory
+from app.models import ProductInventory
 import logging
 
 logger = logging.getLogger(__name__)

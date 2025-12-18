@@ -8,7 +8,7 @@
 
 - Inventory Managers responsible for stock tracking and order management
     
-- Warehouse and logistics personnel (Viewer )handling daily inventory operations
+- Viewer handling daily inventory operations
     
 - Administrative and IT staff overseeing system configuration and security
     
@@ -167,7 +167,7 @@ This architecture promotes separation of concerns, making the system more modula
 |                      |                                                                                                   |
 | -------------------- | ------------------------------------------------------------------------------------------------- |
 | **Layer**            | **Technologies**                                                                                  |
-| Presentation Layer   | Mobile: Cordova Desktop: Tauri Web: Next.js REST Client: Axios Tailwind CSS (UI library)          |
+| Presentation Layer   | Mobile: Cordova Desktop: Tauri Web: React REST Client: Axios Tailwind CSS (UI library)          |
 | Business Logic Layer | FastAPI (RESTful API) ORM: SQLAlchemy Cache: Redis-py  Monitoring & Logging: Prometheus + Grafana Hashing: Argon2 |
 | Data Store Layer     | PostgreSQL (primary database) Caching: Redis                                                      |
 | web server           | nginx                                                                                             |
@@ -191,7 +191,7 @@ The Inventory Management System (IMS) will be deployed using a containerized, th
 |---|---|---|---|
 |**Component**|**Technology**|**Placement & Configuration**|**Role in Deployment**|
 |**Edge Layer**|Cloud Load Balancer (ALB/CLB)|Public Subnet|Terminates SSL/TLS, distributes traffic to Nginx/Presentation Layer.|
-|**Presentation/Web Server**|Nginx & Next.js|Private Subnet (Container)|Nginx serves the static Next.js build. Traffic is load-balanced across multiple instances for redundancy.|
+|**Presentation/Web Server**|Nginx & react|Private Subnet (Container)|Nginx serves the static Next.js build. Traffic is load-balanced across multiple instances for redundancy.|
 |**Business Logic Layer**|FastAPI|Private Subnet (Container)|Handles all API requests, authentication, business rule enforcement, and database interaction. Auto-scaled based on CPU utilization/request queue depth.|
 |**Caching Tier**|Redis|Private Subnet (Managed Service)|Used for session storage and high-speed read cache for inventory lookups.|
 |**Data Tier**|PostgreSQL|Private Subnet (Managed RDS/CloudSQL)|Primary persistence layer. Utilizes a managed service for automated backups, point-in-time recovery, and multi-AZ failover.|

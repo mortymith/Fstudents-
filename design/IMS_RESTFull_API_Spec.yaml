@@ -1505,6 +1505,10 @@ paths:
                 message: "Reset token is invalid or has expired"
                 trace_id: "req_123456789"
 
+  # =============================================
+  # USER MANAGEMENT ENDPOINTS (FR-AUTH-003 to FR-AUTH-006)
+  # =============================================
+
   /users/{id}/sessions:
     get:
       summary: Get user sessions (Admin or own user only)
@@ -1555,9 +1559,6 @@ paths:
         404:
           $ref: '#/components/responses/NotFoundError'
 
-  # =============================================
-  # USER MANAGEMENT ENDPOINTS (FR-AUTH-003 to FR-AUTH-006)
-  # =============================================
   /users:
     get:
       summary: List all users

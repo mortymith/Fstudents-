@@ -2,30 +2,30 @@ This specification translates the detailed functional requirements into a system
 
 ### 🗺️ High-Level Sitemap / Page Hierarchy
 
-|   |   |   |   |
-|---|---|---|---|
-|**Section**|**Screen Name**|**Screen ID**|**Required Role(s)**|
-|**1. Authentication & Users**|Login Screen|S-1.0|All|
-||Forgot Password Screen|S-1.1|ALL|
-||Reset Password Screen|S-1.2|ALL|
-||User Management List|S-1.3|Admin|
-|**2. Dashboard**|Inventory Dashboard|S-2.0|All|
-|**3. Product Catalog**|Products List|S-3.1|All|
-||Product Detail / Inventory View|S-3.2|All|
-||Add/Edit Product Form|S-3.3|Inventory Manager, Admin|
-||Suppliers List|S-3.4|IM, Admin|
-||Add/Edit Supplier Form|S-3.5|IM, Admin|
-||Category Management Modal|S-3.6|IM, Admin|
-|**4. Inventory Management**|Low Stock View|S-4.1|All|
-|**5. Purchase Orders**|PO Management List|S-5.1|IM, Admin|
-||Create New PO Form|S-5.2|IM, Admin|
-||PO Detail / Receiving Interface|S-5.3|IM, Admin|
-|**6. Stock Operations**|Stock Adjustment Tool|S-6.1|IM, Admin|
-||Stock Movement Log|S-6.2|All|
-|**7. Reports & Analytics**|Reports Hub|S-7.0|All|
-||Generic Report View (Template)|S-7.1|All|
-|**8. Audit & Activity Logs**|System Audit Log|S-8.0|Admin|
-|**9. System Configuration**|System Settings|S-9.0|Admin|
+|                               |                                 |               |                          |
+| ----------------------------- | ------------------------------- | ------------- | ------------------------ |
+| **Section**                   | **Screen Name**                 | **Screen ID** | **Required Role(s)**     |
+| **1. Authentication & Users** | Login Screen                    | S-1.0         | All                      |
+|                               | Forgot Password Screen          | S-1.1         | ALL                      |
+|                               | Reset Password Screen           | S-1.2         | ALL                      |
+|                               | User Management List            | S-1.3         | Admin                    |
+| **2. Dashboard**              | Inventory Dashboard             | S-2.0         | All                      |
+| **3. Product Catalog**        | Products List                   | S-3.1         | All                      |
+|                               | Product Detail / Inventory View | S-3.2         | All                      |
+|                               | Add/Edit Product Form           | S-3.3         | Inventory Manager, Admin |
+|                               | Suppliers List                  | S-3.4         | IM, Admin                |
+|                               | Add/Edit Supplier Form          | S-3.5         | IM, Admin                |
+|                               | Category Management Modal       | S-3.6         | IM, Admin                |
+| **4. Inventory Management**   | Low Stock View                  | S-4.1         | All                      |
+| **5. Purchase Orders**        | PO Management List              | S-5.1         | IM, Admin                |
+|                               | Create New PO Form              | S-5.2         | IM, Admin                |
+|                               | PO Detail / Receiving Interface | S-5.3         | IM, Admin                |
+| **6. Stock Operations**       | Stock Adjustment Tool           | S-6.1         | IM, Admin                |
+|                               | Stock Movement Log              | S-6.2         | All                      |
+| **7. Reports & Analytics**    | Reports Hub                     | S-7.0         | All                      |
+|                               | Generic Report View (Template)  | S-7.1         | All                      |
+| **8. Audit & Activity Logs**  | System Audit Log                | S-8.0         | Admin                    |
+| **9. System Configuration**   | System Settings                 | S-9.0         | Admin                    |
 
 ### Detailed Screen-by-Screen Breakdown
 
@@ -303,7 +303,7 @@ This specification translates the detailed functional requirements into a system
 
 - **Purpose:** Display all product details, inventory breakdown, and action history.
     
-- **User Role(s):** All Users
+- **User Role(s):** admin and IM
     
 - **Wireframe Layout (Text-Based):**
     

@@ -2,7 +2,7 @@ from typing import Optional, List, Tuple, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func, desc
 from sqlalchemy.orm import selectinload
-from models import StockMovement
+from app.models import StockMovement
 from datetime import datetime, timedelta
 import logging
 
