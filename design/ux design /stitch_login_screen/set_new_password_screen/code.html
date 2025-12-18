@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Set New Password Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#111714",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+<div class="flex w-full max-w-md flex-col items-center gap-8">
+<div class="flex flex-col items-center justify-center gap-2">
+<svg class="h-12 w-12 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M7.78711 7.09863L11.5176 4.31845C11.8023 4.12004 12.1977 4.12004 12.4824 4.31845L16.2129 7.09863C16.4526 7.26651 16.6025 7.53863 16.6025 7.83416V13.344C16.6025 15.6575 14.8643 17.6593 12.5694 18.1189C12.2062 18.192 11.7938 18.192 11.4306 18.1189C9.13572 17.6593 7.39746 15.6575 7.39746 13.344V7.83416C7.39746 7.53863 7.54738 7.26651 7.78711 7.09863Z"></path>
+<path d="M12 20.25V18.1875"></path>
+<path d="M19.5 13.5L21 12.75"></path>
+<path d="M4.5 13.5L3 12.75"></path>
+<path d="M10.125 21L10.5 18"></path>
+<path d="M13.875 21L13.5 18"></path>
+</svg>
+</div>
+<div class="flex w-full flex-col gap-8 rounded-lg bg-background-light dark:bg-zinc-900/20 p-8 shadow-2xl shadow-primary/10">
+<div class="text-center">
+<h1 class="text-3xl font-bold tracking-tight text-white">Set a New Password</h1>
+<p class="mt-2 text-[#9eb7a8]">Your new password must be different from previous passwords.</p>
+</div>
+<form class="flex w-full flex-col gap-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-base font-medium text-white" for="new-password">New Password</label>
+<div class="relative flex w-full items-center">
+<input class="form-input h-14 w-full flex-1 resize-none overflow-hidden rounded-full border border-[#3d5245] bg-[#1c2620] p-4 pr-12 text-base text-white placeholder:text-[#9eb7a8] focus:border-primary focus:ring-2 focus:ring-primary/50" id="new-password" placeholder="Enter your new password" type="password"/>
+<button class="absolute right-0 mr-4 text-[#9eb7a8] hover:text-white" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+<p class="px-4 text-sm text-[#9eb7a8]">Must contain at least 8 characters, one uppercase letter, and one number.</p>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-base font-medium text-white" for="confirm-password">Confirm New Password</label>
+<div class="relative flex w-full items-center">
+<input class="form-input h-14 w-full flex-1 resize-none overflow-hidden rounded-full border border-[#3d5245] bg-[#1c2620] p-4 pr-12 text-base text-white placeholder:text-[#9eb7a8] focus:border-primary focus:ring-2 focus:ring-primary/50" id="confirm-password" placeholder="Confirm your new password" type="password"/>
+<button class="absolute right-0 mr-4 text-[#9eb7a8] hover:text-white" type="button">
+<span class="material-symbols-outlined">visibility_off</span>
+</button>
+</div>
+</div>
+<button class="mt-4 flex h-12 w-full cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary text-base font-bold text-[#111714] transition-colors hover:bg-primary/90" type="submit">
+<span class="truncate">Reset Password</span>
+</button>
+</form>
+</div>
+<a class="text-base font-medium text-[#9eb7a8] hover:text-primary" href="#">Back to Login</a>
+</div>
+</div>
+</body></html>

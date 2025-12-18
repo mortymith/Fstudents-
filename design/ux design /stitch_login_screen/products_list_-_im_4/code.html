@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Supplier - Inventory Manager</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#111714",
+                        "surface-dark": "#1d2621",
+                        "surface-dark-highlight": "#29382f",
+                        "text-secondary": "#9eb7a8",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"],
+                        "body": ["Spline Sans", "Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden">
+<div class="flex h-screen w-full">
+<aside class="w-64 flex-shrink-0 flex flex-col justify-between bg-surface-dark border-r border-surface-dark-highlight hidden lg:flex">
+<div class="flex flex-col gap-6 p-6">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-12" data-alt="User profile picture showing a professional headshot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAFGHQK8RO4eqC8f_BwaHHnsL-WbLg2ZkD-x7ua1p1TQv28ux1r_i0bzdWZlLSQx2RSpJr6a_ZWmI0B0jXeb1gZLgHEbkrhDy9-G_rQ-VcnQmwJls776PfjUNkQrtSFAhodeOOh2Kh7lcVxUEXoyKbw9g2VhpZPKCIZavMAWDF0EA0Zrt2kcalQ1ISlVhHHSpMmCwNlj-M_xbH5FthAy3CJLJzApXQP1hYquldl3svzvKjg9pw1sve1gMjXuyWI-t7xiukMDrf37Ka-");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-semibold leading-tight">Alex Morgan</h1>
+<p class="text-text-secondary text-xs font-normal">Inventory Manager</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">shopping_bag</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface-dark-highlight text-white" href="#">
+<span class="material-symbols-outlined text-2xl text-primary font-variation-settings-'FILL'1">group</span>
+<span class="text-sm font-medium">Suppliers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">bar_chart</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+</nav>
+</div>
+<div class="p-6">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-red-400 transition-colors mt-1" href="#">
+<span class="material-symbols-outlined text-2xl">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<header class="flex items-center justify-between border-b border-surface-dark-highlight dark:bg-background-dark bg-white px-8 py-5 flex-shrink-0">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-sm">
+<a class="text-text-secondary hover:text-primary transition-colors" href="#">Home</a>
+<span class="text-text-secondary">/</span>
+<a class="text-text-secondary hover:text-primary transition-colors" href="#">Suppliers</a>
+<span class="text-text-secondary">/</span>
+<span class="text-slate-900 dark:text-white font-medium">Edit Supplier</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-2xl font-bold leading-tight">Edit Supplier</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg size-10 text-slate-500 dark:text-text-secondary hover:bg-slate-100 dark:hover:bg-surface-dark-highlight transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="hidden md:flex items-center justify-center rounded-lg size-10 text-slate-500 dark:text-text-secondary hover:bg-slate-100 dark:hover:bg-surface-dark-highlight transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-auto p-8">
+<div class="flex flex-col h-full max-w-4xl mx-auto gap-6">
+<div class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-dark-highlight shadow-sm">
+<div class="px-8 py-6 border-b border-slate-200 dark:border-surface-dark-highlight flex justify-between items-center">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Edit Supplier: TechGiant Solutions</h3>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-[#1e3a29] dark:text-primary border border-green-200 dark:border-green-900">
+                                Active
+                            </span>
+</div>
+<form action="#" class="px-8 py-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="col-span-1">
+<label class="block text-sm font-medium text-slate-700 dark:text-text-secondary mb-2" for="supplier-name">
+                                        Supplier Name <span class="text-red-500">*</span>
+</label>
+<input class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white placeholder-text-secondary focus:border-primary focus:ring-primary sm:text-sm p-2.5" id="supplier-name" name="supplier-name" required="" type="text" value="TechGiant Solutions"/>
+<p class="mt-1 text-xs text-text-secondary">Must be unique.</p>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium text-slate-700 dark:text-text-secondary mb-2" for="contact-name">
+                                        Primary Contact Name
+                                    </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-secondary text-lg">person</span>
+</div>
+<input class="block w-full pl-10 rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white placeholder-text-secondary focus:border-primary focus:ring-primary sm:text-sm p-2.5" id="contact-name" name="contact-name" type="text" value="Sarah Connor"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium text-slate-700 dark:text-text-secondary mb-2" for="phone">
+                                        Phone Number
+                                    </label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-secondary text-lg">call</span>
+</div>
+<input class="block w-full pl-10 rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white placeholder-text-secondary focus:border-primary focus:ring-primary sm:text-sm p-2.5" id="phone" name="phone" type="tel" value="+1 (555) 123-4567"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium text-slate-700 dark:text-text-secondary mb-2" for="email">
+                                        Email Address <span class="text-text-secondary font-normal">(Optional)</span>
+</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-secondary text-lg">mail</span>
+</div>
+<input class="block w-full pl-10 rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white placeholder-text-secondary focus:border-primary focus:ring-primary sm:text-sm p-2.5" id="email" name="email" type="email" value="contact@techgiant.com"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium text-slate-700 dark:text-text-secondary mb-2" for="payment-terms">
+                                        Default Payment Terms
+                                    </label>
+<select class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white focus:border-primary focus:ring-primary sm:text-sm p-2.5" id="payment-terms" name="payment-terms">
+<option>Immediate Payment</option>
+<option>Net 15</option>
+<option selected="">Net 30</option>
+<option>Net 60</option>
+<option>Net 90</option>
+</select>
+</div>
+<div class="col-span-1 md:col-span-2">
+<label class="block text-sm font-medium text-slate-700 dark:text-text-secondary mb-2" for="address">
+                                        Business Address
+                                    </label>
+<textarea class="block w-full rounded-lg border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white placeholder-text-secondary focus:border-primary focus:ring-primary sm:text-sm p-2.5" id="address" name="address" rows="3">123 Innovation Blvd, Suite 400
+Silicon Valley, CA 94000
+United States</textarea>
+</div>
+</div>
+<div class="flex items-center justify-end gap-4 mt-10 pt-6 border-t border-slate-200 dark:border-surface-dark-highlight">
+<button class="px-5 py-2.5 rounded-lg text-sm font-medium text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-surface-dark-highlight transition-colors border border-slate-300 dark:border-slate-600" type="button">
+                                    Cancel
+                                </button>
+<button class="flex items-center gap-2 bg-primary hover:bg-green-400 text-slate-900 px-6 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 transition-all transform active:scale-95" type="submit">
+<span class="material-symbols-outlined text-xl">save</span>
+                                    Save Supplier
+                                </button>
+</div>
+</form>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white dark:bg-surface-dark p-6 rounded-xl border border-slate-200 dark:border-surface-dark-highlight shadow-sm">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-white">Active Products</h4>
+</div>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">124</p>
+<a class="text-xs text-primary hover:underline mt-1 block" href="#">View all products</a>
+</div>
+<div class="bg-white dark:bg-surface-dark p-6 rounded-xl border border-slate-200 dark:border-surface-dark-highlight shadow-sm">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-orange-400">pending_actions</span>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-white">Pending Orders</h4>
+</div>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">3</p>
+<a class="text-xs text-primary hover:underline mt-1 block" href="#">View active orders</a>
+</div>
+<div class="bg-white dark:bg-surface-dark p-6 rounded-xl border border-slate-200 dark:border-surface-dark-highlight shadow-sm">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-blue-400">payments</span>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-white">Total Spend (YTD)</h4>
+</div>
+<p class="text-2xl font-bold text-slate-900 dark:text-white">$45,290.00</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

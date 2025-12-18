@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+
+<html class="light dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Purchase Order</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#1A1A1A", "background-light": "#f7f7f7", "background-dark": "#191919"}, fontFamily: {display: "Spline Sans"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+<style>
+        /* Custom scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .form-input {
+            transition: all 0.2s;
+        }
+        .form-input:focus {
+            border-color: #136dec;
+            box-shadow: 0 0 0 1px #136dec;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111418] dark:text-white font-display overflow-hidden">
+<div class="relative flex h-screen w-full flex-row overflow-hidden">
+<!-- Sidebar -->
+<aside class="flex h-full w-64 flex-col border-r border-[#dbe0e6] dark:border-gray-800 bg-white dark:bg-[#1A222C] flex-shrink-0 transition-all">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center mb-4 px-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-primary/10 flex items-center justify-center text-primary" data-alt="System logo placeholder">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-[#111418] dark:text-white text-base font-bold leading-normal">InventorySys</h1>
+<p class="text-[#617289] dark:text-gray-400 text-sm font-normal leading-normal">Admin Panel</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-light dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#617289] group-hover:text-[#111418] dark:text-gray-400 dark:group-hover:text-white">dashboard</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-light dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#617289] group-hover:text-[#111418] dark:text-gray-400 dark:group-hover:text-white">inventory_2</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Inventory</p>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20" href="#">
+<span class="material-symbols-outlined text-primary font-bold fill-current">shopping_cart</span>
+<p class="text-primary dark:text-blue-400 text-sm font-bold leading-normal">Purchase Orders</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-light dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#617289] group-hover:text-[#111418] dark:text-gray-400 dark:group-hover:text-white">currency_exchange</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Sales</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-background-light dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#617289] group-hover:text-[#111418] dark:text-gray-400 dark:group-hover:text-white">settings</span>
+<p class="text-[#111418] dark:text-gray-200 text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="px-3 py-2">
+<div class="flex items-center gap-3 p-2 rounded-lg bg-background-light dark:bg-gray-800 cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-gray-300 bg-cover bg-center" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBg1YuB18jlTg_WK93K5WeGhkk6Gi9lCGWdV5g_U_drBe7DXIq2_IffjGYIRMyMo44ZI7tCs8BfdkiK2ecDb_s3jbw_5yU1GdN7vYjb0K4C9NdqBjqRoKoXrRvme4h4ptj7LxxDmiVnYn9dQHW6KA0AXitNwHCJtz9rka1JYPmVSEHywfa_1tzY3vB33HyttX6Wwg8kAEUXqoKQOHg0PLxwVT0jdhwFuF2n9c_vROFCr5Nx2NfzxsC4l-AlXIcj9LWmp1G8m1sThjkr");'></div>
+<div class="flex flex-col">
+<p class="text-xs font-semibold text-[#111418] dark:text-white">Jane Doe</p>
+<p class="text-xs text-[#617289] dark:text-gray-400">Log out</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 h-full overflow-y-auto bg-background-light dark:bg-background-dark">
+<div class="container mx-auto max-w-5xl px-6 py-8">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 mb-6 items-center">
+<a class="text-[#617289] dark:text-gray-400 text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<span class="text-[#617289] dark:text-gray-500 text-sm font-medium">/</span>
+<a class="text-[#617289] dark:text-gray-400 text-sm font-medium hover:text-primary transition-colors" href="#">Purchase Orders</a>
+<span class="text-[#617289] dark:text-gray-500 text-sm font-medium">/</span>
+<span class="text-[#111418] dark:text-white text-sm font-semibold">Create New</span>
+</div>
+<!-- Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+<div class="flex flex-col gap-2">
+<h1 class="text-[#111418] dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Create New Purchase Order</h1>
+<p class="text-[#617289] dark:text-gray-400 text-base font-normal">Fill in the details below to generate a new PO sent to your supplier.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white dark:bg-[#1A222C] border border-[#dbe0e6] dark:border-gray-700 text-[#111418] dark:text-white text-sm font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Cancel</button>
+<button class="px-4 py-2 bg-white dark:bg-[#1A222C] border border-[#dbe0e6] dark:border-gray-700 text-primary dark:text-blue-400 text-sm font-bold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">Save as Draft</button>
+</div>
+</div>
+<form class="flex flex-col gap-6" onsubmit="event.preventDefault();">
+<!-- Section 1: PO Details -->
+<div class="bg-white dark:bg-[#1A222C] rounded-xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-[#dbe0e6] dark:border-gray-800">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight">PO Header Details</h3>
+</div>
+<div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Supplier Name -->
+<label class="flex flex-col gap-2">
+<span class="text-[#111418] dark:text-gray-200 text-sm font-medium">Supplier Name</span>
+<div class="relative">
+<select class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-12 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20">
+<option disabled="" selected="" value="">Select a supplier...</option>
+<option value="acme">Acme Corp International</option>
+<option value="globex">Globex Supplies</option>
+<option value="soylent">Soylent Corp</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-3 text-[#617289] pointer-events-none">expand_more</span>
+</div>
+</label>
+<!-- Expected Delivery Date -->
+<label class="flex flex-col gap-2">
+<span class="text-[#111418] dark:text-gray-200 text-sm font-medium">Expected Delivery Date</span>
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-[#617289]" type="date"/>
+</label>
+<!-- Reference Number -->
+<label class="flex flex-col gap-2">
+<span class="text-[#111418] dark:text-gray-200 text-sm font-medium">Reference Number <span class="text-[#617289] font-normal">(Optional)</span></span>
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-12 px-4 focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-[#617289]" placeholder="e.g. PO-2023-001" type="text"/>
+</label>
+<!-- Warehouse Location -->
+<label class="flex flex-col gap-2">
+<span class="text-[#111418] dark:text-gray-200 text-sm font-medium">Ship To Location</span>
+<div class="relative">
+<select class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-12 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20">
+<option value="main">Main Warehouse (NYC)</option>
+<option value="west">West Coast Hub (LA)</option>
+<option value="europe">European Distribution (Berlin)</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-3 text-[#617289] pointer-events-none">expand_more</span>
+</div>
+</label>
+<!-- Internal Notes (Full Width) -->
+<label class="flex flex-col gap-2 md:col-span-2">
+<span class="text-[#111418] dark:text-gray-200 text-sm font-medium">Internal Notes</span>
+<textarea class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] p-4 resize-y focus:outline-none focus:ring-2 focus:ring-primary/20 placeholder:text-[#617289]" placeholder="Add any specific instructions or internal comments here..." rows="3"></textarea>
+</label>
+</div>
+</div>
+<!-- Section 2: Items -->
+<div class="bg-white dark:bg-[#1A222C] rounded-xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+<div class="px-6 py-4 border-b border-[#dbe0e6] dark:border-gray-800 flex justify-between items-center bg-[#fcfdfd] dark:bg-[#1A222C]">
+<h3 class="text-[#111418] dark:text-white text-lg font-bold leading-tight">Purchase Order Items</h3>
+<button class="text-primary text-sm font-bold flex items-center gap-1 hover:bg-primary/10 px-3 py-1.5 rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-lg">add</span>
+                                Add Bulk Items
+                            </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-[#f0f2f4] dark:bg-[#232b36]">
+<tr>
+<th class="py-3 px-6 text-[#617289] dark:text-gray-400 text-xs uppercase font-bold tracking-wider w-[40%]">Product Details</th>
+<th class="py-3 px-4 text-[#617289] dark:text-gray-400 text-xs uppercase font-bold tracking-wider w-[15%]">Quantity</th>
+<th class="py-3 px-4 text-[#617289] dark:text-gray-400 text-xs uppercase font-bold tracking-wider w-[20%]">Unit Cost</th>
+<th class="py-3 px-4 text-[#617289] dark:text-gray-400 text-xs uppercase font-bold tracking-wider w-[15%] text-right">Line Total</th>
+<th class="py-3 px-4 text-[#617289] dark:text-gray-400 text-xs uppercase font-bold tracking-wider w-[10%] text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#dbe0e6] dark:divide-gray-800">
+<!-- Row 1 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-[#1f2933] transition-colors">
+<td class="py-4 px-6">
+<div class="flex flex-col gap-1">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[#617289] text-lg">search</span>
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-10 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" type="text" value="Office Chair - Ergonomic Black (SKU-992)"/>
+</div>
+<span class="text-xs text-[#617289] pl-1">In Stock: 42 units</span>
+</div>
+</td>
+<td class="py-4 px-4 align-top">
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" type="number" value="10"/>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-[#617289] text-sm">$</span>
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-10 pl-6 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" type="number" value="125.00"/>
+</div>
+</td>
+<td class="py-4 px-4 align-top text-right">
+<p class="text-[#111418] dark:text-white font-medium text-sm pt-2.5">$1,250.00</p>
+</td>
+<td class="py-4 px-4 align-top text-center">
+<button class="text-[#617289] hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20" type="button">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-gray-50 dark:hover:bg-[#1f2933] transition-colors">
+<td class="py-4 px-6">
+<div class="flex flex-col gap-1">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[#617289] text-lg">search</span>
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-10 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Search product by name or SKU..." type="text"/>
+</div>
+</div>
+</td>
+<td class="py-4 px-4 align-top">
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-10 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="0" type="number"/>
+</td>
+<td class="py-4 px-4 align-top">
+<div class="relative">
+<span class="absolute left-3 top-2.5 text-[#617289] text-sm">$</span>
+<input class="form-input w-full rounded-lg text-[#111418] dark:text-white border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-[#232b36] h-10 pl-6 pr-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="0.00" type="number"/>
+</div>
+</td>
+<td class="py-4 px-4 align-top text-right">
+<p class="text-[#617289] dark:text-gray-500 font-medium text-sm pt-2.5">$0.00</p>
+</td>
+<td class="py-4 px-4 align-top text-center">
+<button class="text-[#617289] hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20" type="button">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-[#dbe0e6] dark:border-gray-800 bg-gray-50 dark:bg-[#232b36]/50">
+<button class="w-full py-3 border-2 border-dashed border-[#dbe0e6] dark:border-gray-600 rounded-lg text-[#617289] dark:text-gray-400 font-medium hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined">add_circle</span>
+                                Add New Line Item
+                            </button>
+</div>
+</div>
+<!-- Section 3: Summary -->
+<div class="flex flex-col md:flex-row gap-6 justify-end items-start mb-20">
+<div class="w-full md:w-1/3 bg-white dark:bg-[#1A222C] rounded-xl border border-[#dbe0e6] dark:border-gray-800 shadow-sm p-6 flex flex-col gap-4 ml-auto">
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#617289] dark:text-gray-400 font-medium">Subtotal</span>
+<span class="text-[#111418] dark:text-white font-medium">$1,250.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-[#617289] dark:text-gray-400 font-medium">Tax (0%)</span>
+<span class="text-[#111418] dark:text-white font-medium">$0.00</span>
+</div>
+<div class="flex justify-between items-center text-sm pb-4 border-b border-[#dbe0e6] dark:border-gray-800">
+<span class="text-[#617289] dark:text-gray-400 font-medium">Shipping Estimate</span>
+<span class="text-[#111418] dark:text-white font-medium">$50.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[#111418] dark:text-white text-lg font-bold">Total Estimated Cost</span>
+<span class="text-primary text-xl font-black tracking-tight">$1,300.00</span>
+</div>
+<div class="flex flex-col gap-3 mt-4">
+<button class="w-full h-12 bg-primary hover:bg-blue-700 text-white font-bold rounded-lg shadow-md shadow-blue-500/20 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">check_circle</span>
+                                    Mark as Ordered
+                                </button>
+<button class="w-full h-12 bg-white dark:bg-[#232b36] border border-[#dbe0e6] dark:border-gray-600 text-[#111418] dark:text-white font-medium rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                                    Save as Draft
+                                </button>
+</div>
+</div>
+</div>
+</form>
+</div>
+</main>
+</div>
+</body></html>

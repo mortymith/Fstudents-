@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PO Detail / Receiving</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#122017",
+                        "surface-dark": "#111714",
+                        "surface-dark-highlight": "#29382f"
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetic in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111714; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #29382f; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3d5245; 
+        }
+    </style>
+</head>
+<body>
+<div class="relative flex h-screen w-full flex-row bg-background-dark font-display text-white overflow-hidden">
+<!-- Side Navigation -->
+<aside class="flex h-full w-64 flex-col border-r border-surface-dark-highlight bg-surface-dark flex-shrink-0">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<!-- User Profile -->
+<div class="flex gap-3 items-center mb-6">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with professional attire" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC7_Gv7NZ6Hz6_gC1MYo6hjokC19tT0TxZPIPcuM5dB-o9wJyd5kHMCZSNOINuUc7xp8RE7zMM72iFCKZi9cUm20XfwrlUZxdQ573ai_kQMdTMzUW48f9LPcXyeQGCBKQSfQPxIkHC8n9eU2otxMleDW3ItzlvwHxmPr7_0_V7Qk2Vw0zGrn0zeq5q1I7o6bzPqrwXrRXFHJuO6KGKdSXhrj1OB7xwe61c0CXc13lA0x63lqWDrx9wS9XiLHlqFCeINQOY3bIx_MKsS");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Inventory Manager</h1>
+<p class="text-[#9eb7a8] text-sm font-normal leading-normal">Admin</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark-highlight transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#9eb7a8] group-hover:text-white">dashboard</span>
+<p class="text-[#9eb7a8] group-hover:text-white text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark-highlight transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#9eb7a8] group-hover:text-white">inventory_2</span>
+<p class="text-[#9eb7a8] group-hover:text-white text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-dark-highlight" href="#">
+<span class="material-symbols-outlined text-primary fill-1">shopping_cart</span>
+<p class="text-white text-sm font-medium leading-normal">Orders</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark-highlight transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#9eb7a8] group-hover:text-white">description</span>
+<p class="text-[#9eb7a8] group-hover:text-white text-sm font-medium leading-normal">Reports</p>
+</a>
+</div>
+</div>
+<!-- Bottom Settings -->
+<div class="flex flex-col gap-2 border-t border-surface-dark-highlight pt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-surface-dark-highlight transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#9eb7a8] group-hover:text-white">settings</span>
+<p class="text-[#9eb7a8] group-hover:text-white text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex flex-1 flex-col h-full min-w-0 overflow-hidden">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-surface-dark-highlight bg-surface-dark px-8 py-4 shrink-0">
+<div class="flex items-center gap-8 w-full">
+<div class="flex items-center gap-3 text-white">
+<div class="p-1.5 rounded bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-xl">warehouse</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Receiving Dock</h2>
+</div>
+<!-- Search Bar -->
+<label class="flex flex-col min-w-40 !h-10 max-w-96 flex-1">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-surface-dark-highlight group focus-within:ring-1 focus-within:ring-primary/50">
+<div class="text-[#9eb7a8] flex border-none items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-transparent focus:border-none h-full placeholder:text-[#9eb7a8] px-3 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Search PO, SKU, or Supplier..." value=""/>
+</div>
+</label>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<button class="relative flex items-center justify-center rounded-lg size-10 bg-surface-dark-highlight text-white hover:bg-[#3d5245] transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 rounded-full bg-primary border-2 border-surface-dark-highlight"></span>
+</button>
+<div class="h-8 w-[1px] bg-surface-dark-highlight mx-1"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden md:block">
+<p class="text-sm font-medium text-white">Jane Doe</p>
+<p class="text-xs text-[#9eb7a8]">Warehouse Lead</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 ring-2 ring-surface-dark-highlight" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA6fCoH_XH-COXnmF2DRcgJMS4OePQ9JrHWTrcDheBZpjg8pTl1V0v6d3IwgGI6arr4Dowy94tP479RfuK8nxyzzCuAYNWcY4xytyCSB1l9hxQlDoQJgsKiycF5ZtdJ9C5oFBXYt05xgL_l8h3zyQ0ZL2voJtKCdTFQOIWUnzEzRzODPYB7BLNHzbS4ieQBZS7Ci7qveQofVzW-E2VTBAb_fo0Gf8La76mw79Fnidp6bJx5PwWNGZkQoUF2TTLxumW64p_sXSCcld8-");'></div>
+</div>
+</div>
+</div>
+</header>
+<!-- Scrollable Page Content -->
+<main class="flex-1 overflow-y-auto p-8">
+<div class="mx-auto max-w-6xl flex flex-col gap-6">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm">
+<a class="text-[#9eb7a8] hover:text-white transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[18px]">home</span>
+</a>
+<span class="material-symbols-outlined text-[#9eb7a8] text-[16px]">chevron_right</span>
+<a class="text-[#9eb7a8] hover:text-white transition-colors" href="#">Orders</a>
+<span class="material-symbols-outlined text-[#9eb7a8] text-[16px]">chevron_right</span>
+<span class="text-white font-medium">PO #PO-8832</span>
+</div>
+<!-- Header & Actions -->
+<div class="flex flex-wrap items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<h1 class="text-white text-3xl font-bold tracking-tight">Purchase Order: #PO-8832</h1>
+<span class="px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs font-bold uppercase tracking-wider">Partially Received</span>
+</div>
+<p class="text-[#9eb7a8] text-base">Review order details and record received items from <span class="text-white font-medium">Global Tech Suppliers Inc.</span></p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-surface-dark-highlight hover:bg-[#3d5245] text-white text-sm font-bold transition-colors">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                                Print Label
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-[#2bc468] text-surface-dark text-sm font-bold shadow-lg shadow-primary/20 transition-all">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                                Record Receipt
+                            </button>
+</div>
+</div>
+<!-- Stats / Meta Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-surface-dark-highlight bg-[#1a261f]">
+<div class="flex items-center gap-2 text-[#9eb7a8] mb-1">
+<span class="material-symbols-outlined text-[20px]">shopping_bag</span>
+<p class="text-xs font-bold uppercase tracking-wider">Total Items</p>
+</div>
+<p class="text-white text-2xl font-bold">145</p>
+<div class="w-full bg-surface-dark-highlight rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 45%"></div>
+</div>
+<p class="text-xs text-[#9eb7a8] mt-1">65 Received (45%)</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-surface-dark-highlight bg-[#1a261f]">
+<div class="flex items-center gap-2 text-[#9eb7a8] mb-1">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<p class="text-xs font-bold uppercase tracking-wider">Created By</p>
+</div>
+<div class="flex items-center gap-3 mt-1">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="Avatar of PO creator" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAzuPQ2t8Rfj7QurkPzcfwRqwFQmzwSEG0FcMfNah7gfPf52KA2BFdKXT5u8kqwup8aGq20rGYtAZMEk7qf1HWfXMfa5WAr0D9ppD0-6rwNvyOBq6NyV5emMTO1Kh3d9CWbS92VLXjFB_1HAHcM-HVI4DseGm6XpltQvLJH2QNUeAZ4SN76yPjzdzwLEKXkeBISaB-n534A_FsVa41X3btcRa8bDYMWPxxhdDIGmjw8ysnDmGBDWcjOHbsX_HEnD1QS72INQEVyBZgK");'></div>
+<p class="text-white text-lg font-bold">Michael Scott</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-surface-dark-highlight bg-[#1a261f]">
+<div class="flex items-center gap-2 text-[#9eb7a8] mb-1">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+<p class="text-xs font-bold uppercase tracking-wider">Ordered Date</p>
+</div>
+<p class="text-white text-xl font-bold">Oct 24, 2023</p>
+<p class="text-xs text-[#9eb7a8]">10:42 AM</p>
+</div>
+<div class="flex flex-col gap-1 rounded-xl p-5 border border-surface-dark-highlight bg-[#1a261f]">
+<div class="flex items-center gap-2 text-[#9eb7a8] mb-1">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+<p class="text-xs font-bold uppercase tracking-wider">Last Receipt</p>
+</div>
+<p class="text-white text-xl font-bold">Today</p>
+<p class="text-xs text-[#9eb7a8]">Just now by You</p>
+</div>
+</div>
+<!-- Main Data Table Section -->
+<div class="flex flex-col rounded-xl border border-surface-dark-highlight bg-[#1a261f] overflow-hidden">
+<div class="px-6 py-4 border-b border-surface-dark-highlight flex justify-between items-center bg-[#1e2b23]">
+<h3 class="text-lg font-bold text-white">Order Items</h3>
+<div class="flex items-center gap-2">
+<span class="text-sm text-[#9eb7a8]">Show received items</span>
+<button class="w-10 h-6 rounded-full bg-primary/20 relative cursor-pointer border border-primary/30 transition-colors">
+<span class="absolute right-1 top-1 size-4 bg-primary rounded-full shadow-sm"></span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead class="bg-surface-dark text-[#9eb7a8] font-medium border-b border-surface-dark-highlight">
+<tr>
+<th class="px-6 py-4 w-[40%]">Product Details</th>
+<th class="px-6 py-4 w-[15%] text-right">Unit Cost</th>
+<th class="px-6 py-4 w-[15%] text-center">Ordered</th>
+<th class="px-6 py-4 w-[15%] text-center">Received</th>
+<th class="px-6 py-4 w-[15%]">Receive Now</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-dark-highlight">
+<!-- Row 1: Active Input -->
+<tr class="group hover:bg-[#233028] transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded bg-surface-dark-highlight border border-surface-dark-highlight flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#9eb7a8]">chair</span>
+</div>
+<div>
+<p class="text-white font-semibold text-base">Ergonomic Office Chair</p>
+<p class="text-[#9eb7a8] text-xs">SKU: CH-992-BLK</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-[#9eb7a8]">$120.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-1 rounded bg-surface-dark-highlight text-white font-mono font-medium">50</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-primary font-mono font-bold">20</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center relative">
+<input class="w-24 bg-surface-dark border border-surface-dark-highlight rounded-lg px-3 py-2 text-white font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-[#55695e]" placeholder="0" type="number" value="15"/>
+<div class="absolute right-[-40px] opacity-0 group-hover:opacity-100 transition-opacity text-primary">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2: Empty Input -->
+<tr class="group hover:bg-[#233028] transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded bg-surface-dark-highlight border border-surface-dark-highlight flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#9eb7a8]">desk</span>
+</div>
+<div>
+<p class="text-white font-semibold text-base">Standing Desk Pro</p>
+<p class="text-[#9eb7a8] text-xs">SKU: DK-881-WHT</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-[#9eb7a8]">$450.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-1 rounded bg-surface-dark-highlight text-white font-mono font-medium">10</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-[#55695e] font-mono">0</span>
+</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-surface-dark border border-surface-dark-highlight rounded-lg px-3 py-2 text-white font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-[#55695e]" placeholder="0" type="number"/>
+</td>
+</tr>
+<!-- Row 3: Fully Received -->
+<tr class="bg-primary/5 hover:bg-primary/10 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded bg-surface-dark-highlight border border-surface-dark-highlight flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">monitor</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<p class="text-white font-semibold text-base">27" 4K Monitor</p>
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+</div>
+<p class="text-[#9eb7a8] text-xs">SKU: MN-400-IPS</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-[#9eb7a8]">$320.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-1 rounded bg-surface-dark-highlight text-white font-mono font-medium">25</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-primary font-mono font-bold">25</span>
+</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-surface-dark/50 border border-transparent rounded-lg px-3 py-2 text-[#55695e] font-mono cursor-not-allowed" disabled="" type="number" value="0"/>
+</td>
+</tr>
+<!-- Row 4: Empty Input -->
+<tr class="group hover:bg-[#233028] transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded bg-surface-dark-highlight border border-surface-dark-highlight flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[#9eb7a8]">keyboard</span>
+</div>
+<div>
+<p class="text-white font-semibold text-base">Mechanical Keyboard</p>
+<p class="text-[#9eb7a8] text-xs">SKU: KB-202-RGB</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-right font-mono text-[#9eb7a8]">$85.00</td>
+<td class="px-6 py-4 text-center">
+<span class="px-2.5 py-1 rounded bg-surface-dark-highlight text-white font-mono font-medium">60</span>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="text-primary font-mono font-bold">20</span>
+</td>
+<td class="px-6 py-4">
+<input class="w-24 bg-surface-dark border border-surface-dark-highlight rounded-lg px-3 py-2 text-white font-mono focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder-[#55695e]" placeholder="0" type="number"/>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Summary -->
+<div class="px-6 py-4 border-t border-surface-dark-highlight bg-[#1e2b23] flex justify-end">
+<div class="flex flex-col gap-2 w-64">
+<div class="flex justify-between text-sm text-[#9eb7a8]">
+<span>Subtotal (Received)</span>
+<span class="font-mono">$12,100.00</span>
+</div>
+<div class="flex justify-between text-sm text-[#9eb7a8]">
+<span>Estimated Tax</span>
+<span class="font-mono">$968.00</span>
+</div>
+<div class="h-px bg-surface-dark-highlight my-1"></div>
+<div class="flex justify-between text-white font-bold">
+<span>Total Value</span>
+<span class="font-mono text-xl">$13,068.00</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="light dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PO Management List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {primary: "#38e07b", "background-light": "#f6f8f7", "background-dark": "#122017"}, fontFamily: {display: "Spline Sans"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#111318] dark:text-white overflow-x-hidden">
+<div class="flex min-h-screen w-full">
+<!-- Side Navigation -->
+<aside class="hidden lg:flex flex-col w-[280px] border-r border-[#f0f2f4] dark:border-gray-800 bg-white dark:bg-[#111318]">
+<div class="flex h-full flex-col justify-between p-4">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 px-2 py-2 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Company Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDG9BjzdQPRDRTzIozDllGcMTWjnihBSaXv8EhMyrtcrRpMVVcfJwnyKfbbbfgZA7jelUrA_qySu2kmYc0z1Frh5e6pGc39rAGIQusyvU7q9urX_2HFDxkPOjnhM17-tlLQXBSgDojRahkpuMIDC7fjm48ETJ4LeEeG9U5bnHhrLWm7sc7rgI6e80aANo9ZkyLcfX40ECYRyd5izqyHhihE_97KWKepgAJlf85CpUHMpGYNMZpAvaGAFeBdB3k3giGqCX-Bkk49yT4N");'></div>
+<div class="flex flex-col">
+<h1 class="text-[#111318] dark:text-white text-base font-medium leading-normal">InventorySys</h1>
+<p class="text-[#616f89] text-sm font-normal leading-normal">Enterprise</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 mt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-[#616f89] dark:text-gray-400 hover:text-[#111318] dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-[#616f89] dark:text-gray-400 hover:text-[#111318] dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-[#616f89] dark:text-gray-400 hover:text-[#111318] dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">group</span>
+<p class="text-sm font-medium leading-normal">Suppliers</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined filled" style="font-size: 24px;">shopping_cart</span>
+<p class="text-sm font-medium leading-normal">Purchase Orders</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-[#616f89] dark:text-gray-400 hover:text-[#111318] dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">description</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+</nav>
+</div>
+<div class="px-3">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-[#616f89] dark:text-gray-400 hover:text-[#111318] dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background-light dark:bg-background-dark">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#f0f2f4] dark:border-gray-800 bg-white dark:bg-[#111318] px-6 lg:px-10 py-3 sticky top-0 z-30">
+<div class="flex items-center gap-4 text-[#111318] dark:text-white">
+<button class="lg:hidden flex items-center justify-center text-gray-500 hover:text-gray-900">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden sm:flex flex-wrap gap-2 text-sm">
+<a class="text-[#616f89] hover:text-primary transition-colors font-medium leading-normal" href="#">Home</a>
+<span class="text-[#616f89] font-medium leading-normal">/</span>
+<span class="text-[#111318] dark:text-white font-medium leading-normal">Purchase Orders</span>
+</div>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg size-10 hover:bg-[#f0f2f4] dark:hover:bg-gray-800 text-[#111318] dark:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 22px;">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 hover:bg-[#f0f2f4] dark:hover:bg-gray-800 text-[#111318] dark:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 22px;">help</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 cursor-pointer ring-2 ring-transparent hover:ring-primary/20 transition-all" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCrFMNxwTX5JF4KHro2MHiDZgWhdCkgU4wsuraZs8lW-pTjh3QmOQiGxTPv2e6lPkcaK-KtN1rbyBF_3zZMCbM73WdjVKmLHQyEZOQFS9AFId0YMzsRtvKD7dUvxPiNNqJSlCcFDXDHAnoqqNhlplRu10X53hKCoUcVbuRv4sqD4qDbVSRzRMozXpwsFjgyZP2I168xkv3d9rVtOKSfFgMQkPRderae96VHRdx4gBhZodkdPFUkqiSebT29YgSSxJFZjj7BpKxLuML6");'></div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-6 lg:p-10">
+<div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-end gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-[#111318] dark:text-white text-3xl font-bold leading-tight tracking-[-0.033em]">PO Management</h1>
+<p class="text-[#616f89] text-base font-normal leading-normal">Manage, track, and create purchase orders for your inventory.</p>
+</div>
+</div>
+<!-- Control Bar (Filters & Actions) -->
+<div class="bg-white dark:bg-[#111318] rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-sm p-4">
+<div class="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
+<!-- Search & Filters -->
+<div class="flex flex-1 flex-col sm:flex-row gap-3 w-full lg:w-auto">
+<!-- Search -->
+<div class="relative w-full sm:w-80">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[#616f89]" style="font-size: 20px;">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border border-[#dbdfe6] dark:border-gray-700 rounded-lg leading-5 bg-white dark:bg-gray-900 placeholder-[#616f89] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm text-[#111318] dark:text-white" placeholder="Search by PO # or Supplier" type="text"/>
+</div>
+<!-- Status Filter -->
+<div class="relative w-full sm:w-48">
+<select class="block w-full pl-3 pr-10 py-2.5 text-base border border-[#dbdfe6] dark:border-gray-700 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm rounded-lg bg-white dark:bg-gray-900 text-[#111318] dark:text-white appearance-none cursor-pointer">
+<option>Status: All</option>
+<option>Draft</option>
+<option>Ordered</option>
+<option>Partially Received</option>
+<option>Received</option>
+<option>Cancelled</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#616f89]">
+<span class="material-symbols-outlined" style="font-size: 20px;">expand_more</span>
+</div>
+</div>
+<!-- Date Range Filter -->
+<button class="flex items-center justify-between w-full sm:w-auto px-3 py-2.5 border border-[#dbdfe6] dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-sm text-[#111318] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#616f89]" style="font-size: 20px;">calendar_today</span>
+<span>Last 30 Days</span>
+</div>
+<span class="material-symbols-outlined text-[#616f89] ml-2" style="font-size: 20px;">expand_more</span>
+</button>
+</div>
+<!-- Primary Action -->
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-all focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+<span>Create New PO</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-white dark:bg-[#111318] rounded-xl border border-[#dbdfe6] dark:border-gray-800 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-[#f0f2f4] dark:border-gray-800 bg-[#f8fafc] dark:bg-gray-900/50">
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89]">PO Number</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89]">Supplier</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89]">Status</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89]">Ordered Date</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89]">Expected Delivery</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89] text-right">Total</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89]">Created By</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase tracking-wider text-[#616f89] text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#f0f2f4] dark:divide-gray-800 text-sm">
+<!-- Row 1 -->
+<tr class="group hover:bg-[#f6f6f8] dark:hover:bg-gray-900/40 transition-colors">
+<td class="py-4 px-6 font-medium text-primary hover:underline cursor-pointer">
+                                        PO-2023-1045
+                                    </td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600">TS</div>
+<span class="font-medium text-[#111318] dark:text-white">TechSupply Inc.</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                            Received
+                                        </span>
+</td>
+<td class="py-4 px-6 text-[#616f89]">Oct 24, 2023</td>
+<td class="py-4 px-6 text-[#616f89]">Oct 30, 2023</td>
+<td class="py-4 px-6 text-[#111318] dark:text-white font-medium text-right">$4,250.00</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-6" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAh7erPz_r6N-YRq9Xvb4cggYv6JZLzLitmoR7OVny4VGgw_z0azkHE4FGbsA9ORl8Qs0LdRvYfdugT4f4P0VZniF-t58LVyeThzMad1Evujr0weIF9ZMrduBis41FsDRdX8OrcWevb_DCezXVEKId6b2ZX8ChWDiZVRTxSr79eDPkW-aGz7k5voF_6bmM77TtZuDajxr2es2LvSk0zwxFrVrhsawceG99TC2lrW086nJjW4VCIfvUHZUyAqj8jgSkmac_fKN4DvJjd");'></div>
+<span class="text-[#616f89]">Alice M.</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="View Details">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="Print">
+<span class="material-symbols-outlined" style="font-size: 20px;">print</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-[#f6f6f8] dark:hover:bg-gray-900/40 transition-colors">
+<td class="py-4 px-6 font-medium text-primary hover:underline cursor-pointer">
+                                        PO-2023-1044
+                                    </td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8" data-alt="Company Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAozpOPaL0-Eh0XttGzI77Sj-qZ6ON990_9mMKfdmQZGbvDY6PdX_qjtIWqK6g55_upHND_df_BUhQ5eQ-ATIWcVRerZU1-60Hruz8nu0ZFCigNv0ii77JvouZP9DodgvLAGj9fa_Uw6FnwcBwckCO1hiUIMthbdx4CShMN2zCRESikPDcStxlII5olrsAU84MrLnwUcUF1ydx74lSCuj8Bk15qB3jaOd83R7611Bwa77prjlX3cmA_5fHnABpMwqh4H3LE5sZ5i-3");'></div>
+<span class="font-medium text-[#111318] dark:text-white">Global Parts Ltd.</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                                            Partially Received
+                                        </span>
+</td>
+<td class="py-4 px-6 text-[#616f89]">Oct 28, 2023</td>
+<td class="py-4 px-6 text-[#616f89]">Nov 05, 2023</td>
+<td class="py-4 px-6 text-[#111318] dark:text-white font-medium text-right">$12,890.50</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-6" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDmiQTGAO8F_KTiqY_cdUK1B4LInpL3adQzzolG3i0hhHHbCUUD6VOAF7UqImxfduCGE6-ejAACTM5ZXkNYR6m5nTV3wCP96fvVF_qDjRwTLTigvvE6zf7cWWeW7wuZ8MXd--PbSw5zP7caWa8R4Wrdyzx8Y9psoNa6aOEtnm7A3yBQEZiUOYhnA4duL2tdT7FlgdKcMYXmZgLDSW7H3XpkVB9DopkSHWmcxSXyXVdM19AfKRS_7V1tOL9zvrbc5dDC5tZ3QMSRZ0wM");'></div>
+<span class="text-[#616f89]">John D.</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="Receive Items">
+<span class="material-symbols-outlined" style="font-size: 20px;">inventory</span>
+</button>
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="View Details">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-[#f6f6f8] dark:hover:bg-gray-900/40 transition-colors">
+<td class="py-4 px-6 font-medium text-primary hover:underline cursor-pointer">
+                                        PO-2023-1043
+                                    </td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">OS</div>
+<span class="font-medium text-[#111318] dark:text-white">Office Solutions</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                            Draft
+                                        </span>
+</td>
+<td class="py-4 px-6 text-[#616f89]">—</td>
+<td class="py-4 px-6 text-[#616f89]">—</td>
+<td class="py-4 px-6 text-[#111318] dark:text-white font-medium text-right">$540.00</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-6" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD-yYyW-fGiDhVKFEmRtEID-MmkGsKl80BnVrpaoShvxUW-JabVXWSPzb3q3XMsoNCwaUHWi6EBX8TK89rgF3QuTktpaHJJerTtwQK-fCg8JvQUQlAQ4FwDas0Pvh8gmxkF80Fi9vAhL24OMpm2_0RV7bAq6ttjmL0ocpf2ZulgigRd4BztVl-tZ6Ejs8htH4Kg1-H-QBon2yzmI0GXUetfUfb7Qx49jNMP1Fym0KdFGxHodEsGOcJelT87NC5SWBm6Uzv4CpeyOieH");'></div>
+<span class="text-[#616f89]">Alice M.</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="Edit Draft">
+<span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
+</button>
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="Mark as Ordered">
+<span class="material-symbols-outlined" style="font-size: 20px;">check_circle</span>
+</button>
+<button class="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20 text-[#616f89] hover:text-red-600 dark:hover:text-red-400" title="Delete">
+<span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-[#f6f6f8] dark:hover:bg-gray-900/40 transition-colors">
+<td class="py-4 px-6 font-medium text-primary hover:underline cursor-pointer">
+                                        PO-2023-1042
+                                    </td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-8" data-alt="Company Logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1Z7muv7Y_J9ksnt2kvgyylp8a20AlDj9B76JB8Rf93eYVL_at1kUCUCuj8bVG0CGFWQEd8LHz0Q4i5Ecj0KxYyaVwKGV2qKrIIT2H34VOHgtVnzSYEYRU9iaLOShB2OvFxzzQqEIVpzD3RpFaBssXHBB01Vu3rwwYNfedeVq9Fji72J93srHIpDcvpo18LUQvNVJ8Q-wXueuIhQMLOKQon3SuQWO1FoyigpCFu2j37NdEtnYYd3dgWzckSZDXwL7tZjza7vew_Umj");'></div>
+<span class="font-medium text-[#111318] dark:text-white">SteelWorks Co.</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                            Ordered
+                                        </span>
+</td>
+<td class="py-4 px-6 text-[#616f89]">Nov 01, 2023</td>
+<td class="py-4 px-6 text-[#616f89]">Nov 15, 2023</td>
+<td class="py-4 px-6 text-[#111318] dark:text-white font-medium text-right">$8,120.00</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-6" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCmJ2_acBfFQ3Ar5HjT4caRi_GKeHYf_nYcib2QzDhdUmVw-hmDsqvQua9QE5WMtKSkHWGmpRyWppyd4xOnR9nxhPv1d5Nt5EbzhwBLIKq46B-jJvN669eOdr_5DkbF3-1uzGR7FQViwn4NNbFV_6tI5TmOS3G3Msgl9XQgg17jecAy8sIw1_mTYZ-eCocJqnC9c3bQGzVqU37WX5aTfZSMQ3U5quAUy8pA1YVM5NJPeIejvQdLqzHAe1a1-BDluBnVXENPKkUW6DNL");'></div>
+<span class="text-[#616f89]">Mike R.</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="View Details">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</button>
+<button class="p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20 text-[#616f89] hover:text-red-600 dark:hover:text-red-400" title="Cancel Order">
+<span class="material-symbols-outlined" style="font-size: 20px;">cancel</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-[#f6f6f8] dark:hover:bg-gray-900/40 transition-colors">
+<td class="py-4 px-6 font-medium text-primary hover:underline cursor-pointer">
+                                        PO-2023-1041
+                                    </td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-full bg-purple-100 flex items-center justify-center text-xs font-bold text-purple-600">NE</div>
+<span class="font-medium text-[#111318] dark:text-white">Neon Electric</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300">
+                                            Cancelled
+                                        </span>
+</td>
+<td class="py-4 px-6 text-[#616f89]">Oct 15, 2023</td>
+<td class="py-4 px-6 text-[#616f89]">—</td>
+<td class="py-4 px-6 text-[#111318] dark:text-white font-medium text-right">$2,300.00</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-6" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKpxCiPgs4VSyz4cIVxU9FmvuvsCZlfFWR4RJzBnWecrRokOJsM6ZVxajPOYtuU_6TLyXizLesiZDcic1IlB6gMaecery_EuwMC82ab_bNG8iTtShXrKpyW-gZQOOl43hlV2uPKCkxcBDcgsjYAXFpBi3IC7Sf14oAzVa8UQnQtgvI4_3-zKP8Ssi3fiMsIN3Oa-Iy5tXzrTKxKTB97SN20QUGbODWswoQMe8NAbK05aqRmiOgzHOMgUFX_92GraoDRyyw-x-yDZLX");'></div>
+<span class="text-[#616f89]">Alice M.</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-[#616f89] hover:text-[#111318] dark:hover:text-white" title="Reorder">
+<span class="material-symbols-outlined" style="font-size: 20px;">refresh</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="border-t border-[#f0f2f4] dark:border-gray-800 p-4 bg-white dark:bg-[#111318] flex flex-col sm:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2">
+<span class="text-sm text-[#616f89]">Rows per page:</span>
+<select class="form-select bg-transparent border border-[#dbdfe6] dark:border-gray-700 rounded text-sm text-[#111318] dark:text-white py-1 pl-2 pr-6 focus:ring-primary focus:border-primary">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+</div>
+<div class="text-sm text-[#616f89]">
+                            Showing <span class="font-medium text-[#111318] dark:text-white">1</span> to <span class="font-medium text-[#111318] dark:text-white">5</span> of <span class="font-medium text-[#111318] dark:text-white">124</span> results
+                        </div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-sm font-medium text-[#616f89] hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
+                                Previous
+                            </button>
+<button class="px-3 py-1.5 border border-[#dbdfe6] dark:border-gray-700 rounded-lg text-sm font-medium text-[#111318] dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800">
+                                Next
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

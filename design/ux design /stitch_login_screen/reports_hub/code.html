@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reports Hub - InventorySys</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1a2620", // Custom surface color based on the design
+                        "surface-border": "#29382f", // Custom border color based on the design
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #29382f; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3d5245; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden antialiased">
+<div class="flex h-screen w-full flex-row overflow-hidden">
+<!-- Side Navigation -->
+<aside class="flex h-full w-72 flex-col justify-between border-r border-surface-border bg-background-dark p-4 hidden md:flex shrink-0">
+<div class="flex flex-col gap-4">
+<!-- Logo Area -->
+<div class="flex gap-3 px-2 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="InventorySys logo showing abstract geometric shapes" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCPyVWhhcNsyrXYTQSpCEAK3gPVB45WAfX9mjABHy7lIICF7Fp58zSjJOFYOqAx60Ks8fDKV38evNdR_AsIisXttZL7-jwXqw8CIoTfW_pAFrQbsmNbK717xm6-XuLwAQVeMEdrtNDk0m8iP9Hd8Na-H9OYS2yXwyCfbnX7jdxD-6HfHyE_bLIA6Hhp7ZYbGWyXeJpl6EQaxWrr3iEYGkWEMX3jKG-VK-PznMgQFRANF_0mYV53IqPKyDnK1q4jbb9Pl4bw6X8r_ODV");'></div>
+<div class="flex flex-col justify-center">
+<h1 class="text-white text-base font-bold leading-normal tracking-wide">InventorySys</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">Admin Console</p>
+</div>
+</div>
+<!-- Navigation Items -->
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9eb7a8] hover:bg-surface-border hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-white text-[#9eb7a8]" style="font-size: 24px;">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9eb7a8] hover:bg-surface-border hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-white text-[#9eb7a8]" style="font-size: 24px;">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9eb7a8] hover:bg-surface-border hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-white text-[#9eb7a8]" style="font-size: 24px;">shopping_cart</span>
+<p class="text-sm font-medium leading-normal">Orders</p>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-white ring-1 ring-primary/20" href="#">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">bar_chart</span>
+<p class="text-white text-sm font-bold leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#9eb7a8] hover:bg-surface-border hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-white text-[#9eb7a8]" style="font-size: 24px;">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<!-- User Profile (Bottom Sidebar) -->
+<div class="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-surface-border cursor-pointer transition-colors mt-auto">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="Profile picture of the current logged in user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDfVwNxugJCKoFhO3HsFxSU5dxq7l815XWPmwP8PLAR_TGrGLpOyhcpzu1s4t3wVjQhmay8jIYAYX-WK-SKPyndqVuMLdMkCL5FR77mR8P6Ijyplhzpa8hkJjbvxWWZ4LTQDIR7GDT4mjXBTZnHuF7MgF_C1R6mn9Ck9znZ5eMqkmOdsPVjCqeDrQFltgjGhF25q1lStstl2193O5hZAvjpS7Zx8zDMJAdOipKC464E4Sp4p0zXM_7hxiyqbz-54kW94ZRQyr_jK__s");'></div>
+<div class="flex flex-col">
+<p class="text-white text-sm font-medium">Alex Johnson</p>
+<p class="text-[#9eb7a8] text-xs">Manager</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="flex flex-1 flex-col h-full min-w-0 bg-background-light dark:bg-background-dark relative overflow-hidden">
+<!-- Top Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-surface-border px-6 py-4 bg-background-dark z-10 shrink-0">
+<div class="flex items-center gap-4">
+<!-- Mobile Menu Toggle (Hidden on Desktop) -->
+<button class="md:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex items-center gap-3 text-white">
+<div class="bg-primary/20 p-1.5 rounded-lg text-primary">
+<span class="material-symbols-outlined filled" style="font-variation-settings: 'FILL' 1;">analytics</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] hidden sm:block">Reports Hub</h2>
+</div>
+<!-- Search Bar -->
+<label class="flex flex-col min-w-40 h-10 w-64 ml-4 hidden sm:flex">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-surface-dark border border-surface-border focus-within:border-primary/50 transition-colors">
+<div class="text-[#9eb7a8] flex items-center justify-center pl-3">
+<span class="material-symbols-outlined" style="font-size: 20px;">search</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-[#9eb7a8] px-2 text-sm font-normal leading-normal" placeholder="Search reports..."/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 hover:bg-surface-border text-[#9eb7a8] hover:text-white transition-colors relative">
+<span class="material-symbols-outlined" style="font-size: 22px;">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full ring-2 ring-background-dark"></span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 hover:bg-surface-border text-[#9eb7a8] hover:text-white transition-colors">
+<span class="material-symbols-outlined" style="font-size: 22px;">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8 lg:p-12 scroll-smooth">
+<div class="max-w-[1200px] mx-auto flex flex-col gap-6">
+<!-- Breadcrumbs -->
+<nav class="flex flex-wrap gap-2 items-center text-sm">
+<a class="text-[#9eb7a8] hover:text-primary transition-colors font-medium" href="#">Home</a>
+<span class="text-[#566e60] text-base font-medium">/</span>
+<span class="text-white font-medium">Reports</span>
+</nav>
+<!-- Page Heading & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-white text-3xl md:text-4xl font-bold tracking-tight">Reports and Analytics</h1>
+<p class="text-[#9eb7a8] text-base max-w-2xl">Generate insights and view performance metrics across your inventory, suppliers, and orders.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-surface-dark border border-surface-border hover:bg-surface-border text-white px-4 py-2 rounded-lg text-sm font-bold transition-all">
+<span class="material-symbols-outlined" style="font-size: 18px;">calendar_today</span>
+                                Last 30 Days
+                            </button>
+<button class="flex items-center gap-2 bg-primary hover:bg-green-400 text-background-dark px-4 py-2 rounded-lg text-sm font-bold transition-all shadow-[0_0_15px_rgba(54,226,123,0.2)]">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+                                Custom Report
+                            </button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-surface-border">
+<div class="flex gap-6 overflow-x-auto pb-px">
+<button class="flex flex-col items-center justify-center border-b-[2px] border-primary text-white pb-3 px-1 whitespace-nowrap">
+<p class="text-sm font-bold tracking-wide">All Reports</p>
+</button>
+<button class="flex flex-col items-center justify-center border-b-[2px] border-transparent text-[#9eb7a8] hover:text-white pb-3 px-1 transition-colors whitespace-nowrap">
+<p class="text-sm font-bold tracking-wide">Inventory</p>
+</button>
+<button class="flex flex-col items-center justify-center border-b-[2px] border-transparent text-[#9eb7a8] hover:text-white pb-3 px-1 transition-colors whitespace-nowrap">
+<p class="text-sm font-bold tracking-wide">Purchase Orders</p>
+</button>
+<button class="flex flex-col items-center justify-center border-b-[2px] border-transparent text-[#9eb7a8] hover:text-white pb-3 px-1 transition-colors whitespace-nowrap">
+<p class="text-sm font-bold tracking-wide">Audits</p>
+</button>
+</div>
+</div>
+<!-- Main Report Content -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-2">
+<!-- Inventory Reports Section -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="bg-blue-500/10 p-2 rounded-lg text-blue-400">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<h3 class="text-white text-xl font-bold">Inventory Reports</h3>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Report Item: Inventory Valuation -->
+<a class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-surface-border hover:border-primary/50 hover:bg-[#1f2d25] transition-all duration-200" href="#">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-[#29382f] text-white group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">monetization_on</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white font-semibold text-base">Inventory Valuation Report</p>
+<p class="text-[#9eb7a8] text-sm">Current asset value across all warehouses.</p>
+</div>
+</div>
+<div class="text-[#9eb7a8] group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</div>
+</a>
+<!-- Report Item: Stock Out History -->
+<a class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-surface-border hover:border-primary/50 hover:bg-[#1f2d25] transition-all duration-200" href="#">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-[#29382f] text-white group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">history</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white font-semibold text-base">Stock Out History Report</p>
+<p class="text-[#9eb7a8] text-sm">Analysis of missed sales due to stockouts.</p>
+</div>
+</div>
+<div class="text-[#9eb7a8] group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</div>
+</a>
+<!-- Report Item: Low Stock Prediction -->
+<a class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-surface-border hover:border-primary/50 hover:bg-[#1f2d25] transition-all duration-200" href="#">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-[#29382f] text-white group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">trending_down</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white font-semibold text-base">Low Stock Prediction</p>
+<p class="text-[#9eb7a8] text-sm">AI-driven forecast for upcoming shortages.</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 rounded bg-red-500/10 text-red-400 text-xs font-bold border border-red-500/20">Critical</span>
+<div class="text-[#9eb7a8] group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</div>
+</div>
+</a>
+</div>
+</section>
+<!-- PO Reports Section -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="bg-purple-500/10 p-2 rounded-lg text-purple-400">
+<span class="material-symbols-outlined">shopping_bag</span>
+</div>
+<h3 class="text-white text-xl font-bold">Purchase Order Reports</h3>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Report Item: PO Aging Report -->
+<a class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-surface-border hover:border-primary/50 hover:bg-[#1f2d25] transition-all duration-200" href="#">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-[#29382f] text-white group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white font-semibold text-base">PO Aging Report</p>
+<p class="text-[#9eb7a8] text-sm">Track open orders by days outstanding.</p>
+</div>
+</div>
+<div class="text-[#9eb7a8] group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</div>
+</a>
+<!-- Report Item: Supplier Performance -->
+<a class="group flex items-center justify-between p-4 rounded-xl bg-surface-dark border border-surface-border hover:border-primary/50 hover:bg-[#1f2d25] transition-all duration-200" href="#">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-12 rounded-lg bg-[#29382f] text-white group-hover:bg-primary group-hover:text-background-dark transition-colors">
+<span class="material-symbols-outlined">handshake</span>
+</div>
+<div class="flex flex-col">
+<p class="text-white font-semibold text-base">Supplier Performance Report</p>
+<p class="text-[#9eb7a8] text-sm">Delivery times and quality ratings by vendor.</p>
+</div>
+</div>
+<div class="text-[#9eb7a8] group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined">arrow_forward_ios</span>
+</div>
+</a>
+<!-- Placeholder for more PO reports to balance grid -->
+<div class="hidden xl:flex items-center justify-center p-8 rounded-xl border border-dashed border-surface-border bg-transparent">
+<p class="text-[#566e60] text-sm">More reports coming soon...</p>
+</div>
+</div>
+</section>
+<!-- Optional Chart/Graph Summary Area (Visual Polish) -->
+<section class="col-span-1 xl:col-span-2 mt-4 bg-surface-dark border border-surface-border rounded-xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-white text-lg font-bold">Recent Activity</h3>
+<button class="text-primary text-sm font-medium hover:underline">View Log</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-1 p-4 rounded-lg bg-[#111714]">
+<p class="text-[#9eb7a8] text-xs font-medium uppercase tracking-wider">Reports Generated Today</p>
+<p class="text-white text-2xl font-bold font-display">24</p>
+<div class="w-full bg-[#29382f] h-1 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[60%] rounded-full"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-4 rounded-lg bg-[#111714]">
+<p class="text-[#9eb7a8] text-xs font-medium uppercase tracking-wider">Most Active User</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-6" data-alt="Small avatar of active user" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAnDaI4eqhSvDkQvVD83xGfAUNkWIfT_z7utfHEvM3JTVppeuXUKMDMg6cMlV4Plk6FlOWH9f3ERiKuaBoLf0Hoy0nxlGp3SEFiSWMjV17Y4VdUQJPH0DcRVWIQkrDbKoNE61e6_1VXdivQdgVUzTXyuCqd-gwMDhAGI1nIQwp0-fwLRy3nrg6QndVeg0zy2BDH58-TwXuNQuNpcmtE2-y3eO_dRx7Qz3zT-sfalil9r_HrAHFLY5BWoqnh2KkTBL1k7QmOj3nmmdlh");'></div>
+<p class="text-white text-lg font-bold font-display">Sarah L.</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-4 rounded-lg bg-[#111714]">
+<p class="text-[#9eb7a8] text-xs font-medium uppercase tracking-wider">System Status</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="size-2 rounded-full bg-primary animate-pulse"></div>
+<p class="text-white text-lg font-bold font-display">Operational</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

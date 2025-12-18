@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stock Adjustment Tool</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }.icon-filled {
+        font-variation-settings: 'FILL' 1;
+      }::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #122017; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #33443a; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #4a6356; 
+      }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#9eb7a8]">
+<div class="flex h-screen w-full">
+<aside class="flex w-64 flex-col border-r border-white/10 bg-[#111714] p-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Inventory System</h2>
+</div>
+<div class="mt-8 flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Products</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<p class="text-sm font-medium leading-normal">Purchase Orders</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined icon-filled">swap_horiz</span>
+<p class="text-sm font-medium leading-normal">Stock Control</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<p class="text-sm font-medium leading-normal">Suppliers</p>
+</a>
+</div>
+<div class="mt-auto">
+<div class="flex gap-3 border-t border-white/10 pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS0bLOwOLlk8wpKbeBRBNtq6zzHs1ykpwBkTij336JxQa7Y17JtaaEkmRAmXCiH6EmbH62nPe0akIoPWFJ_2V4UK1RcjHmWK_iWEsW6YClmmESQXq4RhD-qFHDW7oVdS6EoO6daqVWGaA6HyN-yH8IGXN-1HcTENCrMu-RbH4IMk2xsalCccpCTOT1ZK_biFf108CBbGjstDZEQmuwlsAmpng0y04AqEkyweZXUl8z2H0MhPzz9AGZ87paNSHzKGoqPzD-XgfwxqBC");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Alex Grim</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">Inventory Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+<div class="flex flex-wrap items-end justify-between gap-4 mb-8 border-b border-white/10 pb-6">
+<div>
+<h1 class="text-white text-3xl font-black leading-tight tracking-[-0.033em]">Stock Adjustment Tool</h1>
+<p class="text-[#9eb7a8] text-sm mt-2">Manage inventory discrepancies, correct stock levels, and log adjustments.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center gap-2 rounded-lg bg-[#1A2C1F] px-4 py-2 text-sm font-bold text-white hover:bg-[#1A2C1F]/80 border border-white/10">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span>View Log</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-4 space-y-6">
+<div class="rounded-xl border border-white/10 bg-[#111714] overflow-hidden">
+<div class="p-5 border-b border-white/10 bg-white/5">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="flex items-center justify-center w-6 h-6 rounded bg-primary/20 text-primary text-xs">1</span>
+                    Product Identification
+                  </h3>
+</div>
+<div class="p-5 space-y-5">
+<div>
+<label class="block text-xs font-medium text-[#9eb7a8] uppercase mb-2">Find Product</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-white/40 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-[#1A2C1F] border border-white/10 rounded-lg py-2.5 pl-10 pr-3 text-white placeholder-white/20 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Search by SKU, Name, or Barcode" type="text"/>
+</div>
+</div>
+<div class="pt-4 border-t border-white/10">
+<label class="block text-xs font-medium text-[#9eb7a8] uppercase mb-3">Selected Product</label>
+<div class="bg-[#1A2C1F] border border-white/10 rounded-lg p-4 relative overflow-hidden group hover:border-white/20 transition-colors cursor-default">
+<div class="absolute top-0 right-0 w-16 h-16 -mr-8 -mt-8 bg-primary/10 rounded-full blur-xl group-hover:bg-primary/20 transition-colors"></div>
+<div class="flex items-start gap-4 relative z-10">
+<div class="w-16 h-16 bg-white/5 rounded-md flex items-center justify-center shrink-0 border border-white/5">
+<span class="material-symbols-outlined text-white/30 text-3xl">headphones</span>
+</div>
+<div>
+<h4 class="text-white font-bold text-lg leading-tight">Wireless Headphones X1</h4>
+<p class="text-sm text-primary font-mono mt-1">SKU: WH-X1-BLU</p>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-2 gap-3">
+<div class="bg-black/20 rounded p-2 border border-white/5">
+<p class="text-[10px] uppercase text-[#9eb7a8]">Current Stock</p>
+<p class="text-xl font-bold text-white">45 <span class="text-xs font-normal text-white/40">units</span></p>
+</div>
+<div class="bg-black/20 rounded p-2 border border-white/5">
+<p class="text-[10px] uppercase text-[#9eb7a8]">Bin Location</p>
+<p class="text-xl font-bold text-white">A-24</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4 flex gap-3">
+<span class="material-symbols-outlined text-blue-400 shrink-0">info</span>
+<div>
+<p class="text-sm text-blue-100 font-medium">Policy Reminder</p>
+<p class="text-xs text-blue-200/70 mt-1">Adjustments over $500 value require manager approval. Please attach incident report for "Theft" types.</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8">
+<div class="rounded-xl border border-white/10 bg-[#111714] h-full">
+<div class="p-5 border-b border-white/10 bg-white/5 flex justify-between items-center">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="flex items-center justify-center w-6 h-6 rounded bg-primary/20 text-primary text-xs">2</span>
+                    Adjustment Form
+                  </h3>
+<span class="text-xs font-mono text-[#9eb7a8]">ID: ADJ-2023-892</span>
+</div>
+<div class="p-6 md:p-8">
+<form class="space-y-8">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-2">
+<label class="text-sm font-medium text-white flex items-center justify-between">
+                          Adjustment Type
+                          <span class="text-xs text-[#9eb7a8] font-normal">Required</span>
+</label>
+<div class="relative">
+<select class="w-full bg-[#1A2C1F] border border-white/10 rounded-lg py-3 px-4 text-white appearance-none focus:ring-1 focus:ring-primary focus:border-primary outline-none cursor-pointer hover:bg-[#1A2C1F]/80 transition-colors">
+<option disabled="" selected="" value="">Select a reason...</option>
+<option value="damaged">Damaged Goods</option>
+<option value="expired">Expired Stock</option>
+<option value="theft">Theft / Loss</option>
+<option value="found">Found Inventory</option>
+<option value="cycle_count">Cycle Count Correction</option>
+<option value="internal">Internal Use / Demo</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-3 text-white/40 pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-white flex items-center justify-between">
+                          Adjustment Delta (+/-)
+                          <span class="text-xs text-[#9eb7a8] font-normal">Required</span>
+</label>
+<div class="relative flex items-center">
+<div class="absolute left-0 pl-3 pointer-events-none text-white/40 flex items-center">
+<span class="material-symbols-outlined text-[18px]">calculate</span>
+</div>
+<input class="w-full bg-[#1A2C1F] border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-white/20 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all font-mono" placeholder="+10 or -5" type="number"/>
+</div>
+<p class="text-xs text-[#9eb7a8]">Enter a negative number to reduce stock.</p>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-white">Reason / Notes</label>
+<div class="relative">
+<textarea class="w-full bg-[#1A2C1F] border border-white/10 rounded-lg py-3 px-4 text-white placeholder-white/20 focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all resize-none" placeholder="Please provide detailed justification for this adjustment..." rows="5"></textarea>
+<div class="absolute bottom-3 right-3 text-[10px] text-white/30 uppercase font-bold tracking-wider">Markdown Supported</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pt-4 border-t border-white/5">
+<div class="flex items-start gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors cursor-pointer w-full md:w-auto">
+<div class="flex items-center h-5">
+<input aria-describedby="cycle-count-description" class="h-5 w-5 rounded border-white/20 bg-[#1A2C1F] text-primary focus:ring-primary focus:ring-offset-[#111714]" id="cycle-count" name="cycle-count" type="checkbox"/>
+</div>
+<div class="text-sm">
+<label class="font-medium text-white select-none" for="cycle-count">Is Cycle Count?</label>
+<p class="text-[#9eb7a8] text-xs select-none" id="cycle-count-description">Mark this if part of routine counting.</p>
+</div>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-6 py-3 rounded-lg border border-white/10 text-white hover:bg-white/5 font-medium transition text-sm" type="button">
+                          Cancel
+                        </button>
+<button class="flex-1 md:flex-none px-6 py-3 rounded-lg bg-primary text-[#111714] font-bold hover:bg-primary/90 transition shadow-[0_0_20px_rgba(56,224,123,0.2)] hover:shadow-[0_0_30px_rgba(56,224,123,0.4)] flex items-center justify-center gap-2 text-sm" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                          Submit Adjustment
+                        </button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

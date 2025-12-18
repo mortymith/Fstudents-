@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Low Stock View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .icon-filled {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #111714; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333; 
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #444; 
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#9eb7a8]">
+<div class="flex h-screen w-full overflow-hidden">
+<aside class="flex w-64 flex-col border-r border-white/10 bg-[#111714] p-4 flex-shrink-0 transition-all duration-300">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Inventory System</h2>
+</div>
+<div class="mt-8 flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined icon-filled">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<p class="text-sm font-medium leading-normal">Orders</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+<div class="mt-auto">
+<div class="flex gap-3 border-t border-white/10 pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS0bLOwOLlk8wpKbeBRBNtq6zzHs1ykpwBkTij336JxQa7Y17JtaaEkmRAmXCiH6EmbH62nPe0akIoPWFJ_2V4UK1RcjHmWK_iWEsW6YClmmESQXq4RhD-qFHDW7oVdS6EoO6daqVWGaA6HyN-yH8IGXN-1HcTENCrMu-RbH4IMk2xsalCccpCTOT1ZK_biFf108CBbGjstDZEQmuwlsAmpng0y04AqEkyweZXUl8z2H0MhPzz9AGZ87paNSHzKGoqPzD-XgfwxqBC");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Alex Grim</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">alex.grim@example.com</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-background-dark">
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+<div class="mb-8 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-white text-3xl font-black leading-tight tracking-[-0.033em]">Low Stock Alerts</h1>
+<p class="text-[#9eb7a8] text-base mt-1">Review items below reorder points and initiate purchase orders.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 rounded-lg bg-white/5 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-lg">refresh</span>
+                  Refresh Data
+                </button>
+</div>
+</div>
+</div>
+<div class="mb-6 flex flex-col md:flex-row items-center justify-between gap-4 rounded-xl border border-white/10 bg-[#111714] p-4 shadow-sm">
+<div class="flex w-full flex-col md:flex-row items-center gap-4">
+<div class="relative w-full md:w-80">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-white/40">
+<span class="material-symbols-outlined text-xl">search</span>
+</span>
+<input class="w-full rounded-lg border border-white/10 bg-white/5 py-2.5 pl-10 pr-4 text-sm text-white placeholder-white/40 focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none" placeholder="Search by SKU or Name..." type="text"/>
+</div>
+<div class="flex w-full md:w-auto gap-4">
+<div class="relative w-full md:w-48">
+<select class="w-full appearance-none rounded-lg border border-white/10 bg-white/5 py-2.5 pl-3 pr-10 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none">
+<option value="">All Categories</option>
+<option value="electronics">Electronics</option>
+<option value="office">Office Supplies</option>
+<option value="furniture">Furniture</option>
+<option value="peripherals">Peripherals</option>
+</select>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+<span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+</span>
+</div>
+<div class="relative w-full md:w-48">
+<select class="w-full appearance-none rounded-lg border border-white/10 bg-white/5 py-2.5 pl-3 pr-10 text-sm text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none">
+<option value="">All Suppliers</option>
+<option value="techsource">TechSource Inc.</option>
+<option value="globex">Globex Corp</option>
+<option value="office_depot">Office Central</option>
+</select>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/40">
+<span class="material-symbols-outlined text-xl">arrow_drop_down</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/10 bg-[#111714] shadow-md">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-[#9eb7a8]">
+<thead class="bg-white/5 text-xs uppercase tracking-wider text-white font-semibold">
+<tr>
+<th class="px-6 py-4">SKU</th>
+<th class="px-6 py-4">Name</th>
+<th class="px-6 py-4 text-center">Qty Available</th>
+<th class="px-6 py-4 text-center">Reorder Point</th>
+<th class="px-6 py-4 text-center">Reorder Qty</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="group hover:bg-white/[0.02] transition-colors">
+<td class="px-6 py-4 font-medium text-white">SKU-89201</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-blue-500/20 flex items-center justify-center text-blue-400">
+<span class="material-symbols-outlined text-lg">mouse</span>
+</div>
+<span class="text-white">Wireless Optical Mouse</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-400 border border-red-500/20">
+                        3
+                      </span>
+</td>
+<td class="px-6 py-4 text-center text-white">15</td>
+<td class="px-6 py-4 text-center text-white">50</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="rounded p-1.5 text-white/60 hover:bg-white/10 hover:text-white transition-colors" title="View Product">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="flex items-center gap-1.5 rounded bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors border border-primary/20">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Suggest PO
+                      </button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-white/[0.02] transition-colors">
+<td class="px-6 py-4 font-medium text-white">SKU-33922</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-purple-500/20 flex items-center justify-center text-purple-400">
+<span class="material-symbols-outlined text-lg">keyboard</span>
+</div>
+<span class="text-white">Mechanical Keyboard RGB</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-orange-500/10 px-2.5 py-0.5 text-xs font-medium text-orange-400 border border-orange-500/20">
+                        8
+                      </span>
+</td>
+<td class="px-6 py-4 text-center text-white">10</td>
+<td class="px-6 py-4 text-center text-white">30</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="rounded p-1.5 text-white/60 hover:bg-white/10 hover:text-white transition-colors" title="View Product">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="flex items-center gap-1.5 rounded bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors border border-primary/20">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Suggest PO
+                      </button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-white/[0.02] transition-colors">
+<td class="px-6 py-4 font-medium text-white">SKU-10294</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+<span class="material-symbols-outlined text-lg">print</span>
+</div>
+<span class="text-white">LaserJet Toner Cartridge</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-400 border border-red-500/20">
+                        1
+                      </span>
+</td>
+<td class="px-6 py-4 text-center text-white">5</td>
+<td class="px-6 py-4 text-center text-white">20</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="rounded p-1.5 text-white/60 hover:bg-white/10 hover:text-white transition-colors" title="View Product">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="flex items-center gap-1.5 rounded bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors border border-primary/20">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Suggest PO
+                      </button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-white/[0.02] transition-colors">
+<td class="px-6 py-4 font-medium text-white">SKU-58291</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-cyan-500/20 flex items-center justify-center text-cyan-400">
+<span class="material-symbols-outlined text-lg">cable</span>
+</div>
+<span class="text-white">USB-C to HDMI Adapter</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-orange-500/10 px-2.5 py-0.5 text-xs font-medium text-orange-400 border border-orange-500/20">
+                        12
+                      </span>
+</td>
+<td class="px-6 py-4 text-center text-white">15</td>
+<td class="px-6 py-4 text-center text-white">100</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="rounded p-1.5 text-white/60 hover:bg-white/10 hover:text-white transition-colors" title="View Product">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="flex items-center gap-1.5 rounded bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors border border-primary/20">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Suggest PO
+                      </button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-white/[0.02] transition-colors">
+<td class="px-6 py-4 font-medium text-white">SKU-77293</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-pink-500/20 flex items-center justify-center text-pink-400">
+<span class="material-symbols-outlined text-lg">desktop_windows</span>
+</div>
+<span class="text-white">27" 4K Monitor Stand</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-400 border border-red-500/20">
+                        0
+                      </span>
+</td>
+<td class="px-6 py-4 text-center text-white">8</td>
+<td class="px-6 py-4 text-center text-white">25</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="rounded p-1.5 text-white/60 hover:bg-white/10 hover:text-white transition-colors" title="View Product">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+<button class="flex items-center gap-1.5 rounded bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors border border-primary/20">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Suggest PO
+                      </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-between border-t border-white/10 px-6 py-4">
+<p class="text-sm text-[#9eb7a8]">
+                Showing <span class="font-medium text-white">1</span> to <span class="font-medium text-white">5</span> of <span class="font-medium text-white">24</span> results
+              </p>
+<div class="flex gap-2">
+<button class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed">
+                  Previous
+                </button>
+<button class="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/10">
+                  Next
+                </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

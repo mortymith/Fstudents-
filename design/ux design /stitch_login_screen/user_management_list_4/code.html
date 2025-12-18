@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .icon-filled {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#9eb7a8]">
+<div class="flex h-screen w-full overflow-hidden">
+<aside class="flex w-64 flex-col border-r border-white/10 bg-[#111714] p-4 flex-shrink-0">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Inventory System</h2>
+</div>
+<div class="mt-8 flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined icon-filled">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<p class="text-sm font-medium leading-normal">Orders</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+<div class="mt-auto">
+<div class="flex gap-3 border-t border-white/10 pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS0bLOwOLlk8wpKbeBRBNtq6zzHs1ykpwBkTij336JxQa7Y17JtaaEkmRAmXCiH6EmbH62nPe0akIoPWFJ_2V4UK1RcjHmWK_iWEsW6YClmmESQXq4RhD-qFHDW7oVdS6EoO6daqVWGaA6HyN-yH8IGXN-1HcTENCrMu-RbH4IMk2xsalCccpCTOT1ZK_biFf108CBbGjstDZEQmuwlsAmpng0y04AqEkyweZXUl8z2H0MhPzz9AGZ87paNSHzKGoqPzD-XgfwxqBC");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Alex Grim</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">alex.grim@example.com</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-background-dark">
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+<div class="mb-8 flex flex-col gap-2">
+<h1 class="text-white text-3xl font-black leading-tight tracking-[-0.033em]">Admin Dashboard</h1>
+<p class="text-[#9eb7a8] text-base">Welcome back, Alex. Select a module to manage the inventory system.</p>
+</div>
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-500/10 text-blue-400 group-hover:bg-blue-500/20 group-hover:text-blue-300 transition-colors">
+<span class="material-symbols-outlined">manage_accounts</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">User Management List</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Manage user roles, permissions, and account status.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-300 transition-colors">
+<span class="material-symbols-outlined">dashboard</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">Inventory Dashboard</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">High-level overview of stock levels and valuation.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-500/10 text-purple-400 group-hover:bg-purple-500/20 group-hover:text-purple-300 transition-colors">
+<span class="material-symbols-outlined">category</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">Products List</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Catalog of all SKUs, descriptions, and pricing.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-red-500/10 text-red-400 group-hover:bg-red-500/20 group-hover:text-red-300 transition-colors">
+<span class="material-symbols-outlined">trending_down</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">Low Stock View</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Items currently below the reorder point threshold.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-orange-500/10 text-orange-400 group-hover:bg-orange-500/20 group-hover:text-orange-300 transition-colors">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">PO Management List</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Track and manage purchase orders to suppliers.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 group-hover:text-cyan-300 transition-colors">
+<span class="material-symbols-outlined">swap_horiz</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">Stock Movement Log</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">History of all inventory inflows and outflows.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-pink-500/10 text-pink-400 group-hover:bg-pink-500/20 group-hover:text-pink-300 transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">Reports Hub</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Generate and view detailed system reports.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-yellow-500/10 text-yellow-400 group-hover:bg-yellow-500/20 group-hover:text-yellow-300 transition-colors">
+<span class="material-symbols-outlined">security</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">System Audit Log</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Review security events and administrative actions.</p>
+</div>
+</a>
+<a class="group relative flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-6 transition-all hover:bg-[#1A2C1F] hover:shadow-lg hover:shadow-primary/5 hover:border-primary/20" href="#">
+<div class="flex items-center justify-between">
+<div class="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-500/10 text-gray-400 group-hover:bg-gray-500/20 group-hover:text-gray-300 transition-colors">
+<span class="material-symbols-outlined">settings_suggest</span>
+</div>
+<span class="material-symbols-outlined text-white/20 group-hover:text-white/60">arrow_outward</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-white">System Settings</h3>
+<p class="mt-1 text-sm text-[#9eb7a8]">Configure system preferences and integrations.</p>
+</div>
+</a>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

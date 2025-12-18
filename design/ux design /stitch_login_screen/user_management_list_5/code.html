@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New User Form</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#9eb7a8]">
+<div class="flex h-screen w-full">
+<aside class="flex w-64 flex-col border-r border-white/10 bg-[#111714] p-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Inventory System</h2>
+</div>
+<div class="mt-8 flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<p class="text-sm font-medium leading-normal">Orders</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+<div class="mt-auto">
+<div class="flex gap-3 border-t border-white/10 pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS0bLOwOLlk8wpKbeBRBNtq6zzHs1ykpwBkTij336JxQa7Y17JtaaEkmRAmXCiH6EmbH62nPe0akIoPWFJ_2V4UK1RcjHmWK_iWEsW6YClmmESQXq4RhD-qFHDW7oVdS6EoO6daqVWGaA6HyN-yH8IGXN-1HcTENCrMu-RbH4IMk2xsalCccpCTOT1ZK_biFf108CBbGjstDZEQmuwlsAmpng0y04AqEkyweZXUl8z2H0MhPzz9AGZ87paNSHzKGoqPzD-XgfwxqBC");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Alex Grim</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">alex.grim@example.com</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+<div class="flex items-center gap-4 mb-8">
+<button class="flex items-center justify-center size-10 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-white text-3xl font-bold leading-tight tracking-[-0.033em]">Add New User</h1>
+</div>
+<div class="rounded-xl border border-white/10 bg-[#111714] p-6 sm:p-8">
+<form>
+<div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+<div class="sm:col-span-1">
+<label class="block text-sm font-medium text-white mb-2" for="full-name">Full Name</label>
+<input class="block w-full rounded-lg border-none bg-[#1A2C1F] py-2.5 px-4 text-white placeholder:text-white/30 focus:ring-2 focus:ring-primary/50 sm:text-sm sm:leading-6" id="full-name" name="full-name" placeholder="Enter full name" type="text"/>
+</div>
+<div class="sm:col-span-1">
+<label class="block text-sm font-medium text-white mb-2" for="email">Email Address</label>
+<input class="block w-full rounded-lg border-none bg-[#1A2C1F] py-2.5 px-4 text-white placeholder:text-white/30 focus:ring-2 focus:ring-primary/50 sm:text-sm sm:leading-6" id="email" name="email" placeholder="name@company.com" type="email"/>
+</div>
+<div class="sm:col-span-1">
+<label class="block text-sm font-medium text-white mb-2" for="role">Role</label>
+<div class="relative">
+<select class="block w-full appearance-none rounded-lg border-none bg-[#1A2C1F] py-2.5 pl-4 pr-10 text-white focus:ring-2 focus:ring-primary/50 sm:text-sm sm:leading-6" id="role" name="role">
+<option>Viewer</option>
+<option>Inventory Manager</option>
+<option>Admin</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white/60">
+<span class="material-symbols-outlined text-xl">expand_more</span>
+</div>
+</div>
+</div>
+<div class="sm:col-span-1">
+<label class="block text-sm font-medium text-white mb-2" for="status">Status</label>
+<div class="relative">
+<select class="block w-full appearance-none rounded-lg border-none bg-[#1A2C1F] py-2.5 pl-4 pr-10 text-white focus:ring-2 focus:ring-primary/50 sm:text-sm sm:leading-6" id="status" name="status">
+<option value="active">Active</option>
+<option value="deactivated">Deactivated</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white/60">
+<span class="material-symbols-outlined text-xl">expand_more</span>
+</div>
+</div>
+</div>
+<div class="sm:col-span-2">
+<label class="block text-sm font-medium text-white mb-2" for="password">Password</label>
+<input class="block w-full rounded-lg border-none bg-[#1A2C1F] py-2.5 px-4 text-white placeholder:text-white/30 focus:ring-2 focus:ring-primary/50 sm:text-sm sm:leading-6" id="password" name="password" placeholder="Create a password" type="password"/>
+<div class="mt-4 flex items-center">
+<input class="h-4 w-4 rounded border-white/10 bg-[#1A2C1F] text-primary focus:ring-primary focus:ring-offset-[#111714]" id="activation-link" name="activation-link" type="checkbox"/>
+<label class="ml-3 block text-sm text-[#9eb7a8]" for="activation-link">Send activation link via email instead</label>
+</div>
+</div>
+</div>
+<div class="mt-8 flex items-center justify-end gap-4 pt-6 border-t border-white/10">
+<button class="rounded-lg bg-transparent px-6 py-2.5 text-sm font-bold text-white hover:bg-white/5 transition-colors" type="button">Cancel</button>
+<button class="rounded-lg bg-primary px-6 py-2.5 text-sm font-bold text-[#111714] shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors" type="submit">Create User</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</div>
+</body></html>

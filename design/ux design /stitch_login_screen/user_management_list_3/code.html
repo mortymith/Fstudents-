@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stock Movement Log</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }.icon-filled {
+        font-variation-settings: 'FILL' 1;
+      }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#9eb7a8]">
+<div class="flex h-screen w-full">
+<aside class="flex w-64 flex-col border-r border-white/10 bg-[#111714] p-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Inventory System</h2>
+</div>
+<div class="mt-8 flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Products</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<p class="text-sm font-medium leading-normal">Purchase Orders</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined icon-filled">swap_horiz</span>
+<p class="text-sm font-medium leading-normal">Stock Control</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<p class="text-sm font-medium leading-normal">Suppliers</p>
+</a>
+</div>
+<div class="mt-auto">
+<div class="flex gap-3 border-t border-white/10 pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS0bLOwOLlk8wpKbeBRBNtq6zzHs1ykpwBkTij336JxQa7Y17JtaaEkmRAmXCiH6EmbH62nPe0akIoPWFJ_2V4UK1RcjHmWK_iWEsW6YClmmESQXq4RhD-qFHDW7oVdS6EoO6daqVWGaA6HyN-yH8IGXN-1HcTENCrMu-RbH4IMk2xsalCccpCTOT1ZK_biFf108CBbGjstDZEQmuwlsAmpng0y04AqEkyweZXUl8z2H0MhPzz9AGZ87paNSHzKGoqPzD-XgfwxqBC");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Alex Grim</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">Inventory Manager</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div>
+<p class="text-white text-4xl font-black leading-tight tracking-[-0.033em]">Stock Movement Log</p>
+<p class="text-[#9eb7a8] text-sm mt-1">Comprehensive audit trail of all inventory changes.</p>
+</div>
+</div>
+<div class="mb-6 flex flex-col gap-4 rounded-xl border border-white/10 bg-[#111714] p-4 lg:flex-row lg:items-end">
+<div class="flex flex-1 flex-col gap-4 sm:flex-row">
+<div class="flex-1 min-w-[200px]">
+<label class="mb-1.5 block text-xs font-medium text-[#9eb7a8]">Date Range</label>
+<div class="flex items-center gap-2">
+<input class="w-full rounded-lg border border-white/10 bg-[#1A2C1F] px-3 py-2 text-sm text-white placeholder-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" type="date" value="2023-10-01"/>
+<span class="text-white/20">to</span>
+<input class="w-full rounded-lg border border-white/10 bg-[#1A2C1F] px-3 py-2 text-sm text-white placeholder-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" type="date" value="2023-10-27"/>
+</div>
+</div>
+<div class="w-full sm:w-48">
+<label class="mb-1.5 block text-xs font-medium text-[#9eb7a8]">Movement Type</label>
+<select class="w-full rounded-lg border border-white/10 bg-[#1A2C1F] px-3 py-2 text-sm text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary">
+<option value="">All Types</option>
+<option value="IN">IN (Received)</option>
+<option value="OUT">OUT (Shipped)</option>
+<option value="ADJUSTMENT">Adjustment</option>
+</select>
+</div>
+<div class="w-full sm:w-48">
+<label class="mb-1.5 block text-xs font-medium text-[#9eb7a8]">Reference ID</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-[18px] text-white/40">search</span>
+<input class="w-full rounded-lg border border-white/10 bg-[#1A2C1F] pl-9 pr-3 py-2 text-sm text-white placeholder-white/40 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" placeholder="PO-XXXX, SO-XXXX" type="text"/>
+</div>
+</div>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-4 py-2 text-sm font-bold text-primary hover:bg-primary/20 transition-colors whitespace-nowrap h-[38px]">
+<span class="material-symbols-outlined text-[20px]">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+<div class="overflow-hidden rounded-xl border border-white/10 bg-[#111714]">
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm text-[#9eb7a8]">
+<thead class="bg-white/5 text-xs uppercase text-white font-semibold tracking-wider">
+<tr>
+<th class="px-6 py-4">Timestamp</th>
+<th class="px-6 py-4">Product Name</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4 text-right">Change</th>
+<th class="px-6 py-4">User</th>
+<th class="px-6 py-4">Reference</th>
+<th class="px-6 py-4 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors group cursor-pointer">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">Oct 27, 09:41 AM</td>
+<td class="px-6 py-4 text-white">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-white/60">laptop_mac</span>
+</div>
+<span>MacBook Pro M2</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-semibold text-green-400">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span> IN
+                                </span>
+</td>
+<td class="px-6 py-4 text-right font-bold text-green-400">+50</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-bold">AG</div>
+<span>Alex Grim</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-white/60">PO-4092</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">expand_more</span>
+</td>
+</tr>
+<tr class="bg-white/5 border-l-2 border-l-primary">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">Oct 26, 04:20 PM</td>
+<td class="px-6 py-4 text-white">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-white/60">monitor</span>
+</div>
+<span>Monitor 27-inch 4K</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-2.5 py-1 text-xs font-semibold text-orange-400">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span> OUT
+                                </span>
+</td>
+<td class="px-6 py-4 text-right font-bold text-orange-400">-2</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-[10px] font-bold">SJ</div>
+<span>Sarah J.</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-white/60">SO-9921</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-primary rotate-180">expand_more</span>
+</td>
+</tr>
+<tr class="bg-[#1A2C1F]/40 border-l-2 border-l-primary/50">
+<td class="px-6 py-4" colspan="7">
+<div class="flex flex-col sm:flex-row gap-8 text-sm">
+<div class="flex gap-8">
+<div>
+<p class="text-xs text-[#9eb7a8] mb-1 uppercase tracking-wider font-semibold">Quantity Before</p>
+<p class="text-white font-mono text-lg">148</p>
+</div>
+<div>
+<p class="text-xs text-[#9eb7a8] mb-1 uppercase tracking-wider font-semibold">Quantity After</p>
+<p class="text-white font-mono text-lg">146</p>
+</div>
+</div>
+<div class="h-px sm:h-auto sm:w-px bg-white/10"></div>
+<div>
+<p class="text-xs text-[#9eb7a8] mb-1 uppercase tracking-wider font-semibold">Notes / Reason</p>
+<p class="text-white/80">Standard fulfillment for online order #9921. Verified by packing station 3.</p>
+</div>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group cursor-pointer">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">Oct 25, 11:15 AM</td>
+<td class="px-6 py-4 text-white">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-white/60">keyboard</span>
+</div>
+<span>Mech Keyboard RGB</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-blue-500/10 px-2.5 py-1 text-xs font-semibold text-blue-400">
+<span class="material-symbols-outlined text-[14px]">tune</span> ADJ
+                                </span>
+</td>
+<td class="px-6 py-4 text-right font-bold text-red-400">-1</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-[10px] font-bold">AG</div>
+<span>Alex Grim</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-white/60">ADJ-004</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">expand_more</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group cursor-pointer">
+<td class="px-6 py-4 font-medium text-white whitespace-nowrap">Oct 24, 02:30 PM</td>
+<td class="px-6 py-4 text-white">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-white/60">mouse</span>
+</div>
+<span>Wireless Mouse G1</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 rounded-full bg-green-500/10 px-2.5 py-1 text-xs font-semibold text-green-400">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span> IN
+                                </span>
+</td>
+<td class="px-6 py-4 text-right font-bold text-green-400">+200</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center text-[10px] font-bold">MK</div>
+<span>Mike K.</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-white/60">PO-4088</td>
+<td class="px-6 py-4 text-center">
+<span class="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">expand_more</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="flex items-center justify-between border-t border-white/10 bg-[#111714] px-6 py-4">
+<div class="text-xs text-[#9eb7a8]">
+                    Showing <span class="font-medium text-white">1</span> to <span class="font-medium text-white">4</span> of <span class="font-medium text-white">1,204</span> results
+                </div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/5 disabled:opacity-50">
+                        Previous
+                    </button>
+<button class="flex items-center justify-center rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/5">
+                        Next
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

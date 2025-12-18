@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Settings - Inventory Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#197fe6",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#111921",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#111418] dark:text-white antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Sidebar -->
+<aside class="flex w-64 flex-col border-r border-[#dce0e5] dark:border-gray-800 bg-white dark:bg-[#111418] shrink-0">
+<div class="flex flex-col gap-4 p-4">
+<div class="flex gap-3 items-center mb-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-primary/10 flex items-center justify-center text-primary" data-alt="Abstract blue logo for inventory system">
+<span class="material-symbols-outlined text-3xl">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-base font-bold leading-normal dark:text-white">InventorySys</h1>
+<p class="text-[#637588] dark:text-gray-400 text-xs font-normal leading-normal">Management Console</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#637588] dark:text-gray-400 group-hover:text-primary transition-colors">dashboard</span>
+<p class="text-[#637588] dark:text-gray-400 text-sm font-medium leading-normal group-hover:text-primary transition-colors">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#637588] dark:text-gray-400 group-hover:text-primary transition-colors">package_2</span>
+<p class="text-[#637588] dark:text-gray-400 text-sm font-medium leading-normal group-hover:text-primary transition-colors">Inventory</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#637588] dark:text-gray-400 group-hover:text-primary transition-colors">shopping_cart</span>
+<p class="text-[#637588] dark:text-gray-400 text-sm font-medium leading-normal group-hover:text-primary transition-colors">Orders</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#637588] dark:text-gray-400 group-hover:text-primary transition-colors">bar_chart</span>
+<p class="text-[#637588] dark:text-gray-400 text-sm font-medium leading-normal group-hover:text-primary transition-colors">Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined fill-current">settings</span>
+<p class="text-sm font-bold leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-4 border-t border-[#dce0e5] dark:border-gray-800">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDeSey7pb-MQamfQVMmHkUNOXo0RadV-Vv4C03dCcqo8jPW_2upfKnxW3GWKgeGXWdXAN0EPKkN8EF6Ht61VWKXNJiBEzfM88HZ5GxtwpvPlKjAxxnqrS0PiYk7WJoMVYU4PAdhVBMwsBWQ-GL1Qbb9x7cgiXTbh_7bNFMAZmGfsJFW03LuV7fj_ZS9kWAjd2Lxr0Uynw45SFFHgp18IE8LPoLAnHck2JLpP1tlHHxD38N6ECCVi8hR3fAvyMpD30kxqhceYFJPZkR_");'></div>
+<div class="flex flex-col">
+<p class="text-sm font-medium dark:text-white">Alex Morgan</p>
+<p class="text-xs text-[#637588] dark:text-gray-400">Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Top Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-[#dce0e5] dark:border-gray-800 bg-white dark:bg-[#111418] px-8 py-3 shrink-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#637588] dark:text-gray-400 cursor-pointer">menu</span>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] dark:text-white">System Settings</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<div class="relative max-w-md w-full hidden md:block">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-[#637588] text-[20px]">search</span>
+</div>
+<input class="block w-full rounded-lg border-0 py-2 pl-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 bg-[#f0f2f4] dark:bg-gray-800 dark:text-white dark:ring-gray-700" placeholder="Search settings..." type="text"/>
+</div>
+<button class="relative rounded-full p-1 text-[#637588] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-[#111418]"></span>
+</button>
+<button class="rounded-full p-1 text-[#637588] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto p-8">
+<div class="max-w-[1000px] mx-auto flex flex-col gap-6">
+<!-- Page Heading -->
+<div class="flex flex-col gap-2">
+<h1 class="text-3xl font-black leading-tight tracking-tight text-[#111418] dark:text-white">System Configuration</h1>
+<p class="text-[#637588] dark:text-gray-400 text-base">Manage global settings, ID patterns, and notification preferences for your inventory workspace.</p>
+</div>
+<!-- Tabs & Forms Container -->
+<div class="bg-white dark:bg-[#111418] rounded-xl shadow-sm border border-[#dce0e5] dark:border-gray-800 flex flex-col min-h-[600px]">
+<!-- Tabs Header -->
+<div class="border-b border-[#dce0e5] dark:border-gray-800 px-6 pt-4">
+<nav aria-label="Tabs" class="flex gap-8">
+<a class="flex items-center gap-2 border-b-[3px] border-primary pb-3 px-1 text-primary font-bold text-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+                                    General Settings
+                                </a>
+<a class="flex items-center gap-2 border-b-[3px] border-transparent pb-3 px-1 text-[#637588] dark:text-gray-400 hover:text-[#111418] dark:hover:text-gray-200 font-medium text-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+                                    Naming &amp; IDs
+                                </a>
+<a class="flex items-center gap-2 border-b-[3px] border-transparent pb-3 px-1 text-[#637588] dark:text-gray-400 hover:text-[#111418] dark:hover:text-gray-200 font-medium text-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+                                    Notifications
+                                </a>
+</nav>
+</div>
+<!-- Tab Content -->
+<div class="p-8 flex flex-col gap-10 flex-1">
+<!-- Section: General Settings -->
+<section class="flex flex-col gap-6">
+<div class="flex flex-col gap-1 border-b border-gray-100 dark:border-gray-800 pb-2">
+<h3 class="text-lg font-bold text-[#111418] dark:text-white">Global Preferences</h3>
+<p class="text-sm text-[#637588] dark:text-gray-400">Set the foundational standards for your inventory system.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Currency Dropdown -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-[#111418] dark:text-gray-200" for="currency">Default Currency</label>
+<div class="relative">
+<select class="block w-full rounded-lg border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 bg-[#f0f2f4] dark:bg-gray-800 dark:text-white dark:ring-gray-700" id="currency" name="currency">
+<option>USD - United States Dollar</option>
+<option>EUR - Euro</option>
+<option>GBP - British Pound</option>
+<option>CAD - Canadian Dollar</option>
+</select>
+</div>
+<p class="text-xs text-[#637588] dark:text-gray-500">Used for all cost calculations and reporting.</p>
+</div>
+<!-- Weight Unit Dropdown -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-[#111418] dark:text-gray-200" for="weight">Default Weight Unit</label>
+<div class="relative">
+<select class="block w-full rounded-lg border-0 py-2.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 bg-[#f0f2f4] dark:bg-gray-800 dark:text-white dark:ring-gray-700" id="weight" name="weight">
+<option>kg - Kilograms</option>
+<option>lb - Pounds</option>
+<option>oz - Ounces</option>
+<option>g - Grams</option>
+</select>
+</div>
+<p class="text-xs text-[#637588] dark:text-gray-500">Standard unit for shipping and inventory metrics.</p>
+</div>
+</div>
+<!-- Toggle Switch -->
+<div class="flex items-center justify-between p-4 rounded-lg border border-[#dce0e5] dark:border-gray-800 bg-[#f8f9fa] dark:bg-gray-900/50 mt-2">
+<div class="flex flex-col gap-1">
+<span class="text-sm font-semibold text-[#111418] dark:text-gray-200">Enable Expiry Date Tracking</span>
+<span class="text-xs text-[#637588] dark:text-gray-500">Required for perishable goods. Adds expiration fields to stock entries.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+</label>
+</div>
+</section>
+<!-- Section: Naming & IDs (Visual Separation) -->
+<section class="flex flex-col gap-6 pt-6 border-t border-[#dce0e5] dark:border-gray-800">
+<div class="flex flex-col gap-1 border-b border-gray-100 dark:border-gray-800 pb-2">
+<h3 class="text-lg font-bold text-[#111418] dark:text-white">Naming &amp; IDs</h3>
+<p class="text-sm text-[#637588] dark:text-gray-400">Configure how the system automatically generates identifiers.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- PO Prefix -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-[#111418] dark:text-gray-200" for="po-prefix">PO Number Prefix</label>
+<div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary bg-[#f0f2f4] dark:bg-gray-800 dark:ring-gray-700">
+<span class="flex select-none items-center pl-3 text-gray-500 sm:text-sm">PREFIX</span>
+<input class="block flex-1 border-0 bg-transparent py-2.5 pl-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 dark:text-white" id="po-prefix" name="po-prefix" placeholder="PO-" type="text"/>
+</div>
+</div>
+<!-- SKU Pattern -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-[#111418] dark:text-gray-200" for="sku-pattern">SKU Auto-Generation Pattern</label>
+<input class="block w-full rounded-lg border-0 py-2.5 px-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 bg-[#f0f2f4] dark:bg-gray-800 dark:text-white dark:ring-gray-700" id="sku-pattern" name="sku-pattern" placeholder="{CAT}-{SEQ}-{YEAR}" type="text" value="{CAT}-{SEQ}-{YEAR}"/>
+<p class="text-xs text-[#637588] dark:text-gray-500">Use tags like {CAT} for category and {SEQ} for sequence.</p>
+</div>
+</div>
+<!-- Checkbox -->
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input aria-describedby="manual-override-description" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="manual-override" name="manual-override" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-[#111418] dark:text-gray-200" for="manual-override">Enable Manual ID Override</label>
+<p class="text-[#637588] dark:text-gray-500" id="manual-override-description">Allow authorized users to edit automatically generated IDs before saving.</p>
+</div>
+</div>
+</section>
+<!-- Section: Notifications (Visual Separation) -->
+<section class="flex flex-col gap-6 pt-6 border-t border-[#dce0e5] dark:border-gray-800">
+<div class="flex flex-col gap-1 border-b border-gray-100 dark:border-gray-800 pb-2">
+<h3 class="text-lg font-bold text-[#111418] dark:text-white">Notifications</h3>
+<p class="text-sm text-[#637588] dark:text-gray-400">Control when and how you receive system alerts.</p>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Checkbox -->
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input checked="" class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" id="low-stock-alert" name="low-stock-alert" type="checkbox"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-[#111418] dark:text-gray-200" for="low-stock-alert">Send Low Stock Email Alerts</label>
+<p class="text-[#637588] dark:text-gray-500">Trigger an email when inventory falls below the safety threshold.</p>
+</div>
+</div>
+<!-- Email Input -->
+<div class="flex flex-col gap-2 max-w-md mt-2">
+<label class="text-sm font-semibold text-[#111418] dark:text-gray-200" for="alert-email">Default Recipient Email for Alerts</label>
+<div class="relative rounded-md shadow-sm">
+<div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+<span class="material-symbols-outlined text-gray-500 text-[20px]">mail</span>
+</div>
+<input class="block w-full rounded-lg border-0 py-2.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-primary sm:text-sm sm:leading-6 bg-[#f0f2f4] dark:bg-gray-800 dark:text-white dark:ring-gray-700" id="alert-email" name="alert-email" placeholder="admin@inventorysys.com" type="email"/>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sticky Footer Actions -->
+<div class="sticky bottom-0 z-10 bg-white dark:bg-[#111418] border-t border-[#dce0e5] dark:border-gray-800 px-8 py-5 rounded-b-xl flex justify-end gap-3">
+<button class="px-5 py-2.5 text-sm font-bold text-[#637588] hover:text-[#111418] dark:text-gray-400 dark:hover:text-white transition-colors" type="button">Discard Changes</button>
+<button class="px-6 py-2.5 bg-primary hover:bg-primary/90 text-white text-sm font-bold rounded-lg shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-all flex items-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                                Save Configuration
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

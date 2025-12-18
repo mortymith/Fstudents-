@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add New Product - Admin</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e87a",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1c2620",
+                        "border-dark": "#29382f",
+                        "text-subtle": "#9db8a8",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #29382f; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3c5345; 
+        }input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.6;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<aside class="hidden md:flex flex-col w-72 h-full border-r border-border-dark bg-background-dark">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="bg-primary/20 p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<h1 class="text-white text-lg font-bold tracking-tight">Admin Panel</h1>
+</div>
+</div>
+<nav class="flex-1 px-4 py-2 space-y-2 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined icon-filled">inventory</span>
+<span class="font-medium">Products</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-medium">Analytics</span>
+</a>
+<div class="pt-4 mt-4 border-t border-border-dark">
+<p class="px-4 text-xs font-semibold text-text-subtle uppercase tracking-wider mb-2">Settings</p>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Configuration</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-border-dark">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center" data-alt="User profile avatar gradient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAk-xNv3BgRy3MW3CLuAvbONYj-8yI0d9qBYee9kcSPIMuK3Y2V1ZsQIIzIwvzGyxnKc1wDDia_fvHTi9iMm03ZxEfpPFvbV5fZnIuUiF5TfZiFDYMqotT1FADBfD0d8xGlU0fIxV_7oNXs9Ar5Gkd-MgxcjX-ScasVwXJLGXDZncePIQGGdgrk8OQflyhMd66CnxhogYYAVUyCkmKdVbdAFdZbFFKpt027kJpO1bGckee__Uy_PsCFFJvSi77wROfoWBuF7jIQ4XMZ');"></div>
+<div class="absolute bottom-0 right-0 size-3 bg-primary border-2 border-background-dark rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-white leading-none">Jane Doe</p>
+<p class="text-xs text-text-subtle mt-1">Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-background-light dark:bg-background-dark relative">
+<header class="h-16 flex items-center justify-between px-6 border-b border-border-dark bg-background-dark shrink-0 z-20">
+<div class="flex items-center gap-4 lg:hidden">
+<button class="text-white p-1">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="text-white text-lg font-bold">New Product</h2>
+</div>
+<div class="hidden lg:flex flex-1 items-center justify-between">
+<nav class="flex items-center text-sm font-medium text-text-subtle">
+<a class="hover:text-white transition-colors" href="#">Inventory</a>
+<span class="mx-2 text-border-dark">/</span>
+<a class="hover:text-white transition-colors" href="#">Products</a>
+<span class="mx-2 text-border-dark">/</span>
+<span class="text-white">Add New</span>
+</nav>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined text-text-subtle absolute left-3 top-1/2 -translate-y-1/2 text-[20px]">search</span>
+<input class="h-9 w-64 bg-surface-dark border-border-dark rounded-full pl-10 pr-4 text-sm text-white placeholder-text-subtle focus:ring-1 focus:ring-primary focus:border-primary" placeholder="Quick search..." type="text"/>
+</div>
+<button class="text-text-subtle hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="text-text-subtle hover:text-white transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-6 md:p-8 lg:px-12 scroll-smooth">
+<div class="max-w-5xl mx-auto flex flex-col gap-8">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl font-black text-white tracking-tight">Add New Product</h1>
+<p class="text-text-subtle text-base">Fill in the details to add a new item to the inventory.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center justify-center gap-2 px-6 h-10 rounded-lg border border-border-dark bg-transparent text-text-subtle hover:text-white hover:bg-white/5 transition-colors font-bold text-sm">
+                            Cancel
+                        </button>
+</div>
+</div>
+<div class="bg-surface-dark border border-border-dark rounded-xl shadow-sm overflow-hidden">
+<form class="p-6 md:p-8 flex flex-col gap-8">
+<div class="flex flex-col gap-6">
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-border-dark">
+<span class="material-symbols-outlined text-[18px]">info</span>
+                                General Information
+                            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="product_name">Product Name <span class="text-red-500">*</span></label>
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg px-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="product_name" placeholder="e.g. Wireless Ergonomic Mouse" required="" type="text"/>
+</div>
+<div class="md:col-span-2">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="description">Description</label>
+<textarea class="w-full bg-[#111814] border border-border-dark rounded-lg p-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none" id="description" placeholder="Enter product specifications, features, etc." rows="3"></textarea>
+</div>
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="category">Category <span class="text-red-500">*</span></label>
+<div class="relative">
+<select class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg pl-4 pr-10 text-white focus:border-primary focus:ring-1 focus:ring-primary appearance-none transition-all" id="category">
+<option disabled="" selected="" value="">Select Category</option>
+<option value="electronics">Electronics</option>
+<option value="furniture">Furniture</option>
+<option value="office">Office Supplies</option>
+<option value="peripherals">Computer Peripherals</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-subtle pointer-events-none">expand_more</span>
+</div>
+</div>
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="supplier">Primary Supplier <span class="text-red-500">*</span></label>
+<div class="relative">
+<select class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg pl-4 pr-10 text-white focus:border-primary focus:ring-1 focus:ring-primary appearance-none transition-all" id="supplier">
+<option disabled="" selected="" value="">Select Supplier</option>
+<option value="tech_inc">TechSupplies Inc.</option>
+<option value="office_depot">OfficeDepot</option>
+<option value="global_imports">Global Imports Ltd.</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-subtle pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-border-dark">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                                Pricing &amp; Identification
+                            </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="unit_price">Unit Price (Sales) <span class="text-red-500">*</span></label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtle">$</span>
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg pl-8 pr-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="unit_price" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="unit_cost">Unit Cost (Admin Only)</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-text-subtle">$</span>
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg pl-8 pr-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="unit_cost" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="barcode">Barcode / SKU</label>
+<div class="relative">
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg pl-4 pr-10 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="barcode" placeholder="Scan or type..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-text-subtle hover:text-white transition-colors" title="Scan Barcode" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<h3 class="text-sm font-bold text-primary uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-border-dark">
+<span class="material-symbols-outlined text-[18px]">inventory</span>
+                                Inventory Control
+                            </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="reorder_point">Reorder Point</label>
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg px-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="reorder_point" placeholder="e.g. 10" type="number"/>
+<p class="text-[10px] text-text-subtle mt-1">Min quantity before reordering</p>
+</div>
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="low_stock_threshold">Low Stock Alert</label>
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg px-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="low_stock_threshold" placeholder="e.g. 5" type="number"/>
+<p class="text-[10px] text-text-subtle mt-1">Trigger alert when qty drops below</p>
+</div>
+<div>
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="reorder_qty">Default Reorder Qty</label>
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg px-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="reorder_qty" placeholder="e.g. 50" type="number"/>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6 bg-[#161f1a] p-6 rounded-lg border border-border-dark">
+<div class="flex flex-col gap-4">
+<div>
+<div class="flex items-center gap-3">
+<input class="peer w-5 h-5 rounded bg-[#111814] border-border-dark text-primary focus:ring-primary focus:ring-offset-[#111814] cursor-pointer" id="track_expiry" type="checkbox"/>
+<label class="text-sm font-medium text-white cursor-pointer select-none" for="track_expiry">Track Expiry Date</label>
+</div>
+<p class="text-xs text-text-subtle mt-1 ml-8">Enable for perishable goods to track expiration dates.</p>
+<div class="hidden peer-checked:block mt-4 ml-8 animate-in fade-in slide-in-from-top-2 duration-200">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-2 block" for="expiry_date">Expiry Date</label>
+<input class="w-full md:w-64 h-11 bg-[#111814] border border-border-dark rounded-lg px-4 text-white placeholder-text-subtle focus:border-primary focus:ring-1 focus:ring-primary transition-all" id="expiry_date" type="date"/>
+</div>
+</div>
+<div class="h-px w-full bg-border-dark"></div>
+<div>
+<div class="flex items-center gap-3">
+<input checked="" class="w-5 h-5 rounded bg-[#111814] border-border-dark text-primary focus:ring-primary focus:ring-offset-[#111814] cursor-pointer" id="is_active" type="checkbox"/>
+<label class="text-sm font-medium text-white cursor-pointer select-none" for="is_active">Is Active</label>
+</div>
+<p class="text-xs text-text-subtle mt-1 ml-8">Product will be visible in sales channels immediately.</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col-reverse md:flex-row items-center justify-end gap-4 pt-4 border-t border-border-dark">
+<button class="w-full md:w-auto px-6 h-12 rounded-lg border border-border-dark bg-transparent text-text-subtle hover:text-white hover:bg-white/5 transition-colors font-bold text-sm" type="button">
+                                Cancel
+                            </button>
+<button class="w-full md:w-auto px-8 h-12 rounded-lg bg-primary text-background-dark hover:bg-primary/90 transition-colors font-bold text-sm shadow-[0_0_15px_rgba(48,232,122,0.15)] flex items-center justify-center gap-2" type="submit">
+<span class="material-symbols-outlined text-[20px]">check</span>
+                                Save Product
+                            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>

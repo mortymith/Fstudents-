@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Suppliers List - Inventory Manager</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#38e07b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#111714",
+                        "surface-dark": "#1d2621",
+                        "surface-dark-highlight": "#29382f",
+                        "text-secondary": "#9eb7a8",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"],
+                        "body": ["Spline Sans", "Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden">
+<div class="flex h-screen w-full">
+<aside class="w-64 flex-shrink-0 flex flex-col justify-between bg-surface-dark border-r border-surface-dark-highlight hidden lg:flex">
+<div class="flex flex-col gap-6 p-6">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-12" data-alt="User profile picture showing a professional headshot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAFGHQK8RO4eqC8f_BwaHHnsL-WbLg2ZkD-x7ua1p1TQv28ux1r_i0bzdWZlLSQx2RSpJr6a_ZWmI0B0jXeb1gZLgHEbkrhDy9-G_rQ-VcnQmwJls776PfjUNkQrtSFAhodeOOh2Kh7lcVxUEXoyKbw9g2VhpZPKCIZavMAWDF0EA0Zrt2kcalQ1ISlVhHHSpMmCwNlj-M_xbH5FthAy3CJLJzApXQP1hYquldl3svzvKjg9pw1sve1gMjXuyWI-t7xiukMDrf37Ka-");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-semibold leading-tight">Alex Morgan</h1>
+<p class="text-text-secondary text-xs font-normal">Inventory Manager</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">inventory_2</span>
+<span class="text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">shopping_bag</span>
+<span class="text-sm font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface-dark-highlight text-white" href="#">
+<span class="material-symbols-outlined text-2xl text-primary font-variation-settings-'FILL'1">group</span>
+<span class="text-sm font-medium">Suppliers</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:text-primary transition-colors">bar_chart</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+</nav>
+</div>
+<div class="p-6">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-text-secondary hover:bg-surface-dark-highlight hover:text-red-400 transition-colors mt-1" href="#">
+<span class="material-symbols-outlined text-2xl">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<header class="flex items-center justify-between border-b border-surface-dark-highlight dark:bg-background-dark bg-white px-8 py-5 flex-shrink-0">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-sm">
+<a class="text-text-secondary hover:text-primary transition-colors" href="#">Home</a>
+<span class="text-text-secondary">/</span>
+<a class="text-text-secondary hover:text-primary transition-colors" href="#">Inventory</a>
+<span class="text-text-secondary">/</span>
+<span class="text-slate-900 dark:text-white font-medium">Suppliers List</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-2xl font-bold leading-tight">Suppliers List</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-lg size-10 text-slate-500 dark:text-text-secondary hover:bg-slate-100 dark:hover:bg-surface-dark-highlight transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<button class="hidden md:flex items-center justify-center rounded-lg size-10 text-slate-500 dark:text-text-secondary hover:bg-slate-100 dark:hover:bg-surface-dark-highlight transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-auto p-8">
+<div class="flex flex-col h-full max-w-[1400px] mx-auto gap-6">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white dark:bg-surface-dark p-4 rounded-xl border border-slate-200 dark:border-surface-dark-highlight shadow-sm">
+<div class="flex flex-1 flex-col xl:flex-row gap-3 w-full md:w-auto">
+<div class="relative w-full xl:w-96">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-secondary">search</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white placeholder-text-secondary focus:ring-1 focus:ring-primary text-sm font-medium" placeholder="Search by Name, Contact..." type="text"/>
+</div>
+</div>
+<button class="flex items-center gap-2 bg-primary hover:bg-green-400 text-slate-900 px-5 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 transition-all transform active:scale-95 whitespace-nowrap">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+                            Add New Supplier
+                        </button>
+</div>
+<div class="flex flex-1 flex-col bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-surface-dark-highlight shadow-sm overflow-hidden">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-slate-200 dark:border-surface-dark-highlight bg-slate-50 dark:bg-[#18201b]">
+<th class="p-4 pl-6 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap cursor-pointer hover:text-primary">Name</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap cursor-pointer hover:text-primary">Primary Contact</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap cursor-pointer hover:text-primary">Phone</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap cursor-pointer hover:text-primary">Email</th>
+<th class="p-4 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap text-center cursor-pointer hover:text-primary">Created At</th>
+<th class="p-4 pr-6 text-xs font-semibold uppercase tracking-wider text-text-secondary whitespace-nowrap text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-200 dark:divide-surface-dark-highlight">
+<tr class="group hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<td class="p-4 pl-6 w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="text-sm font-bold text-slate-900 dark:text-white">AudioTech Solutions</span>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">JD</div>
+<span>John Doe</span>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 font-mono">+1 (555) 123-4567</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">contact@audiotech.com</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 text-center">Jan 15, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="View PO History">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<td class="p-4 pl-6 w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="text-sm font-bold text-slate-900 dark:text-white">ModernSpaces Inc</span>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center text-xs font-bold">JS</div>
+<span>Jane Smith</span>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 font-mono">+1 (555) 987-6543</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">sales@modernspaces.com</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 text-center">Mar 10, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="View PO History">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<td class="p-4 pl-6 w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="text-sm font-bold text-slate-900 dark:text-white">KeyChronos</span>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center text-xs font-bold">MB</div>
+<span>Mike Brown</span>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 font-mono">+1 (555) 456-7890</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">support@keychronos.com</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 text-center">Nov 05, 2022</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="View PO History">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<td class="p-4 pl-6 w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Vision Displays</span>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-purple-500/20 text-purple-500 flex items-center justify-center text-xs font-bold">SW</div>
+<span>Sarah Wilson</span>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 font-mono">+1 (555) 789-0123</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">info@visiondisplays.com</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 text-center">Dec 12, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="View PO History">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<td class="p-4 pl-6 w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="text-sm font-bold text-slate-900 dark:text-white">PaperWorks</span>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-xs font-bold">DL</div>
+<span>David Lee</span>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 font-mono">+1 (555) 234-5678</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">hello@paperworks.com</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 text-center">Feb 28, 2024</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="View PO History">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="group hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors border-b-0">
+<td class="p-4 pl-6 w-10">
+<input class="rounded border-slate-300 dark:border-slate-600 bg-transparent text-primary focus:ring-offset-0 focus:ring-primary size-4" type="checkbox"/>
+</td>
+<td class="p-4">
+<span class="text-sm font-bold text-slate-900 dark:text-white">ConnectTech</span>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-xs font-bold">RK</div>
+<span>Rachel King</span>
+</div>
+</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 font-mono">+1 (555) 321-7654</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300">procurement@connecttech.com</td>
+<td class="p-4 text-sm text-slate-600 dark:text-slate-300 text-center">Aug 14, 2023</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary hover:text-primary p-1 rounded hover:bg-surface-dark" title="View PO History">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="border-t border-slate-200 dark:border-surface-dark-highlight p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-[#18201b]">
+<div class="flex items-center gap-2 text-sm text-text-secondary">
+<span>Rows per page:</span>
+<select class="bg-transparent border-none text-slate-900 dark:text-white font-medium focus:ring-0 cursor-pointer text-sm p-0 pr-6">
+<option>10</option>
+<option>20</option>
+<option>50</option>
+</select>
+</div>
+<div class="flex items-center gap-4 text-sm text-text-secondary">
+<span>1-10 of 42 items</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-slate-200 dark:hover:bg-surface-dark-highlight disabled:opacity-50 text-slate-900 dark:text-white">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-1 rounded hover:bg-slate-200 dark:hover:bg-surface-dark-highlight text-slate-900 dark:text-white">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<div aria-modal="true" class="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-slate-900/60 backdrop-blur-sm" role="dialog">
+<div class="bg-white dark:bg-surface-dark w-full max-w-3xl rounded-xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden border border-slate-200 dark:border-surface-dark-highlight">
+<div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-surface-dark-highlight bg-white dark:bg-surface-dark z-10">
+<div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white leading-tight">Product Category Management</h3>
+<p class="text-sm text-text-secondary mt-1">Organize your inventory hierarchy</p>
+</div>
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-8 bg-slate-50/50 dark:bg-[#151b18]">
+<div class="bg-white dark:bg-[#1d2621] p-5 rounded-lg border border-slate-200 dark:border-surface-dark-highlight shadow-sm">
+<h4 class="text-sm font-bold uppercase tracking-wider text-text-secondary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add_box</span>
+                    Add New Category
+                </h4>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+<div class="md:col-span-5 space-y-1.5">
+<label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Category Name <span class="text-red-500">*</span></label>
+<input class="w-full rounded-lg border-slate-300 dark:border-surface-dark-highlight bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white text-sm focus:ring-primary focus:border-primary placeholder:text-slate-400" placeholder="e.g., Wireless Headphones" type="text"/>
+</div>
+<div class="md:col-span-5 space-y-1.5">
+<label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Parent Category</label>
+<select class="w-full rounded-lg border-slate-300 dark:border-surface-dark-highlight bg-slate-50 dark:bg-surface-dark-highlight text-slate-900 dark:text-white text-sm focus:ring-primary focus:border-primary">
+<option value="">None (Top Level)</option>
+<option value="1">Electronics</option>
+<option value="2">-- Computers</option>
+<option value="3">Furniture</option>
+</select>
+</div>
+<div class="md:col-span-2">
+<button class="w-full flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 px-4 py-2.5 rounded-lg font-semibold text-sm transition-all">
+                            Add
+                        </button>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-[#1d2621] rounded-lg border border-slate-200 dark:border-surface-dark-highlight shadow-sm overflow-hidden flex flex-col">
+<div class="px-5 py-4 border-b border-slate-100 dark:border-surface-dark-highlight flex justify-between items-center bg-slate-50/50 dark:bg-[#1d2621]">
+<h4 class="text-sm font-bold uppercase tracking-wider text-text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">account_tree</span>
+                        Category Structure
+                    </h4>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded">12 Active Categories</span>
+</div>
+<div class="divide-y divide-slate-100 dark:divide-surface-dark-highlight">
+<div class="group flex items-center justify-between p-3 pl-4 hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<div class="flex items-center gap-3">
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-white">
+<span class="material-symbols-outlined text-xl">expand_more</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">folder</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">Electronics</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Active</span>
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Edit Name"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Change Parent"><span class="material-symbols-outlined text-lg">drive_file_move</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500 rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Disable"><span class="material-symbols-outlined text-lg">block</span></button>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 pl-10 hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors bg-slate-50/30 dark:bg-black/10">
+<div class="flex items-center gap-3">
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-white">
+<span class="material-symbols-outlined text-xl">expand_more</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-secondary text-xl">folder_open</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">Computers</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Active</span>
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Edit Name"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Change Parent"><span class="material-symbols-outlined text-lg">drive_file_move</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500 rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Disable"><span class="material-symbols-outlined text-lg">block</span></button>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 pl-[4.5rem] hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<div class="flex items-center gap-3 border-l-2 border-slate-200 dark:border-slate-700 pl-3 ml-1.5 h-6">
+<div class="flex items-center gap-2">
+<span class="text-sm text-slate-600 dark:text-slate-300">Laptops</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Active</span>
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Edit Name"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Change Parent"><span class="material-symbols-outlined text-lg">drive_file_move</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500 rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Disable"><span class="material-symbols-outlined text-lg">block</span></button>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 pl-[4.5rem] hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<div class="flex items-center gap-3 border-l-2 border-slate-200 dark:border-slate-700 pl-3 ml-1.5 h-6">
+<div class="flex items-center gap-2">
+<span class="text-sm text-slate-600 dark:text-slate-300">Accessories</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 uppercase tracking-wide">Disabled</span>
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Edit Name"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Change Parent"><span class="material-symbols-outlined text-lg">drive_file_move</span></button>
+<button class="p-1.5 text-slate-400 hover:text-green-500 rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Enable"><span class="material-symbols-outlined text-lg">check_circle</span></button>
+</div>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 pl-4 hover:bg-slate-50 dark:hover:bg-surface-dark-highlight transition-colors">
+<div class="flex items-center gap-3">
+<button class="text-slate-400 hover:text-slate-600 dark:hover:text-white">
+<span class="material-symbols-outlined text-xl">chevron_right</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-text-secondary text-xl">folder</span>
+<span class="text-sm font-medium text-slate-900 dark:text-white">Furniture</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 uppercase tracking-wide">Active</span>
+<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Edit Name"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-1.5 text-slate-400 hover:text-primary rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Change Parent"><span class="material-symbols-outlined text-lg">drive_file_move</span></button>
+<button class="p-1.5 text-slate-400 hover:text-red-500 rounded hover:bg-slate-100 dark:hover:bg-surface-dark-highlight" title="Disable"><span class="material-symbols-outlined text-lg">block</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-5 border-t border-slate-100 dark:border-surface-dark-highlight bg-white dark:bg-surface-dark flex justify-end gap-3 z-10">
+<button class="px-5 py-2.5 rounded-lg border border-slate-200 dark:border-surface-dark-highlight text-slate-700 dark:text-text-secondary hover:bg-slate-50 dark:hover:bg-surface-dark-highlight font-medium text-sm transition-colors">
+                Cancel
+            </button>
+<button class="px-6 py-2.5 rounded-lg bg-primary hover:bg-green-400 text-slate-900 font-bold text-sm shadow-lg shadow-primary/20 transition-all transform active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">save</span>
+                Save and Close
+            </button>
+</div>
+</div>
+</div>
+</body></html>

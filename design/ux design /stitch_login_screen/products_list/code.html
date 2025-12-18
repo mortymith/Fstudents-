@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Products List - Admin</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#30e87a",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1c2620",
+                        "border-dark": "#29382f",
+                        "text-subtle": "#9db8a8",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Scrollbar for dark mode webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #29382f; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3c5345; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- Side Navigation -->
+<aside class="hidden md:flex flex-col w-72 h-full border-r border-border-dark bg-background-dark">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="bg-primary/20 p-2 rounded-lg text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<h1 class="text-white text-lg font-bold tracking-tight">Admin Panel</h1>
+</div>
+</div>
+<nav class="flex-1 px-4 py-2 space-y-2 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined icon-filled">inventory</span>
+<span class="font-medium">Products</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-medium">Orders</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-medium">Analytics</span>
+</a>
+<div class="pt-4 mt-4 border-t border-border-dark">
+<p class="px-4 text-xs font-semibold text-text-subtle uppercase tracking-wider mb-2">Settings</p>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-text-subtle hover:text-white hover:bg-white/5 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Configuration</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-border-dark">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="relative">
+<div class="size-10 rounded-full bg-cover bg-center" data-alt="User profile avatar gradient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAk-xNv3BgRy3MW3CLuAvbONYj-8yI0d9qBYee9kcSPIMuK3Y2V1ZsQIIzIwvzGyxnKc1wDDia_fvHTi9iMm03ZxEfpPFvbV5fZnIuUiF5TfZiFDYMqotT1FADBfD0d8xGlU0fIxV_7oNXs9Ar5Gkd-MgxcjX-ScasVwXJLGXDZncePIQGGdgrk8OQflyhMd66CnxhogYYAVUyCkmKdVbdAFdZbFFKpt027kJpO1bGckee__Uy_PsCFFJvSi77wROfoWBuF7jIQ4XMZ');"></div>
+<div class="absolute bottom-0 right-0 size-3 bg-primary border-2 border-background-dark rounded-full"></div>
+</div>
+<div class="flex flex-col">
+<p class="text-sm font-bold text-white leading-none">Jane Doe</p>
+<p class="text-xs text-text-subtle mt-1">Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="flex-1 flex flex-col h-full min-w-0 overflow-hidden bg-background-light dark:bg-background-dark relative">
+<!-- Top Header -->
+<header class="h-16 flex items-center justify-between px-6 border-b border-border-dark bg-background-dark shrink-0 z-20">
+<div class="flex items-center gap-4 lg:hidden">
+<button class="text-white p-1">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="text-white text-lg font-bold">Products</h2>
+</div>
+<!-- Desktop Header Content -->
+<div class="hidden lg:flex flex-1 items-center justify-between">
+<h2 class="text-white text-lg font-bold tracking-tight">Inventory Management</h2>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined text-text-subtle absolute left-3 top-1/2 -translate-y-1/2 text-[20px]">search</span>
+<input class="h-9 w-64 bg-surface-dark border-border-dark rounded-full pl-10 pr-4 text-sm text-white placeholder-text-subtle focus:ring-1 focus:ring-primary focus:border-primary" placeholder="Quick search..." type="text"/>
+</div>
+<button class="text-text-subtle hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 size-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="text-text-subtle hover:text-white transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto p-6 md:p-8 lg:px-12 scroll-smooth">
+<div class="max-w-[1400px] mx-auto flex flex-col gap-8">
+<!-- Page Heading -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="text-3xl md:text-4xl font-black text-white tracking-tight">Products List</h1>
+<p class="text-text-subtle text-base">Manage and organize your inventory items efficiently.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 h-10 rounded-lg border border-border-dark bg-surface-dark text-white hover:bg-border-dark transition-colors font-bold text-sm">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+                                Export
+                            </button>
+<button class="flex items-center gap-2 px-4 h-10 rounded-lg bg-primary text-background-dark hover:bg-primary/90 transition-colors font-bold text-sm shadow-[0_0_15px_rgba(48,232,122,0.15)]">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                                Add New Product
+                            </button>
+</div>
+</div>
+<!-- Filters & Controls Bar -->
+<div class="flex flex-col xl:flex-row gap-4 items-start xl:items-end bg-surface-dark p-4 rounded-xl border border-border-dark shadow-sm">
+<!-- Search -->
+<div class="flex-1 w-full xl:w-auto min-w-[300px]">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-1.5 block">Search</label>
+<div class="relative group">
+<input class="w-full h-11 bg-[#111814] border border-border-dark rounded-lg pl-11 pr-4 text-white placeholder-text-subtle focus:border-primary focus:ring-0 transition-all" placeholder="Search by Name or SKU..." type="text"/>
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-text-subtle group-focus-within:text-primary transition-colors">search</span>
+</div>
+</div>
+<!-- Dropdowns Wrapper -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full xl:w-auto">
+<div class="flex flex-col">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-1.5 block">Category</label>
+<select class="h-11 bg-[#111814] border border-border-dark rounded-lg px-3 text-white text-sm focus:border-primary focus:ring-0">
+<option value="">All Categories</option>
+<option value="electronics">Electronics</option>
+<option value="furniture">Furniture</option>
+<option value="office">Office Supplies</option>
+</select>
+</div>
+<div class="flex flex-col">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-1.5 block">Supplier</label>
+<select class="h-11 bg-[#111814] border border-border-dark rounded-lg px-3 text-white text-sm focus:border-primary focus:ring-0">
+<option value="">All Suppliers</option>
+<option value="tech">TechSupplies Inc.</option>
+<option value="depot">OfficeDepot</option>
+</select>
+</div>
+<div class="flex flex-col">
+<label class="text-xs font-semibold text-text-subtle uppercase mb-1.5 block">Status</label>
+<select class="h-11 bg-[#111814] border border-border-dark rounded-lg px-3 text-white text-sm focus:border-primary focus:ring-0">
+<option value="">Any Status</option>
+<option value="instock">In Stock</option>
+<option value="lowstock">Low Stock</option>
+<option value="outstock">Out of Stock</option>
+</select>
+</div>
+<!-- Filter Actions -->
+<div class="flex items-end">
+<button class="h-11 w-full flex items-center justify-center gap-2 rounded-lg border border-border-dark bg-[#111814] text-text-subtle hover:text-white hover:border-white/30 transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span class="text-sm font-medium">More</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden shadow-sm flex flex-col">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[1000px]">
+<thead>
+<tr class="bg-[#161f1a] border-b border-border-dark">
+<th class="p-4 pl-6 text-xs font-bold text-text-subtle uppercase tracking-wider w-32 cursor-pointer hover:text-white">
+<div class="flex items-center gap-1">SKU <span class="material-symbols-outlined text-[16px]">swap_vert</span></div>
+</th>
+<th class="p-4 text-xs font-bold text-text-subtle uppercase tracking-wider cursor-pointer hover:text-white">
+<div class="flex items-center gap-1">Product Name <span class="material-symbols-outlined text-[16px]">swap_vert</span></div>
+</th>
+<th class="p-4 text-xs font-bold text-text-subtle uppercase tracking-wider">Category</th>
+<th class="p-4 text-xs font-bold text-text-subtle uppercase tracking-wider">Supplier</th>
+<th class="p-4 text-xs font-bold text-text-subtle uppercase tracking-wider text-right">Price</th>
+<th class="p-4 text-xs font-bold text-text-subtle uppercase tracking-wider text-center">Qty</th>
+<th class="p-4 text-xs font-bold text-text-subtle uppercase tracking-wider text-center">Status</th>
+<th class="p-4 pr-6 text-xs font-bold text-text-subtle uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-dark">
+<!-- Row 1 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 pl-6 font-mono text-sm text-text-subtle group-hover:text-white">SKU-1024</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded bg-[#111814] border border-border-dark bg-cover bg-center" data-alt="Product image of a mouse" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGGdfZRgtcmj_JnHBr9mte_OFv9UXsulHCbZnL4Di1-YZfVbNrbVdfsUr4JXo4yrHs-lLtnx36Y7ZT2scb2hhckdWJ01m31VTqFqnbjrh34uUg4mGKF9sp3YQMXEfRKNoENxx5oe5OzOruP-lE4bRQm7XJmhllGmPQ1IHFW7gfaUzKykAt56b3o0zwiG5M_V-z9ExLiK7oKKxU7nXRUV93idNckHxlaZoeRrt3r1zndHdlbyJAOJ3Zvt57iX8__HJK5BLTa_WEaMb1');"></div>
+<div class="flex flex-col">
+<span class="font-bold text-white text-sm">Wireless Optical Mouse</span>
+<span class="text-xs text-text-subtle">Reorder Pt: 20</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-text-subtle">Electronics</td>
+<td class="p-4 text-sm text-text-subtle">TechSupplies Inc.</td>
+<td class="p-4 text-sm font-medium text-white text-right">$24.00</td>
+<td class="p-4 text-sm font-medium text-white text-center">150</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/20">
+                                                In Stock
+                                            </span>
+</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-white hover:bg-white/10" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-primary hover:bg-primary/10" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-red-400 hover:bg-red-400/10" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 pl-6 font-mono text-sm text-text-subtle group-hover:text-white">SKU-1025</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded bg-[#111814] border border-border-dark bg-cover bg-center" data-alt="Product image of a chair" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBJyCdzNx7MyoZtK5Vr3lndpQC4-FN-EjScrrwPiIcpUqEhETjGMXG82QXJZfGRPd5RoJSGiJEmQDQCEYs70QlNvy95Tao4h3SSTBfyOIbT7uvkzDhnq7nJiyvu_qDYuZFZgU5RWY4RIV9swUOdqC8M_p0xIiC2XT6DOodFlOOt2SHax31P-tf-ya1tYuuGMm3hKO22vnmBRo2HIdxDhD2RY6KTZ80hdYEvA0BpyNjOVnhdyJ-wdy7AuHCe1xoDNOS9MItqq32V4OUR');"></div>
+<div class="flex flex-col">
+<span class="font-bold text-white text-sm">Ergonomic Office Chair</span>
+<span class="text-xs text-text-subtle">Reorder Pt: 10</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-text-subtle">Furniture</td>
+<td class="p-4 text-sm text-text-subtle">OfficeDepot</td>
+<td class="p-4 text-sm font-medium text-white text-right">$250.00</td>
+<td class="p-4 text-sm font-medium text-yellow-500 text-center">5</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-500 border border-yellow-500/20">
+                                                Low Stock
+                                            </span>
+</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-white hover:bg-white/10" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-primary hover:bg-primary/10" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-red-400 hover:bg-red-400/10" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 pl-6 font-mono text-sm text-text-subtle group-hover:text-white">SKU-1026</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded bg-[#111814] border border-border-dark bg-cover bg-center" data-alt="Product image of a monitor" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVPTQ--m0K4rogcoX7DUwbF06UdY8xhwksD5F2LolaNI9ucSI5SG3Lkbtbvlz5jiRvrbUS53AdcdpkomPeLYNa0cqqwlx6nH3P4daFijXrh39-s1l95Vi1QeuwsGdwEgcaQHqr41ncZiRsTflEv3z33E8tVyVQJvJOeXq8pIm81Ylu5f--9W8X3uXSsXr6WL2aNqS1gwZfCCYer7kCMuzrLqc8-vADM69pbp8Atvu-Nsc8rwvQj_aP3Oryxkp-VOot_HHomTl6W61Z');"></div>
+<div class="flex flex-col">
+<span class="font-bold text-white text-sm">27" 4K Monitor</span>
+<span class="text-xs text-text-subtle">Reorder Pt: 5</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-text-subtle">Electronics</td>
+<td class="p-4 text-sm text-text-subtle">TechSupplies Inc.</td>
+<td class="p-4 text-sm font-medium text-white text-right">$320.00</td>
+<td class="p-4 text-sm font-medium text-white text-center">42</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/20">
+                                                In Stock
+                                            </span>
+</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-white hover:bg-white/10" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-primary hover:bg-primary/10" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-red-400 hover:bg-red-400/10" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 pl-6 font-mono text-sm text-text-subtle group-hover:text-white">SKU-1027</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded bg-[#111814] border border-border-dark bg-cover bg-center" data-alt="Product image of a keyboard" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAdwc7GYMj5Gf8gGaHXWqRt5dp6a8Bmb7V2Vf43ZzYUBisNh-jZkPi100k8Y_HOkAK_Q2iMOV3Mpn6wU3j7w4-5OQNjlyExKkHCIhfbOz7U3dHd0_Yrkwbwj6O7wLEyNBTjgL8BvOEhM4dhOrK4xcw8Ow73pV0ATOXGFPQK4lCctTZ_os4quO7BnovYXzOp4B9OetU9AseXWXb2o0ulmW8Dx8fcys_M19k2yvxd9xo742nX0FiB4nypnIb12vVepVPsBCXL44fZsN7r');"></div>
+<div class="flex flex-col">
+<span class="font-bold text-white text-sm">Mechanical Keyboard</span>
+<span class="text-xs text-text-subtle">Reorder Pt: 15</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-text-subtle">Electronics</td>
+<td class="p-4 text-sm text-text-subtle">KeyBoards Co.</td>
+<td class="p-4 text-sm font-medium text-white text-right">$89.99</td>
+<td class="p-4 text-sm font-medium text-white text-center">8</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/20">
+                                                Critically Low
+                                            </span>
+</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-white hover:bg-white/10" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-primary hover:bg-primary/10" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-red-400 hover:bg-red-400/10" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-white/5 transition-colors">
+<td class="p-4 pl-6 font-mono text-sm text-text-subtle group-hover:text-white">SKU-1028</td>
+<td class="p-4">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded bg-[#111814] border border-border-dark bg-cover bg-center" data-alt="Product image of printer paper" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDXqfWG2JgqLV7NXhjq6E0isygPT9-3OOHfE7z1IEx6Vlkd3lJPC5_LwNvlf6iDoZSYBdpbf28hQqipmmiVDmA_qJzg4eBh7in1CDEsLYuCz75oh4WektsGg8w1q-IR1NzdE7srxIYbd9hrm9bPv8i3lyULu-TGUfwgj4lhqBXHGMEs5e1Une9qocIJe3T1Y0Ntv_IItnVFFyuuHRjCXqizKHih9WdCXMcuSV2zCLor_kkuF5mMCaWfL6Ji-0I_xkop37_aJRZZu-au');"></div>
+<div class="flex flex-col">
+<span class="font-bold text-white text-sm">Printer Paper A4 (500)</span>
+<span class="text-xs text-text-subtle">Reorder Pt: 100</span>
+</div>
+</div>
+</td>
+<td class="p-4 text-sm text-text-subtle">Office Supplies</td>
+<td class="p-4 text-sm text-text-subtle">PaperWorks Ltd.</td>
+<td class="p-4 text-sm font-medium text-white text-right">$5.50</td>
+<td class="p-4 text-sm font-medium text-white text-center">450</td>
+<td class="p-4 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/20">
+                                                In Stock
+                                            </span>
+</td>
+<td class="p-4 pr-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-white hover:bg-white/10" title="View Details">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-primary hover:bg-primary/10" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 flex items-center justify-center rounded-lg text-text-subtle hover:text-red-400 hover:bg-red-400/10" title="Deactivate">
+<span class="material-symbols-outlined text-[20px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="flex items-center justify-between px-6 py-4 border-t border-border-dark bg-[#161f1a]">
+<p class="text-sm text-text-subtle">
+                                Showing <span class="font-bold text-white">1</span> to <span class="font-bold text-white">5</span> of <span class="font-bold text-white">48</span> results
+                            </p>
+<div class="flex items-center gap-2">
+<button class="size-9 flex items-center justify-center rounded-lg border border-border-dark bg-transparent text-text-subtle hover:bg-white/5 hover:text-white hover:border-text-subtle/30 disabled:opacity-50 transition-all">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg bg-primary text-background-dark font-bold shadow-sm transition-all">1</button>
+<button class="size-9 flex items-center justify-center rounded-lg border border-border-dark bg-transparent text-text-subtle hover:bg-white/5 hover:text-white hover:border-text-subtle/30 transition-all">2</button>
+<button class="size-9 flex items-center justify-center rounded-lg border border-border-dark bg-transparent text-text-subtle hover:bg-white/5 hover:text-white hover:border-text-subtle/30 transition-all">3</button>
+<span class="text-text-subtle">...</span>
+<button class="size-9 flex items-center justify-center rounded-lg border border-border-dark bg-transparent text-text-subtle hover:bg-white/5 hover:text-white hover:border-text-subtle/30 transition-all">8</button>
+<button class="size-9 flex items-center justify-center rounded-lg border border-border-dark bg-transparent text-text-subtle hover:bg-white/5 hover:text-white hover:border-text-subtle/30 transition-all">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

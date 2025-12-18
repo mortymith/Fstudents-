@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit User Form</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#38e07b",
+              "background-light": "#f6f8f7",
+              "background-dark": "#122017",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#9eb7a8]">
+<div class="flex h-screen w-full">
+<aside class="flex w-64 flex-col border-r border-white/10 bg-[#111714] p-4">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Inventory System</h2>
+</div>
+<div class="mt-8 flex flex-1 flex-col gap-2">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventory</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<p class="text-sm font-medium leading-normal">Orders</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/20 px-3 py-2 text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<p class="text-sm font-medium leading-normal">Users</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<p class="text-sm font-medium leading-normal">Reports</p>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2 text-white/60 hover:bg-white/5 hover:text-white" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+<div class="mt-auto">
+<div class="flex gap-3 border-t border-white/10 pt-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBS0bLOwOLlk8wpKbeBRBNtq6zzHs1ykpwBkTij336JxQa7Y17JtaaEkmRAmXCiH6EmbH62nPe0akIoPWFJ_2V4UK1RcjHmWK_iWEsW6YClmmESQXq4RhD-qFHDW7oVdS6EoO6daqVWGaA6HyN-yH8IGXN-1HcTENCrMu-RbH4IMk2xsalCccpCTOT1ZK_biFf108CBbGjstDZEQmuwlsAmpng0y04AqEkyweZXUl8z2H0MhPzz9AGZ87paNSHzKGoqPzD-XgfwxqBC");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-sm font-medium leading-normal">Alex Grim</h1>
+<p class="text-[#9eb7a8] text-xs font-normal leading-normal">alex.grim@example.com</p>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto">
+<div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+<div class="flex items-center gap-4 mb-8">
+<a class="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-[#111714] text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">arrow_back</span>
+</a>
+<div>
+<h1 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em]">Edit User</h1>
+<p class="text-[#9eb7a8] text-sm mt-1">Update user details and permissions.</p>
+</div>
+</div>
+<div class="rounded-xl border border-white/10 bg-[#111714] p-6 sm:p-8">
+<form>
+<div class="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2">
+<div class="col-span-1">
+<label class="block text-sm font-medium leading-6 text-white" for="full-name">Full Name</label>
+<div class="mt-2">
+<input class="block w-full rounded-lg border-0 bg-[#1A2C1F] py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="full-name" name="full-name" type="text" value="Olivia Rhye"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium leading-6 text-white" for="email">Email Address</label>
+<div class="mt-2">
+<input class="block w-full rounded-lg border-0 bg-[#1A2C1F] py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="email" name="email" type="email" value="olivia@example.com"/>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium leading-6 text-white" for="role">Role</label>
+<div class="mt-2">
+<select class="block w-full rounded-lg border-0 bg-[#1A2C1F] py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="role" name="role">
+<option selected="">Admin</option>
+<option>Inventory Manager</option>
+<option>Viewer</option>
+</select>
+</div>
+</div>
+<div class="col-span-1">
+<label class="block text-sm font-medium leading-6 text-white" for="status">Status</label>
+<div class="mt-2">
+<select class="block w-full rounded-lg border-0 bg-[#1A2C1F] py-2.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6" id="status" name="status">
+<option selected="">Active</option>
+<option>Deactivated</option>
+</select>
+</div>
+</div>
+<div class="col-span-1 sm:col-span-2 border-t border-white/10 pt-8 mt-2">
+<h3 class="text-base font-semibold leading-7 text-white">Security</h3>
+<p class="mt-1 text-sm leading-6 text-[#9eb7a8]">Manage authentication and password reset for this account.</p>
+<div class="mt-6 flex items-center justify-between rounded-lg border border-white/10 bg-[#1A2C1F]/50 px-4 py-4 sm:px-6">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1A2C1F] text-white">
+<span class="material-symbols-outlined">lock_reset</span>
+</div>
+<div>
+<p class="text-sm font-medium text-white">Password Reset</p>
+<p class="text-xs text-[#9eb7a8]">Send a link to the user's email to reset their password.</p>
+</div>
+</div>
+<button class="rounded-md bg-white/5 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-white/10 ring-1 ring-inset ring-white/10" type="button">
+                                    Send Link
+                                </button>
+</div>
+</div>
+</div>
+<div class="mt-10 flex items-center justify-end gap-x-4 border-t border-white/10 pt-6">
+<button class="text-sm font-semibold leading-6 text-white hover:text-primary transition-colors" type="button">Cancel</button>
+<button class="rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-[#111714] shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" type="submit">Save User</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+</div>
+
+</body></html>
